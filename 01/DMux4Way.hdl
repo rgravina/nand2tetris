@@ -12,9 +12,11 @@
  */
 
 CHIP DMux4Way {
-    IN in, sel[2];
-    OUT a, b, c, d;
+  IN in, sel[2];
+  OUT a, b, c, d;
 
-    PARTS:
-    // Put your code here:
+  PARTS:
+  DMux(in=in, sel=sel[0], a=temp1, b=temp2);
+  DMux(in=temp1, sel=sel[1], a=a, b=c);
+  DMux(in=temp2, sel=sel[1], a=b, b=d);
 }
