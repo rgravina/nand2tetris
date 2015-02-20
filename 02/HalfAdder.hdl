@@ -8,6 +8,11 @@ CHIP HalfAdder {
       carry;  // Left bit of a + b
 
   PARTS:
+  // sum(a,b) happs to be just like Xor(a,b)
+  // i.e. the answer is 1 when they are different
   Xor(a=a, b=b, out=sum);
+  // this is because of the carry bit. If a and b
+  // are both 1, then there is a carry.
+  // So, And(a,b) implements carry.
   And(a=a, b=b, out=carry);
 }
