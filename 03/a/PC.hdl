@@ -17,17 +17,19 @@ CHIP PC {
   Mux16(a=regout, b=outplusone, sel=inc, out=inced);
 
   // Load
-  // We can load over the inc, that's fine
-  Mux16(a=inced, b=in, sel=load, out=loaded);
+  Mux16(a=regout, b=in, sel=load, out=loaded);
 
   // Reset
-  // Reset the value to zero if set, regardless of what was already done
-  Mux16(a=loaded, b=false, sel=reset, out=reseted);
+  Mux16(a=regout, b=false, sel=reset, out=reseted);
 
   // Store the new value if inc or load or reset
   Or(a=inc, b=load, out=incorload);
   Or(a=incorload, b=reset, out=bitset);
-  Register(in=reseted, load=bitset, out=regout);
+
+  Mux16(a=inced, b=loaded, sel=load, out=v1);
+  Mux16(a=v1, b=reseted, sel=reset, out=value);
+
+  Register(in=value, load=bitset, out=regout);
 
   // Send the value out
   Or16(a=regout, b=false, out=out);
