@@ -83,8 +83,17 @@ CHIP ALU {
     // if (no == 1) set out = !out   // bitwise not
     Not16(in=preout, out=notout);
     Mux16(a=preout, b=notout, sel=no, out=out);
+    // need this same value for implmenting status bits below
+    Mux16(a=preout, b=notout, sel=no, out=outstatus);
+
+    /*
+     * Status bits
+     */
 
     // if (out == 0) set zr = 1
-    // if (out < 0) set ng = 1
+    Or16Way(in=outstatus, out=prezr);
+    Not(in=prezr, out=zr);
 
+    // if (out < 0) set ng = 1
+    IsNeg16(in=outstatus, out=ng);
 }

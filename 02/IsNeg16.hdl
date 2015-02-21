@@ -1,0 +1,13 @@
+/**
+ * 16-bit negative number test: 
+ * out = (1 if negative)
+ */
+
+CHIP IsNeg16 {
+  IN in[16];
+  OUT out;
+
+  PARTS:
+  // if the most significant bit is one, it's negative
+  And(a=in[15], b=true, out=out);
+}
