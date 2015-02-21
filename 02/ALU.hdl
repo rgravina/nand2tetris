@@ -27,20 +27,64 @@
 // if (out < 0) set ng = 1
 
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
-        zx, // zero the x input?
-        nx, // negate the x input?
-        zy, // zero the y input?
-        ny, // negate the y input?
-        f,  // compute out = x + y (if 1) or x & y (if 0)
-        no; // negate the out output?
+  IN  
+    x[16], y[16],  // 16-bit inputs        
+    zx, // zero the x input?
+    nx, // negate the x input?
+    zy, // zero the y input?
+    ny, // negate the y input?
+    f,  // compute out = x + y (if 1) or x & y (if 0)
+    no; // negate the out output?
 
-    OUT 
-        out[16], // 16-bit output
-        zr, // 1 if (out == 0), 0 otherwise
-        ng; // 1 if (out < 0),  0 otherwise
+  OUT 
+    out[16], // 16-bit output
+    zr, // 1 if (out == 0), 0 otherwise
+    ng; // 1 if (out < 0),  0 otherwise
 
-    PARTS:
-   // Put you code here:
+  PARTS:
+
+    /*
+     * Zero or not the inputs (x and y)
+     * based on control pins
+     * zx, nx
+     * zy, ny
+     */
+
+    // if (zx == 1) set x = 0        // 16-bit constant
+    Mux16(a=x, b=false, sel=zx, out=zerox);
+
+    // if (nx == 1) set x = !x       // bitwise not
+    Not16(in=zerox, out=notxtemp);
+    Mux16(a=zerox, b=notxtemp, sel=nx, out=notx);
+
+    // if (zy == 1) set y = 0        // 16-bit constant
+    Mux16(a=y, b=false, sel=zy, out=zeroy);
+
+    // if (ny == 1) set y = !y       // bitwise not
+    Not16(in=zeroy, out=notytemp);
+    Mux16(a=zeroy, b=notytemp, sel=ny, out=noty);
+
+    // now, chose the correct x and y by multiplexing them
+    Mux16(a=zerox, b=notx, sel=nx, out=prex);
+    Mux16(a=zeroy, b=noty, sel=ny, out=prey);
+
+    /*
+     * And or add the pre-processed inputs
+     * based on f
+     */
+
+    // if (f == 1)  set out = x + y  // integer 2's complement addition
+    Add16(a=prex, b=prey, out=xplusy);
+
+    // if (f == 0)  set out = x & y  // bitwise and
+    And16(a=prex, b=prey, out=xandy);
+    Mux16(a=xandy, b=xplusy, sel=f, out=preout);
+
+    // if (no == 1) set out = !out   // bitwise not
+    Not16(in=preout, out=notout);
+    Mux16(a=preout, b=notout, sel=no, out=out);
+
+    // if (out == 0) set zr = 1
+    // if (out < 0) set ng = 1
+
 }
