@@ -25,6 +25,7 @@ CHIP Memory {
   // check the value of in to see which RAM it should go to
   Or(a=address[14], b=false, out=usekbd);
   Or(a=address[13], b=false, out=usescreen);
+  // if neither of keyboard or screen is used, then use RAM
   Or(a=usekbd, b=usescreen, out=useram0);
   Not(in=useram0, out=useram);
 
