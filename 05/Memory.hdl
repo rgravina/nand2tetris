@@ -22,10 +22,20 @@ CHIP Memory {
   OUT out[16];
 
   PARTS:
+
+  /********************
+    Note: The first two bits of the address determine the part to use.
+    [14]  [13]  selects
+       0     0  RAM16
+       0     1  RAM16
+       1     0  Screen
+       1     1  Keyboard
+  *********************/
   // check the value of in to see which RAM it should go to
-  Or(a=address[14], b=false, out=usekbd);
-  Or(a=address[13], b=false, out=usescreen);
   // if neither of keyboard or screen is used, then use RAM
+  And(a=address[14], b=address[13], out=usekbd);
+  Not(in=usekbd, out=notusekbd);
+  And(a=address[14], b=notusekbd, out=usescreen);
   Or(a=usekbd, b=usescreen, out=useram0);
   Not(in=useram0, out=useram);
 
