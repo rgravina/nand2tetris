@@ -28,8 +28,12 @@ CHIP Memory {
   Or(a=usekbd, b=usescreen, out=useram0);
   Not(in=useram0, out=useram);
 
-  RAM16K(in=in, load=load, address=address[0..13], out=memout);
-  Screen(in=in, load=load, address=address[1..13], out=screenout);
+  // Be sure not to store values in both RAM and Screen
+  And(a=load, b=useram, out=loadram);
+  And(a=load, b=usescreen, out=loadscreen);
+
+  RAM16K(in=in, load=loadram, address=address[0..13], out=memout);
+  Screen(in=in, load=loadscreen, address=address[1..13], out=screenout);
   Keyboard(out=kbdout);
 
   Mux16(a=screenout, b=kbdout, sel=usekbd, out=temp);
