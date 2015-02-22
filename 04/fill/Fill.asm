@@ -4,7 +4,35 @@
 // program clears the screen, i.e. writes "white" in every pixel.
 
 (LOOP)
+  // look a keyboard and set fill if a key is pressed
+  @24576
+  D=M
+  @SET_FILL
+  // a value > 0 means a key has been pressed
+  D;JGT
+
+  // if execution gets here clear the screen
+  @SET_CLEAR
+  0;JMP
+
+(AFTER_SET)
   @FILL_SCREEN
+  0;JMP
+
+(SET_FILL)
+  // set to fill screen
+  // 1111111111111111
+  @operation
+  M=-1
+  @AFTER_SET
+  0;JMP
+
+(SET_CLEAR)
+  // set to clear screen
+  // 0000000000000000
+  @operation
+  M=0
+  @AFTER_SET
   0;JMP
 
 (FILL_SCREEN)
@@ -24,12 +52,15 @@
   @LOOP
   D;JEQ
 
+  // get operation
+  @operation
+  D=M
   // Set pixel black
   @i
   // get the memory location stored in i
   A=M
-  // set it to 1111111111111111
-  M=-1
+  // set it to operation
+  M=D
 
   // row++
   @i
