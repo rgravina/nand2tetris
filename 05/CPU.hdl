@@ -34,10 +34,36 @@ CHIP CPU {
 
   PARTS:
   // instruction decoding
+
+  // instruction type (A or C)
   Or(a=instruction[15], b=false, out=c-instruction);
+  Not(in=c-instruction, out=a-instruction);
+
+  // C instruction fields
   Or(a=instruction[12], b=false, out=a-field);
   Or16(a=instruction, b=false, out[6..11]=c-field);
   Or16(a=instruction, b=false, out[3..5]=d-field);
   Or16(a=instruction, b=false, out[0..2]=j-field);
 
+  // Destination breakdown
+  Or16(a=instruction, b=false, out[3]=store-in-a);
+  Or16(a=instruction, b=false, out[4]=store-in-d);
+  Or16(a=instruction, b=false, out[5]=store-in-m);
+
+  // A Register
+  ARegister(in=instruction, load=a-instruction, out=a-register-out);
+
+  // D Register
+  DRegister(in=alu-out, load=store-in-d, out=d-register-out);
+
+  // ALU
+  Mux16(a=inM, b=a-register-out, sel=store-in-a, out=a-or-m);
+  ALU(x=d-register-out, y=a-or-m, out=alu-out);
+
+  // Program Counter
+  PC(in=a-register-out, load=false, inc=true, reset=reset, out[0..14]=pc);
+
+  // Output
+  Or16(a=a-register-out, b=false, out[0..14]=addressM);
+  Or16(a=alu-out, b=false, out=outM);
 }
