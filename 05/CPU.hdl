@@ -65,7 +65,7 @@ CHIP CPU {
   DRegister(in=alu-out, load=store-in-d, out=d-register-out);
 
   // ALU
-  Mux16(a=inM, b=a-register-out, sel=a-field, out=m-or-a);
+  Mux16(a=a-register-out, b=inM, sel=a-field, out=m-or-a);
   ALU(x=d-register-out, y=m-or-a, 
       zx=zx, nx=nx, zy=zy, ny=ny, f=f, no=no,
       out=alu-out);
