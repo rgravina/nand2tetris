@@ -65,7 +65,8 @@ CHIP CPU {
 
   // A Register
   Mux16(a=instruction, b=alu-out, sel=c-instruction, out=a-reg-input);
-  ARegister(in=a-reg-input, load=a-instruction, out=a-register-out);
+  Or(a=store-in-a, b=a-instruction, out=load-a);
+  ARegister(in=a-reg-input, load=load-a, out=a-register-out);
 
   // D Register
   DRegister(in=alu-out, load=store-in-d, out=d-register-out);
