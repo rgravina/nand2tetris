@@ -46,6 +46,7 @@ CHIP CPU {
   Or16(a=instruction, b=false, out[0..2]=j-field);
 
   // Destination breakdown
+  // FIXME: These destinations are correct but incomplete
   Or16(a=instruction, b=false, out[3]=store-in-a);
   Or16(a=instruction, b=false, out[4]=store-in-d);
   Or16(a=instruction, b=false, out[5]=store-in-m);
