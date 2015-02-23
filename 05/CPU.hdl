@@ -50,6 +50,14 @@ CHIP CPU {
   Or16(a=instruction, b=false, out[4]=store-in-d);
   Or16(a=instruction, b=false, out[5]=store-in-m);
 
+  // Control code breakdown
+  Or16(a=instruction, b=false, out[11]=zx);
+  Or16(a=instruction, b=false, out[10]=nx);
+  Or16(a=instruction, b=false, out[9]=zy);
+  Or16(a=instruction, b=false, out[8]=ny);
+  Or16(a=instruction, b=false, out[7]=no);
+  Or16(a=instruction, b=false, out[6]=f);
+
   // A Register
   ARegister(in=instruction, load=a-instruction, out=a-register-out);
 
