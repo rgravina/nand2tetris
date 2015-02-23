@@ -58,6 +58,11 @@ CHIP CPU {
   Or16(a=instruction, b=false, out[6]=no);
   Or16(a=instruction, b=false, out[7]=f);
 
+  // Jump code breakdown
+  Or16(a=instruction, b=false, out[0]=jump-if-gt-zero);
+  Or16(a=instruction, b=false, out[1]=jump-if-eq-zero);
+  Or16(a=instruction, b=false, out[2]=jump-if-lt-zero);
+
   // A Register
   ARegister(in=instruction, load=a-instruction, out=a-register-out);
 
@@ -68,10 +73,21 @@ CHIP CPU {
   Mux16(a=a-register-out, b=inM, sel=a-field, out=m-or-a);
   ALU(x=d-register-out, y=m-or-a, 
       zx=zx, nx=nx, zy=zy, ny=ny, f=f, no=no,
+      zr=zr, ng=ng,
       out=alu-out);
 
   // Program Counter
-  PC(in=a-register-out, load=false, inc=true, reset=reset, out[0..14]=pc);
+
+  And(a=zr, b=jump-if-eq-zero, out=should-jump-eq-zero);
+  And(a=ng, b=jump-if-lt-zero, out=should-jump-lt-zero);
+  Or(a=ng, b=zr, out=or-ng-zr);
+  Not(in=or-ng-zr, out=pos);
+  And(a=pos, b=jump-if-gt-zero, out=should-jump-gt-zero);
+  Or(a=should-jump-lt-zero, b=should-jump-eq-zero, out=should-jump0);
+  Or(a=should-jump0, b=should-jump-gt-zero, out=should-jump1);
+  And(a=should-jump1, b=c-instruction, out=should-jump);
+
+  PC(in=a-register-out, load=should-jump, inc=true, reset=reset, out[0..14]=pc);
 
   // Output
   Or16(a=a-register-out, b=false, out[0..14]=addressM);
