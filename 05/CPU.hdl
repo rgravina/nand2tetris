@@ -64,7 +64,8 @@ CHIP CPU {
   Or16(a=instruction, b=false, out[2]=jump-if-lt-zero);
 
   // A Register
-  ARegister(in=instruction, load=a-instruction, out=a-register-out);
+  Mux16(a=instruction, b=alu-out, sel=c-instruction, out=a-reg-input);
+  ARegister(in=a-reg-input, load=a-instruction, out=a-register-out);
 
   // D Register
   DRegister(in=alu-out, load=store-in-d, out=d-register-out);
@@ -86,7 +87,7 @@ CHIP CPU {
   Or(a=should-jump-lt-zero, b=should-jump-eq-zero, out=should-jump0);
   Or(a=should-jump0, b=should-jump-gt-zero, out=should-jump1);
   And(a=should-jump1, b=c-instruction, out=should-jump);
-
+  // load takes precendence over inc
   PC(in=a-register-out, load=should-jump, inc=true, reset=reset, out[0..14]=pc);
 
   // Output
