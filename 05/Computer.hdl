@@ -24,16 +24,6 @@ CHIP Computer {
   // The CPU
   CPU(inM=data-memory-out, instruction=instruction, reset=reset, outM=outM, writeM=writeM, addressM=addressM, pc=pc);
 
-  // Select which RAM to use
-  Or16(a[0..14]=addressM, b=false, out[14]=topmost-address-bit);
-  DMux(in=writeM, sel=topmost-address-bit, a=lower-ram, b=upper-ram);
-
-  // The data memory
-  Or16(a[0..14]=addressM, b=false, out[0..13]=lower-address);
-  Or16(a[0..14]=addressM, b=false, out[1..14]=upper-address);
-
-  RAM16K(in=outM, load=lower-ram, address=lower-address, out=data-memory-out0);
-  RAM16K(in=outM, load=upper-ram, address=upper-address, out=data-memory-out1);
-
-  Or16(a=data-memory-out0, b=data-memory-out1, out=data-memory-out);
+  // The data RAM
+  Memory(in=outM, load=writeM, address=addressM, out=data-memory-out);
 }
