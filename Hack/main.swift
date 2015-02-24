@@ -8,5 +8,7 @@ func usage() {
 
 if Process.arguments.count != 2 {
   usage()
+} else {
+  let parser = Parser(file: Process.arguments.last!)
 }
 

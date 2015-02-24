@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io
 
+# Extras for this project
+Hack/hack
+
 ### Xcode ###
 build/
 *.pbxuser
