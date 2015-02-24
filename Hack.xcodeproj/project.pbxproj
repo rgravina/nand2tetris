@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
+		EC407A8C1A9C7678006FDDC0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* Parser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		973614EE1A9C3743001D26CB /* Hack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Hack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		EC407A8B1A9C7678006FDDC0 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +47,9 @@
 				973614F01A9C3743001D26CB /* Hack */,
 				973614EF1A9C3743001D26CB /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		973614EF1A9C3743001D26CB /* Products */ = {
 			isa = PBXGroup;
@@ -57,7 +62,9 @@
 		973614F01A9C3743001D26CB /* Hack */ = {
 			isa = PBXGroup;
 			children = (
+				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
+				EC407A8B1A9C7678006FDDC0 /* Parser.swift */,
 			);
 			path = Hack;
 			sourceTree = "<group>";
@@ -118,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC407A8C1A9C7678006FDDC0 /* Parser.swift in Sources */,
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -233,6 +241,7 @@
 				973614F71A9C3743001D26CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
