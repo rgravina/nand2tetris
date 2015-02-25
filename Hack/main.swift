@@ -11,4 +11,3 @@ if Process.arguments.count != 2 {
 } else {
   let parser = Parser(file: Process.arguments.last!)
 }
-
