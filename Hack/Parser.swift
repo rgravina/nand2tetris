@@ -12,9 +12,6 @@ class Parser {
     let content = String(contentsOfFile: file, encoding: NSUTF8StringEncoding, error: nil)
     if let fileContent = content {
       lines = fileContent.componentsSeparatedByString("\n")
-      for line in lines! {
-        println(line)
-      }
     } else {
       println("Could not read contents of file: '\(file)'.")
     }
@@ -22,9 +19,19 @@ class Parser {
 
   func hasMoreCommands() -> Bool {
     if let lines = lines {
-      return linePos == lines.count
+      return linePos < lines.count-1
     } else {
       return false
     }
+  }
+
+  func advance() -> Command? {
+    if let lines = lines {
+      if linePos < lines.count-1 {
+        linePos++;
+        return Command(command: lines[linePos])
+      }
+    }
+    return nil
   }
 }

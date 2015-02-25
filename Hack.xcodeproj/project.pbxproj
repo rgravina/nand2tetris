@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
+		EC13D2FB1A9D916600A70F63 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* Command.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* Parser.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		973614EE1A9C3743001D26CB /* Hack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Hack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		EC13D2FA1A9D916600A70F63 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		EC407A8B1A9C7678006FDDC0 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,6 +67,7 @@
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
 				EC407A8B1A9C7678006FDDC0 /* Parser.swift */,
+				EC13D2FA1A9D916600A70F63 /* Command.swift */,
 			);
 			path = Hack;
 			sourceTree = "<group>";
@@ -127,6 +130,7 @@
 			files = (
 				EC407A8C1A9C7678006FDDC0 /* Parser.swift in Sources */,
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
+				EC13D2FB1A9D916600A70F63 /* Command.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
