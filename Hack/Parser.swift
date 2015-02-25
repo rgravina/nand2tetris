@@ -17,14 +17,7 @@ class Parser {
     }
   }
 
-  func hasMoreCommands() -> Bool {
-    if let lines = lines {
-      return linePos < lines.count-1
-    } else {
-      return false
-    }
-  }
-
+  // Returns the next command and advances the current line
   func advance() -> Command? {
     if let lines = lines {
       if linePos < lines.count-1 {

@@ -10,7 +10,7 @@ if Process.arguments.count != 2 {
   usage()
 } else {
   let parser = Parser(file: Process.arguments.last!)
-  while (parser.hasMoreCommands()) {
-    parser.advance()
+  while let command = parser.advance() {
+    //...
   }
 }
