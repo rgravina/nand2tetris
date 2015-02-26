@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
   } else {
     parse(argv[1]);
   }
+  return 0;
 }
 
 void usage(char* executable_name) {
