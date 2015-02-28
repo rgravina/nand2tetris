@@ -17,6 +17,7 @@ char skip_comments(FILE *file , int c);
 bool is_start_of_command(int c);
 int read_command(FILE *file , int c, Command commands[], int current_command_index);
 void print_commands(Source source, Command commands[]);
+void print_command_description(Command command);
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -46,13 +47,20 @@ void parse(char* filename) {
 
 void print_commands(Source source, Command commands[]) {
   for (int i=0; i<source.command_index; i++) {
-    switch(commands[i].type) {
-      case A_COMMAND:
-        printf("%i\t%s\t(A)\n", i+1, commands[i].string);
-        break;
-      case C_COMMAND:
-      printf("%i\t%s\t(C)\n", i+1, commands[i].string);
-    }
+    printf("%i\t%s\t", i+1, commands[i].string);
+    print_command_description(commands[i]);
+    printf("\n");
+  }
+}
+
+void print_command_description(Command command) {
+  printf("// ");
+  switch(command.type) {
+    case A_COMMAND:
+      printf("Loads something into the A register.");
+      break;
+    case C_COMMAND:
+      printf("C instruction.");
   }
 }
 
