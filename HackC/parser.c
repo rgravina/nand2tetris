@@ -105,9 +105,25 @@ void print_command_machine_code(Command command) {
       instruction[pos++] = '1';
       instruction[pos++] = '1';
       // command.comp
+      if (strcmp(command.comp, "0") == 0) {
+        instruction[pos++] = '1';
+        instruction[pos++] = '0';
+        instruction[pos++] = '1';
+        instruction[pos++] = '0';
+        instruction[pos++] = '1';
+        instruction[pos++] = '0';
+      }
       if (command.has_dest) {
+      } else {
+        instruction[pos++] = '0';
+        instruction[pos++] = '0';
+        instruction[pos++] = '0';
       }
       if (command.has_jump) {
+      } else {
+        instruction[pos++] = '0';
+        instruction[pos++] = '0';
+        instruction[pos++] = '0';
       }
       instruction[pos++] = '\0';
   }
