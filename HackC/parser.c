@@ -2,11 +2,16 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+typedef struct {
+  char string[16];
+} Command;
+
 char skip_to_next_command(FILE *file , int c);
 char skip_whitespace(FILE *file , int c);
 char skip_comments(FILE *file , int c);
 bool is_start_of_command(int c);
-int read_command(FILE *file , int c);
+int read_command(FILE *file , int c, Command commands[], int current_command_index);
+
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -29,12 +34,18 @@ void parse(char* filename) {
     // read first char
     c = fgetc(file);
     //printf("%c", c);
-
+    Command commands[1024];
+    int current_command_index = 0;
     while (!feof(file)) {
       c = skip_to_next_command(file, c);
-      c = read_command(file, c);      
+      c = read_command(file, c, commands, current_command_index);    
+      current_command_index++;  
     }
-    
+
+    for (int i=0; i<current_command_index; i++) {
+      printf("%s", commands[i].string);
+    }
+
     fclose(file);
   }
 }
@@ -101,15 +112,17 @@ bool is_start_of_command(int c) {
   }
 }
 
-int read_command(FILE *file, int c) {
+int read_command(FILE *file, int c, Command commands[], int current_command_index) {
   if (feof(file)) {
     return c;
   }
-  printf("<command>");
+  Command command;
+  int pos = 0;
   while (!feof(file) && !isspace(c)) {
-    printf("%c", c);
+    command.string[pos++] = c;
     c = fgetc(file);
   }
-  printf("</command>\n");
+  command.string[pos++] = '\n';
+  commands[current_command_index] = command;
   return c;
 }
