@@ -52,7 +52,29 @@ const struct codeMap instructionMap[] = {
   {"D&M", "000000"},
   {"D|A", "010101"},
   {"D|M", "010101"},
-  {NULL, 0}  /* end marker */
+  {NULL, 0}
+};
+
+const struct codeMap destMap[] = {
+  {"M",   "001"},
+  {"D",   "010"},
+  {"MD",  "011"},
+  {"A",   "100"},
+  {"AM",  "101"},
+  {"AD",  "110"},
+  {"AMD", "111"},
+  {NULL, 0}
+};
+
+const struct codeMap jumpMap[] = {
+  {"JGT", "001"},
+  {"JEQ", "010"},
+  {"JGE", "011"},
+  {"JLT", "100"},
+  {"JNE", "101"},
+  {"JLE", "110"},
+  {"JMP", "111"},
+  {NULL, 0}
 };
 
 typedef struct {
@@ -69,6 +91,8 @@ void print_command_description(Command command);
 void print_command_machine_code(Command command);
 int dec_to_bin(int decimal);
 void set_command(Command* command);
+void set_dest(Command* command);
+void set_jump(Command* command);
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -143,14 +167,14 @@ void print_command_machine_code(Command command) {
       command.instruction[2] = '1';
       set_command(&command);
       if (command.has_dest) {
-        // TODO
+        set_dest(&command);
       } else {
         command.instruction[9] = '0';
         command.instruction[10] = '0';
         command.instruction[11] = '0';
       }
       if (command.has_jump) {
-        // TODO
+        set_jump(&command);
       } else {
         command.instruction[12] = '0';
         command.instruction[13] = '0';
@@ -170,6 +194,28 @@ void set_command(Command* command) {
       command->instruction[6] = instructionMap[i].machine_code[3];
       command->instruction[7] = instructionMap[i].machine_code[4];
       command->instruction[8] = instructionMap[i].machine_code[5];
+      return;
+    }
+  }
+}
+
+void set_dest(Command* command) {
+  for (int i = 0; destMap[i].assembly != NULL; i++) {
+    if (strcmp(command->comp, destMap[i].assembly) == 0) {
+      command->instruction[9] = destMap[i].machine_code[0];
+      command->instruction[10] = destMap[i].machine_code[1];
+      command->instruction[11] = destMap[i].machine_code[2];
+      return;
+    }
+  }
+}
+
+void set_jump(Command* command) {
+  for (int i = 0; jumpMap[i].assembly != NULL; i++) {
+    if (strcmp(command->comp, destMap[i].assembly) == 0) {
+      command->instruction[12] = jumpMap[i].machine_code[0];
+      command->instruction[13] = jumpMap[i].machine_code[1];
+      command->instruction[14] = jumpMap[i].machine_code[2];
       return;
     }
   }
@@ -267,6 +313,9 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
     }
     c = fgetc(file);
     pos++;
+  }
+  if (command.type == A_COMMAND) {
+    command.address[address_pos++] = '\0';
   }
   command.string[pos++] = '\0';
   //
