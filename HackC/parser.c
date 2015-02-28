@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 int MAX_COMMANDS_ALLOWED = 30000;
 
@@ -27,6 +28,8 @@ bool is_start_of_command(int c);
 int read_command(FILE *file , int c, Command commands[], int current_command_index);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
+void print_command_machine_code(Command command);
+int dec_to_bin(int decimal);
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -62,6 +65,8 @@ void print_commands(Source source, Command commands[]) {
   for (int i=0; i<source.command_index; i++) {
     printf("%i\t%s\t", i+1, commands[i].string);
     print_command_description(commands[i]);
+    printf("\n\t");
+    print_command_machine_code(commands[i]);
     printf("\n");
   }
 }
@@ -83,6 +88,40 @@ void print_command_description(Command command) {
   }
 }
 
+void print_command_machine_code(Command command) {
+  char instruction[17];
+  int pos = 0;
+  int dec_address = 0;
+  int bin_address = 0;
+  switch(command.type) {
+    case A_COMMAND:
+      sscanf(command.address, "%d", &dec_address);
+      bin_address = dec_to_bin(dec_address);
+      sprintf(instruction, "%015d", bin_address);
+      break;
+    case C_COMMAND:
+      instruction[pos++] = '1';
+      // unused bits
+      instruction[pos++] = '1';
+      instruction[pos++] = '1';
+      if (command.has_dest) {
+      }
+      // command.comp
+      if (command.has_jump) {
+      }
+      instruction[pos++] = '\0';
+  }
+  printf("%s", instruction);
+}
+
+int dec_to_bin(int decimal) {
+  int i, binary = 0;
+  for(i = 0; decimal != 0; i++) {
+      binary = binary + pow(10,i) *(decimal%2);
+      decimal = decimal/2;
+  }
+  return binary;
+}
 
 // Skips all whitespace and comments until the
 // start of the next command
