@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[16];
   char address[16];
+  char comp[4];
+  bool has_dest;
+  char dest[4];
+  bool has_jump;
+  char jump[4];
 } Command;
 
 typedef struct {
@@ -61,7 +67,13 @@ void print_command_description(Command command) {
       printf("Loads %s into the A register.", command.address);
       break;
     case C_COMMAND:
-      printf("C instruction.");
+      if (command.has_dest) {
+        printf("%s=", command.dest);
+      }
+      printf("%s", command.comp);
+      if (command.has_jump) {
+        printf(";%s", command.jump);
+      }
   }
 }
 
@@ -135,6 +147,7 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   Command command;
   int pos = 0;
   int address_pos = 0;
+  // the at symbol tells us it's a A instruction
   if (c == '@') {
     command.type = A_COMMAND;
   } else {
@@ -142,6 +155,7 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   }
   while (!feof(file) && !isspace(c)) {
     command.string[pos] = c;
+    // everything after the at is a postitive integer (for now, later could be variables)
     if (command.type == A_COMMAND && pos > 0) {
       command.address[address_pos++] = c;
     }
@@ -149,6 +163,72 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
     pos++;
   }
   command.string[pos++] = '\0';
+  //
+  // Now we can work out the C instruction fields
+  //
+  // C instruction
+  // dest=comp;jump
+  // either dest or jump may be empty
+  // if dest is empty. the '=' is omitted
+  // if jump is empty, the ';' is omitted
+  //
+  // i.e dest=comp;jump, comp;jump, dest=comp.
+  command.has_dest = false;
+  command.has_jump = false;
+  if (strchr(command.string, '=') != NULL) {
+    command.has_dest = true;
+  }
+  if (strchr(command.string, ';') != NULL) {
+    command.has_jump = true;
+  }
+  // dest
+  if (command.has_dest) {
+    int i = 0;
+    char c = command.string[0];
+    while(c != '=') {
+      command.dest[i++] = c;
+      c = command.string[i];
+    }
+    command.dest[i++] = '\0';
+  }
+  // comp
+  if (!command.has_dest) {
+    int i = 0;
+    char c = command.string[0];
+    while(c != ';' && c != '\0') {
+      command.comp[i++] = c;
+      c = command.string[i];
+    }
+    command.comp[i++] = '\0';
+  }
+  if (!command.has_jump) {
+    int i = 0;
+    char c = command.string[0];
+    while(c != '=') {
+      c = command.string[i++];
+    }
+    int j=0;
+    while(c != '\0') {
+      c = command.string[i++];
+      command.comp[j++] = c;
+    }
+    command.comp[i++] = '\0';
+  }
+
+  // jump
+  if (command.has_jump) {
+    int i = 0;
+    char c = command.string[0];
+    while(c != ';') {
+      c = command.string[i++];
+    }
+    int j=0;
+    while(c != '\0') {
+      c = command.string[i++];
+      command.jump[j++] = c;
+    }
+    command.jump[i++] = '\0';
+  }
   commands[current_command_index] = command;
   return c;
 }
