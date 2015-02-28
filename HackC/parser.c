@@ -104,9 +104,9 @@ void print_command_machine_code(Command command) {
       // unused bits
       instruction[pos++] = '1';
       instruction[pos++] = '1';
+      // command.comp
       if (command.has_dest) {
       }
-      // command.comp
       if (command.has_jump) {
       }
       instruction[pos++] = '\0';
