@@ -2,10 +2,11 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-int get_next_char(FILE *file, int c);
-int skip_to_next_command(FILE *file , int c);
-int skip_whitespace(FILE *file , int c);
-int skip_comments(FILE *file , int c);
+char skip_to_next_command(FILE *file , int c);
+char skip_whitespace(FILE *file , int c);
+char skip_comments(FILE *file , int c);
+bool is_start_of_command(int c);
+int read_command(FILE *file , int c);
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -24,38 +25,35 @@ void parse(char* filename) {
     // }
 
     // current char
-    int c = 0;
-
+    int c;
     // read first char
     c = fgetc(file);
-    printf("%c", c);
-    skip_to_next_command(file, c);
+    //printf("%c", c);
 
-    printf("Next char: %i, %c", c, c);
+    while (!feof(file)) {
+      c = skip_to_next_command(file, c);
+      c = read_command(file, c);      
+    }
+    
     fclose(file);
   }
 }
 
-// int get_next_char(FILE *file , int c) {
-//   c = fgetc(file);
-//   c = skip_whitespace(file, c, line_number);
-//   c = skip_comments(file, c, line_number);
-//   return c;
-// }
-
-
-int skip_to_next_command(FILE *file , int c) {
-  while (c != EOF) {
+// Skips all whitespace and comments until the
+// start of the next command
+char skip_to_next_command(FILE *file, int c) {
+  while (!(feof(file) || is_start_of_command(c))) {
     c = skip_whitespace(file, c);
-    c = skip_comments(file, c);    
+    c = skip_comments(file, c);
   }
   return c;
 }
 
-int skip_whitespace(FILE *file , int c) {
-  while (isspace(c)) {
+// Skips whitespace (including newlines)
+char skip_whitespace(FILE *file, int c) {
+  while (!feof(file) && isspace(c)) {
     c = fgetc(file);
-    printf("%c", c);
+    //printf("%c", c);
   }
   return c;
 }
@@ -63,15 +61,55 @@ int skip_whitespace(FILE *file , int c) {
 // will skip anything starting with a forward slash to the end of the line.
 // Although comments start with two forward slashes, slashes don't appear
 // in assembler instructions so we can avoid looking ahead on character. 
-int skip_comments(FILE *file , int c) {
+char skip_comments(FILE *file, int c) {
   if (c == '/') {
-    while (c != '\n') {
+    while (!feof(file) && c != '\n') {
       c = fgetc(file);
-      printf("%c", c);
+      //printf("%c", c);
     }
     //consume end of line
-    c = fgetc(file);
-    printf("%c", c);
+    if (c == '\n') { 
+      c = fgetc(file);      
+    }
+    //printf("%c", c);
   }
+  return c;
+}
+
+// Returns true if start of a command.
+// Uses a really simple switch on all possible chars
+// in the assembly language (or a digit).
+bool is_start_of_command(int c) {
+  switch(c) {
+    case '@':
+    case 'D':
+    case 'M':
+    case 'A':
+    case '=':
+    case '+':
+    case '-':
+    case ';':
+    case 'J':
+    case 'G':
+    case 'T':
+    case 'L':
+    case 'E':
+      return true;
+      break;
+    default:
+      return isdigit(c);
+  }
+}
+
+int read_command(FILE *file, int c) {
+  if (feof(file)) {
+    return c;
+  }
+  printf("<command>");
+  while (!feof(file) && !isspace(c)) {
+    printf("%c", c);
+    c = fgetc(file);
+  }
+  printf("</command>\n");
   return c;
 }
