@@ -4,6 +4,7 @@
 
 typedef struct {
   char string[16];
+  enum {A_COMMAND, C_COMMAND} type;
 } Command;
 
 typedef struct {
@@ -38,7 +39,13 @@ void parse(char* filename) {
     }
 
     for (int i=0; i<source.command_index; i++) {
-      printf("%i\t%s", i+1, commands[i].string);
+      switch(commands[i].type) {
+        case A_COMMAND:
+          printf("%i\t%s\t(A)\n", i+1, commands[i].string);
+          break;
+        case C_COMMAND:
+        printf("%i\t%s\t(C)\n", i+1, commands[i].string);
+      }
     }
 
     fclose(file);
@@ -113,11 +120,16 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   }
   Command command;
   int pos = 0;
+  if (c == '@') {
+    command.type = A_COMMAND;
+  } else {
+    command.type = C_COMMAND;    
+  }
   while (!feof(file) && !isspace(c)) {
     command.string[pos++] = c;
     c = fgetc(file);
   }
-  command.string[pos++] = '\n';
+  command.string[pos++] = '\0';
   commands[current_command_index] = command;
   return c;
 }
