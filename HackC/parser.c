@@ -9,8 +9,8 @@ typedef struct {
   char address[16];
   bool has_dest;
   bool has_jump;
-  char comp[5];
   char dest[4];
+  char comp[5];
   char jump[4];
 } Command;
 
