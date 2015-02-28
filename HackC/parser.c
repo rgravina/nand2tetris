@@ -6,6 +6,10 @@ typedef struct {
   char string[16];
 } Command;
 
+typedef struct {
+  int command_index;
+} Source;
+
 char skip_to_next_command(FILE *file , int c);
 char skip_whitespace(FILE *file , int c);
 char skip_comments(FILE *file , int c);
@@ -22,15 +26,19 @@ void parse(char* filename) {
     int c = fgetc(file);
     // array of assembly commands
     Command commands[1024];
-    int current_command_index = 0;
+    // Struct to keep track of position etc.
+    Source source;
+    source.command_index = 0;
     while (!feof(file)) {
       c = skip_to_next_command(file, c);
-      c = read_command(file, c, commands, current_command_index);    
-      current_command_index++;  
+      c = read_command(file, c, commands, source.command_index);
+      if (!feof(file)) {
+        source.command_index++;        
+      }  
     }
 
-    for (int i=0; i<current_command_index; i++) {
-      printf("%s", commands[i].string);
+    for (int i=0; i<source.command_index; i++) {
+      printf("%i\t%s", i+1, commands[i].string);
     }
 
     fclose(file);
