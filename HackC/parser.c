@@ -18,12 +18,12 @@ typedef struct {
   char jump[4];
 } Command;
 
-struct comp {
+struct codeMap {
   char* assembly;
   char* machine_code;
 };
 
-const struct comp compMap[] = {
+const struct codeMap instructionMap[] = {
   {"0",   "101010"},
   {"1",   "111111"},
   {"-1",  "111010"},
@@ -162,14 +162,14 @@ void print_command_machine_code(Command command) {
 }
 
 void set_command(Command* command) {
-  for (int i = 0; compMap[i].assembly != NULL; i++) {
-    if (strcmp(command->comp, compMap[i].assembly) == 0) {
-      command->instruction[3] = compMap[i].machine_code[0];
-      command->instruction[4] = compMap[i].machine_code[1];
-      command->instruction[5] = compMap[i].machine_code[2];
-      command->instruction[6] = compMap[i].machine_code[3];
-      command->instruction[7] = compMap[i].machine_code[4];
-      command->instruction[8] = compMap[i].machine_code[5];
+  for (int i = 0; instructionMap[i].assembly != NULL; i++) {
+    if (strcmp(command->comp, instructionMap[i].assembly) == 0) {
+      command->instruction[3] = instructionMap[i].machine_code[0];
+      command->instruction[4] = instructionMap[i].machine_code[1];
+      command->instruction[5] = instructionMap[i].machine_code[2];
+      command->instruction[6] = instructionMap[i].machine_code[3];
+      command->instruction[7] = instructionMap[i].machine_code[4];
+      command->instruction[8] = instructionMap[i].machine_code[5];
       return;
     }
   }
