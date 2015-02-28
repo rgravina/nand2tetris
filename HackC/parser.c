@@ -7,10 +7,10 @@ typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[16];
   char address[16];
-  char comp[4];
   bool has_dest;
-  char dest[4];
   bool has_jump;
+  char comp[5];
+  char dest[4];
   char jump[4];
 } Command;
 
@@ -184,17 +184,18 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   // dest
   if (command.has_dest) {
     int i = 0;
-    char c = command.string[0];
+    char c = command.string[i];
     while(c != '=') {
       command.dest[i++] = c;
       c = command.string[i];
     }
     command.dest[i++] = '\0';
   }
+
   // comp
   if (!command.has_dest) {
     int i = 0;
-    char c = command.string[0];
+    char c = command.string[i];
     while(c != ';' && c != '\0') {
       command.comp[i++] = c;
       c = command.string[i];
@@ -203,7 +204,7 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   }
   if (!command.has_jump) {
     int i = 0;
-    char c = command.string[0];
+    char c = command.string[i];
     while(c != '=') {
       c = command.string[i++];
     }
@@ -218,7 +219,7 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   // jump
   if (command.has_jump) {
     int i = 0;
-    char c = command.string[0];
+    char c = command.string[i];
     while(c != ';') {
       c = command.string[i++];
     }
