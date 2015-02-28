@@ -1,6 +1,6 @@
 all: run
 build:
-	@gcc hack.c parser.c -o hack
+	@gcc -std=c99 -Wall hack.c parser.c -o hack
 run: build
 	@./hack $(file)
 clean:
