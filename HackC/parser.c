@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+int MAX_COMMANDS_ALLOWED = 30000;
+
 typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[16];
@@ -34,11 +36,11 @@ void parse(char* filename) {
     // current char
     int c = fgetc(file);
     // array of assembly commands
-    Command commands[1024];
+    Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
     Source source;
     source.command_index = 0;
-    while (!feof(file)) {
+    while (!feof(file) && source.command_index < MAX_COMMANDS_ALLOWED) {
       c = skip_to_next_command(file, c);
       c = read_command(file, c, commands, source.command_index);
       if (!feof(file)) {
@@ -47,6 +49,10 @@ void parse(char* filename) {
     }
 
     print_commands(source, commands);
+    if (source.command_index == MAX_COMMANDS_ALLOWED) {
+      printf("----\n");
+      printf("Exceeded maximum allowed instructions (%i). Program truncated.\n", MAX_COMMANDS_ALLOWED);
+    }
 
     fclose(file);
   }
