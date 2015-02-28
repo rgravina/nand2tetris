@@ -18,22 +18,9 @@ void parse(char* filename) {
   if (file == 0) {
     printf("Could not open file\n");
   } else {
-    // int current_file_pointer;
-    // bool in_token = false;
-    // while ((current_file_pointer = get_next_char(file, current_file_pointer)) != EOF) {
-    //   if (current_file_pointer != '\n') {
-    //     printf("%c", current_file_pointer);
-    //     in_token = false;
-    //   } else {
-    //     in_token = true;
-    //   }
-    // }
-
     // current char
-    int c;
-    // read first char
-    c = fgetc(file);
-    //printf("%c", c);
+    int c = fgetc(file);
+    // array of assembly commands
     Command commands[1024];
     int current_command_index = 0;
     while (!feof(file)) {
