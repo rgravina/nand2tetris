@@ -10,6 +10,7 @@ typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[14];
   char address[16];
+  char instruction[16];
   bool has_dest;
   bool has_jump;
   char dest[4];
@@ -30,6 +31,7 @@ void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
 int dec_to_bin(int decimal);
+void set_command(Command* command);
 
 void parse(char* filename) {
   FILE *file = fopen(filename, "r");
@@ -89,45 +91,48 @@ void print_command_description(Command command) {
 }
 
 void print_command_machine_code(Command command) {
-  char instruction[17];
-  int pos = 0;
   int dec_address = 0;
   int bin_address = 0;
   switch(command.type) {
     case A_COMMAND:
       sscanf(command.address, "%d", &dec_address);
       bin_address = dec_to_bin(dec_address);
-      sprintf(instruction, "%015d", bin_address);
+      sprintf(command.instruction, "%015d", bin_address);
       break;
     case C_COMMAND:
-      instruction[pos++] = '1';
+      command.instruction[0] = '1';
       // unused bits
-      instruction[pos++] = '1';
-      instruction[pos++] = '1';
-      // command.comp
-      if (strcmp(command.comp, "0") == 0) {
-        instruction[pos++] = '1';
-        instruction[pos++] = '0';
-        instruction[pos++] = '1';
-        instruction[pos++] = '0';
-        instruction[pos++] = '1';
-        instruction[pos++] = '0';
-      }
+      command.instruction[1] = '1';
+      command.instruction[2] = '1';
+      set_command(&command);
       if (command.has_dest) {
+        // TODO
       } else {
-        instruction[pos++] = '0';
-        instruction[pos++] = '0';
-        instruction[pos++] = '0';
+        command.instruction[9] = '0';
+        command.instruction[10] = '0';
+        command.instruction[11] = '0';
       }
       if (command.has_jump) {
+        // TODO
       } else {
-        instruction[pos++] = '0';
-        instruction[pos++] = '0';
-        instruction[pos++] = '0';
+        command.instruction[12] = '0';
+        command.instruction[13] = '0';
+        command.instruction[14] = '0';
       }
-      instruction[pos++] = '\0';
+      command.instruction[15] = '\0';
   }
-  printf("%s", instruction);
+  printf("%s", command.instruction);
+}
+
+void set_command(Command* command) {
+  if (strcmp(command->comp, "0") == 0) {
+    command->instruction[3] = '1';
+    command->instruction[4] = '0';
+    command->instruction[5] = '1';
+    command->instruction[6] = '0';
+    command->instruction[7] = '1';
+    command->instruction[8] = '0';
+  }
 }
 
 int dec_to_bin(int decimal) {
