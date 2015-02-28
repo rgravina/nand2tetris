@@ -3,8 +3,9 @@
 #include <stdbool.h>
 
 typedef struct {
-  char string[16];
   enum {A_COMMAND, C_COMMAND} type;
+  char string[16];
+  char address[16];
 } Command;
 
 typedef struct {
@@ -57,7 +58,7 @@ void print_command_description(Command command) {
   printf("// ");
   switch(command.type) {
     case A_COMMAND:
-      printf("Loads something into the A register.");
+      printf("Loads %s into the A register.", command.address);
       break;
     case C_COMMAND:
       printf("C instruction.");
@@ -133,14 +134,19 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   }
   Command command;
   int pos = 0;
+  int address_pos = 0;
   if (c == '@') {
     command.type = A_COMMAND;
   } else {
     command.type = C_COMMAND;    
   }
   while (!feof(file) && !isspace(c)) {
-    command.string[pos++] = c;
+    command.string[pos] = c;
+    if (command.type == A_COMMAND && pos > 0) {
+      command.address[address_pos++] = c;
+    }
     c = fgetc(file);
+    pos++;
   }
   command.string[pos++] = '\0';
   commands[current_command_index] = command;
