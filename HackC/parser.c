@@ -7,7 +7,7 @@ int MAX_COMMANDS_ALLOWED = 30000;
 
 typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
-  char string[16];
+  char string[14];
   char address[16];
   bool has_dest;
   bool has_jump;
