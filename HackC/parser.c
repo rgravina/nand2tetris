@@ -106,7 +106,7 @@ void set_jump(Command* command);
 void parse(char* filename) {
   Source source;
   source.file = fopen(filename, "r");
-  source.line = 0;
+  source.line = 1;
   if (source.file == 0) {
     printf("Could not open file\n");
   } else {
@@ -266,8 +266,8 @@ char skip_to_next_command(Source* source, int c) {
     c = skip_whitespace(source, c);
     c = skip_comments(source, c);
     if (!(is_start_of_command(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
-      printf("Can not parse file. Can't get passed char: %c\n", c);
-      exit(1);
+      printf("Parse error on line %i. Unexpected char: '%c'.\n", source->line, c);
+      exit(0);
     }
   }
   return c;
@@ -277,6 +277,9 @@ char skip_to_next_command(Source* source, int c) {
 char skip_whitespace(Source* source, int c) {
   while (!feof(source->file) && isspace(c)) {
     c = fgetc(source->file);
+    if (c == '\n') {
+      source->line++;
+    }
     //printf("%c", c);
   }
   return c;
@@ -293,7 +296,8 @@ char skip_comments(Source* source, int c) {
     }
     //consume end of line
     if (c == '\n') { 
-      c = fgetc(source->file);      
+      c = fgetc(source->file);
+      source->line++;
     }
     //printf("%c", c);
   }
