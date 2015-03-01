@@ -160,8 +160,10 @@ void print_command_machine_code(Command command) {
         command.instruction[i] = '0';
       }
       command.instruction[16] = '\0';
-      sscanf(command.address, "%d", &dec_address);
-      dec_to_bin(dec_address, command.instruction);
+      if (isdigit(command.address[0])) {
+        sscanf(command.address, "%d", &dec_address);
+        dec_to_bin(dec_address, command.instruction);
+      }
       break;
     case C_COMMAND:
       command.instruction[0] = '1';
