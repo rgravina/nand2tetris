@@ -89,7 +89,7 @@ int read_command(FILE *file , int c, Command commands[], int current_command_ind
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
-unsigned int dec_to_bin(int decimal);
+void dec_to_bin(int decimal, char* binary);
 void set_a(Command* command);
 void set_command(Command* command);
 void set_dest(Command* command);
@@ -127,9 +127,9 @@ void parse(char* filename) {
 
 void print_commands(Source source, Command commands[]) {
   for (int i=0; i<source.command_index; i++) {
-   /* printf("%i\t%s\t", i+1, commands[i].string);
-    print_command_description(commands[i]);
-    printf("\n\t"); */
+    //printf("%i\t%s\t", i+1, commands[i].string);
+    //print_command_description(commands[i]);
+    //printf("\n\t");
     print_command_machine_code(commands[i]);
     printf("\n");
   }
@@ -154,12 +154,14 @@ void print_command_description(Command command) {
 
 void print_command_machine_code(Command command) {
   int dec_address = 0;
-  unsigned int bin_address = 0;
   switch(command.type) {
     case A_COMMAND:
+      for (int i=0; i<16; i++) {
+        command.instruction[i] = '0';
+      }
+      command.instruction[16] = '\0';
       sscanf(command.address, "%d", &dec_address);
-      bin_address = dec_to_bin(dec_address);
-      sprintf(command.instruction, "%016d", bin_address);
+      dec_to_bin(dec_address, command.instruction);
       break;
     case C_COMMAND:
       command.instruction[0] = '1';
@@ -234,14 +236,16 @@ void set_jump(Command* command) {
   }
 }
 
-unsigned int dec_to_bin(int decimal) {
-  int i = 0;
-  unsigned int binary = 0;
-  for(i = 0; decimal != 0; i++) {
-    binary = binary + pow(10,i) *(decimal%2);
-    decimal = decimal/2;
+void dec_to_bin(int decimal, char* binary) {
+  if (decimal == 0) {
+    return;
   }
-  return binary;
+  int rem = 0;
+  for(int i = 15; decimal != 0; i--) {
+    rem = decimal % 2;
+    decimal /= 2;
+    binary[i] = rem+'0';
+  }
 }
 
 // Skips all whitespace and comments until the
