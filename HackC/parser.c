@@ -89,11 +89,11 @@ typedef struct {
   FILE *file;
 } Source;
 
-char skip_to_next_command(Source* source, int c);
-char skip_whitespace(Source* source, int c);
-char skip_comments(Source* source, int c);
-bool is_start_of_command(int c);
-int read_command(Source* source, int c, Command commands[], int current_command_index);
+char skip_to_next_command(Source* source, char c);
+char skip_whitespace(Source* source, char c);
+char skip_comments(Source* source, char c);
+bool is_start_of_command(char c);
+char read_command(Source* source, char c, Command commands[], int current_command_index);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
@@ -111,7 +111,7 @@ void parse(char* filename) {
     printf("Could not open file\n");
   } else {
     // current char
-    int c = fgetc(source.file);
+    char c = fgetc(source.file);
     // array of assembly commands
     Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
@@ -261,7 +261,7 @@ void dec_to_bin(int decimal, char* binary) {
 
 // Skips all whitespace and comments until the
 // start of the next command
-char skip_to_next_command(Source* source, int c) {
+char skip_to_next_command(Source* source, char c) {
   while (!(feof(source->file) || is_start_of_command(c))) {
     c = skip_whitespace(source, c);
     c = skip_comments(source, c);
@@ -274,7 +274,7 @@ char skip_to_next_command(Source* source, int c) {
 }
 
 // Skips whitespace (including newlines)
-char skip_whitespace(Source* source, int c) {
+char skip_whitespace(Source* source, char c) {
   while (!feof(source->file) && isspace(c)) {
     c = fgetc(source->file);
     if (c == '\n') {
@@ -288,7 +288,7 @@ char skip_whitespace(Source* source, int c) {
 // will skip anything starting with a forward slash to the end of the line.
 // Although comments start with two forward slashes, slashes don't appear
 // in assembler instructions so we can avoid looking ahead on character. 
-char skip_comments(Source* source, int c) {
+char skip_comments(Source* source, char c) {
   if (c == '/') {
     while (!feof(source->file) && c != '\n') {
       c = fgetc(source->file);
@@ -307,7 +307,7 @@ char skip_comments(Source* source, int c) {
 // Returns true if start of a command.
 // Uses a really simple switch on all possible chars
 // in the assembly language (or a digit).
-bool is_start_of_command(int c) {
+bool is_start_of_command(char c) {
   switch(c) {
     case '@':
     case 'D':
@@ -329,7 +329,7 @@ bool is_start_of_command(int c) {
   }
 }
 
-int read_command(Source* source, int c, Command commands[], int current_command_index) {
+char read_command(Source* source, char c, Command commands[], int current_command_index) {
   if (feof(source->file)) {
     return c;
   }
