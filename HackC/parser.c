@@ -5,8 +5,10 @@
 #include <math.h>
 #include <stdlib.h>
 
+// TODO: use a linked list of commands
 int MAX_COMMANDS_ALLOWED = 30000;
 
+// All information about a command
 typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[14];
@@ -19,6 +21,8 @@ typedef struct {
   char jump[4];
 } Command;
 
+// Used to store lookup tables of comp, dest and jump machine code
+// from assembly instruction
 struct codeMap {
   char* assembly;
   char* machine_code;
@@ -78,15 +82,18 @@ const struct codeMap jumpMap[] = {
   {NULL, 0}
 };
 
+// stores info about the current source file
 typedef struct {
+  int line;
   int command_index;
+  FILE *file;
 } Source;
 
-char skip_to_next_command(FILE *file , int c);
-char skip_whitespace(FILE *file , int c);
-char skip_comments(FILE *file , int c);
+char skip_to_next_command(Source* source, int c);
+char skip_whitespace(Source* source, int c);
+char skip_comments(Source* source, int c);
 bool is_start_of_command(int c);
-int read_command(FILE *file , int c, Command commands[], int current_command_index);
+int read_command(Source* source, int c, Command commands[], int current_command_index);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
@@ -97,21 +104,22 @@ void set_dest(Command* command);
 void set_jump(Command* command);
 
 void parse(char* filename) {
-  FILE *file = fopen(filename, "r");
-  if (file == 0) {
+  Source source;
+  source.file = fopen(filename, "r");
+  source.line = 0;
+  if (source.file == 0) {
     printf("Could not open file\n");
   } else {
     // current char
-    int c = fgetc(file);
+    int c = fgetc(source.file);
     // array of assembly commands
     Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
-    Source source;
     source.command_index = 0;
-    while (!feof(file) && source.command_index < MAX_COMMANDS_ALLOWED) {
-      c = skip_to_next_command(file, c);
-      c = read_command(file, c, commands, source.command_index);
-      if (!feof(file)) {
+    while (!feof(source.file) && source.command_index < MAX_COMMANDS_ALLOWED) {
+      c = skip_to_next_command(&source, c);
+      c = read_command(&source, c, commands, source.command_index);
+      if (!feof(source.file)) {
         source.command_index++;        
       }  
     }
@@ -122,7 +130,7 @@ void parse(char* filename) {
       printf("Exceeded maximum allowed instructions (%i). Program truncated.\n", MAX_COMMANDS_ALLOWED);
     }
 
-    fclose(file);
+    fclose(source.file);
   }
 }
 
@@ -253,10 +261,10 @@ void dec_to_bin(int decimal, char* binary) {
 
 // Skips all whitespace and comments until the
 // start of the next command
-char skip_to_next_command(FILE *file, int c) {
-  while (!(feof(file) || is_start_of_command(c))) {
-    c = skip_whitespace(file, c);
-    c = skip_comments(file, c);
+char skip_to_next_command(Source* source, int c) {
+  while (!(feof(source->file) || is_start_of_command(c))) {
+    c = skip_whitespace(source, c);
+    c = skip_comments(source, c);
     if (!(is_start_of_command(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
       printf("Can not parse file. Can't get passed char: %c\n", c);
       exit(1);
@@ -266,9 +274,9 @@ char skip_to_next_command(FILE *file, int c) {
 }
 
 // Skips whitespace (including newlines)
-char skip_whitespace(FILE *file, int c) {
-  while (!feof(file) && isspace(c)) {
-    c = fgetc(file);
+char skip_whitespace(Source* source, int c) {
+  while (!feof(source->file) && isspace(c)) {
+    c = fgetc(source->file);
     //printf("%c", c);
   }
   return c;
@@ -277,15 +285,15 @@ char skip_whitespace(FILE *file, int c) {
 // will skip anything starting with a forward slash to the end of the line.
 // Although comments start with two forward slashes, slashes don't appear
 // in assembler instructions so we can avoid looking ahead on character. 
-char skip_comments(FILE *file, int c) {
+char skip_comments(Source* source, int c) {
   if (c == '/') {
-    while (!feof(file) && c != '\n') {
-      c = fgetc(file);
+    while (!feof(source->file) && c != '\n') {
+      c = fgetc(source->file);
       //printf("%c", c);
     }
     //consume end of line
     if (c == '\n') { 
-      c = fgetc(file);      
+      c = fgetc(source->file);      
     }
     //printf("%c", c);
   }
@@ -317,8 +325,8 @@ bool is_start_of_command(int c) {
   }
 }
 
-int read_command(FILE *file, int c, Command commands[], int current_command_index) {
-  if (feof(file)) {
+int read_command(Source* source, int c, Command commands[], int current_command_index) {
+  if (feof(source->file)) {
     return c;
   }
   Command command;
@@ -330,13 +338,13 @@ int read_command(FILE *file, int c, Command commands[], int current_command_inde
   } else {
     command.type = C_COMMAND;    
   }
-  while (!feof(file) && !isspace(c)) {
+  while (!feof(source->file) && !isspace(c)) {
     command.string[pos] = c;
     // everything after the at is a postitive integer (for now, later could be variables)
     if (command.type == A_COMMAND && pos > 0) {
       command.address[address_pos++] = c;
     }
-    c = fgetc(file);
+    c = fgetc(source->file);
     pos++;
   }
   if (command.type == A_COMMAND) {
