@@ -90,6 +90,7 @@ void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
 int dec_to_bin(int decimal);
+void set_a(Command* command);
 void set_command(Command* command);
 void set_dest(Command* command);
 void set_jump(Command* command);
@@ -165,14 +166,22 @@ void print_command_machine_code(Command command) {
       // unused bits
       command.instruction[1] = '1';
       command.instruction[2] = '1';
-      // a-bit... TODO
-      command.instruction[3] = '1';
+      set_a(&command);
       set_command(&command);
       set_dest(&command);
       set_jump(&command);
       command.instruction[16] = '\0';
   }
   printf("%s", command.instruction);
+}
+
+void set_a(Command* command) {
+  // If the comp section uses M, then the a-bit shoul be on
+  if (strcmp(&command->instruction[3], "M") == 0) {
+    command->instruction[3] = '1';
+  } else {
+    command->instruction[3] = '0';
+  }
 }
 
 void set_command(Command* command) {
