@@ -89,7 +89,7 @@ int read_command(FILE *file , int c, Command commands[], int current_command_ind
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
-int dec_to_bin(int decimal);
+unsigned int dec_to_bin(int decimal);
 void set_a(Command* command);
 void set_command(Command* command);
 void set_dest(Command* command);
@@ -154,7 +154,7 @@ void print_command_description(Command command) {
 
 void print_command_machine_code(Command command) {
   int dec_address = 0;
-  int bin_address = 0;
+  unsigned int bin_address = 0;
   switch(command.type) {
     case A_COMMAND:
       sscanf(command.address, "%d", &dec_address);
@@ -234,11 +234,12 @@ void set_jump(Command* command) {
   }
 }
 
-int dec_to_bin(int decimal) {
-  int i, binary = 0;
+unsigned int dec_to_bin(int decimal) {
+  int i = 0;
+  unsigned int binary = 0;
   for(i = 0; decimal != 0; i++) {
-      binary = binary + pow(10,i) *(decimal%2);
-      decimal = decimal/2;
+    binary = binary + pow(10,i) *(decimal%2);
+    decimal = decimal/2;
   }
   return binary;
 }
