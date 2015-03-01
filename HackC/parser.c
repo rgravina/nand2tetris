@@ -212,7 +212,6 @@ void set_a(Command* command) {
 }
 
 void set_dest(Command* command) {
-//  printf("has dest: %i\n", command->has_dest);
   if (command->has_dest) {
     for (int i = 0; destMap[i].assembly != NULL; i++) {
       if (strcmp(command->dest, destMap[i].assembly) == 0) {
@@ -230,7 +229,6 @@ void set_dest(Command* command) {
 }
 
 void set_jump(Command* command) {
-//  printf("has jump: %i\n", command->has_jump);
   if (command->has_jump) {
     for (int i = 0; jumpMap[i].assembly != NULL; i++) {
       if (strcmp(command->jump, jumpMap[i].assembly) == 0) {
@@ -280,7 +278,6 @@ char skip_whitespace(Source* source, char c) {
     if (c == '\n') {
       source->line++;
     }
-    //printf("%c", c);
   }
   return c;
 }
@@ -292,14 +289,12 @@ char skip_comments(Source* source, char c) {
   if (c == '/') {
     while (!feof(source->file) && c != '\n') {
       c = fgetc(source->file);
-      //printf("%c", c);
     }
     //consume end of line
     if (c == '\n') { 
       c = fgetc(source->file);
       source->line++;
     }
-    //printf("%c", c);
   }
   return c;
 }
