@@ -127,9 +127,9 @@ void parse(char* filename) {
 
 void print_commands(Source source, Command commands[]) {
   for (int i=0; i<source.command_index; i++) {
-    printf("%i\t%s\t", i+1, commands[i].string);
+   /* printf("%i\t%s\t", i+1, commands[i].string);
     print_command_description(commands[i]);
-    printf("\n\t");
+    printf("\n\t"); */
     print_command_machine_code(commands[i]);
     printf("\n");
   }
@@ -166,22 +166,13 @@ void print_command_machine_code(Command command) {
       // unused bits
       command.instruction[1] = '1';
       command.instruction[2] = '1';
-      set_a(&command);
       set_command(&command);
+      set_a(&command);
       set_dest(&command);
       set_jump(&command);
       command.instruction[16] = '\0';
   }
   printf("%s", command.instruction);
-}
-
-void set_a(Command* command) {
-  // If the comp section uses M, then the a-bit shoul be on
-  if (strcmp(&command->instruction[3], "M") == 0) {
-    command->instruction[3] = '1';
-  } else {
-    command->instruction[3] = '0';
-  }
 }
 
 void set_command(Command* command) {
@@ -195,6 +186,15 @@ void set_command(Command* command) {
       command->instruction[9] = instructionMap[i].machine_code[5];
       return;
     }
+  }
+}
+
+void set_a(Command* command) {
+  // If the comp section uses M, then the a-bit shoul be on
+  if (strchr(command->comp, 'M') != NULL) {
+    command->instruction[3] = '1';
+  } else {
+    command->instruction[3] = '0';
   }
 }
 
