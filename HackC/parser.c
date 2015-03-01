@@ -9,8 +9,8 @@ int MAX_COMMANDS_ALLOWED = 30000;
 typedef struct {
   enum {A_COMMAND, C_COMMAND} type;
   char string[14];
-  char address[16];
-  char instruction[16];
+  char address[17];
+  char instruction[17];
   bool has_dest;
   bool has_jump;
   char dest[4];
@@ -158,29 +158,19 @@ void print_command_machine_code(Command command) {
     case A_COMMAND:
       sscanf(command.address, "%d", &dec_address);
       bin_address = dec_to_bin(dec_address);
-      sprintf(command.instruction, "%015d", bin_address);
+      sprintf(command.instruction, "%016d", bin_address);
       break;
     case C_COMMAND:
       command.instruction[0] = '1';
       // unused bits
       command.instruction[1] = '1';
       command.instruction[2] = '1';
+      // a-bit... TODO
+      command.instruction[3] = '1';
       set_command(&command);
-      if (command.has_dest) {
-        set_dest(&command);
-      } else {
-        command.instruction[9] = '0';
-        command.instruction[10] = '0';
-        command.instruction[11] = '0';
-      }
-      if (command.has_jump) {
-        set_jump(&command);
-      } else {
-        command.instruction[12] = '0';
-        command.instruction[13] = '0';
-        command.instruction[14] = '0';
-      }
-      command.instruction[15] = '\0';
+      set_dest(&command);
+      set_jump(&command);
+      command.instruction[16] = '\0';
   }
   printf("%s", command.instruction);
 }
@@ -188,36 +178,50 @@ void print_command_machine_code(Command command) {
 void set_command(Command* command) {
   for (int i = 0; instructionMap[i].assembly != NULL; i++) {
     if (strcmp(command->comp, instructionMap[i].assembly) == 0) {
-      command->instruction[3] = instructionMap[i].machine_code[0];
-      command->instruction[4] = instructionMap[i].machine_code[1];
-      command->instruction[5] = instructionMap[i].machine_code[2];
-      command->instruction[6] = instructionMap[i].machine_code[3];
-      command->instruction[7] = instructionMap[i].machine_code[4];
-      command->instruction[8] = instructionMap[i].machine_code[5];
+      command->instruction[4] = instructionMap[i].machine_code[0];
+      command->instruction[5] = instructionMap[i].machine_code[1];
+      command->instruction[6] = instructionMap[i].machine_code[2];
+      command->instruction[7] = instructionMap[i].machine_code[3];
+      command->instruction[8] = instructionMap[i].machine_code[4];
+      command->instruction[9] = instructionMap[i].machine_code[5];
       return;
     }
   }
 }
 
 void set_dest(Command* command) {
-  for (int i = 0; destMap[i].assembly != NULL; i++) {
-    if (strcmp(command->comp, destMap[i].assembly) == 0) {
-      command->instruction[9] = destMap[i].machine_code[0];
-      command->instruction[10] = destMap[i].machine_code[1];
-      command->instruction[11] = destMap[i].machine_code[2];
-      return;
+//  printf("has dest: %i\n", command->has_dest);
+  if (command->has_dest) {
+    for (int i = 0; destMap[i].assembly != NULL; i++) {
+      if (strcmp(command->dest, destMap[i].assembly) == 0) {
+        command->instruction[10] = destMap[i].machine_code[0];
+        command->instruction[11] = destMap[i].machine_code[1];
+        command->instruction[12] = destMap[i].machine_code[2];
+        break;
+      }
     }
+  } else {
+    command->instruction[10] = '0';
+    command->instruction[11] = '0';
+    command->instruction[12] = '0';
   }
 }
 
 void set_jump(Command* command) {
-  for (int i = 0; jumpMap[i].assembly != NULL; i++) {
-    if (strcmp(command->comp, destMap[i].assembly) == 0) {
-      command->instruction[12] = jumpMap[i].machine_code[0];
-      command->instruction[13] = jumpMap[i].machine_code[1];
-      command->instruction[14] = jumpMap[i].machine_code[2];
-      return;
+//  printf("has jump: %i\n", command->has_jump);
+  if (command->has_jump) {
+    for (int i = 0; jumpMap[i].assembly != NULL; i++) {
+      if (strcmp(command->jump, jumpMap[i].assembly) == 0) {
+        command->instruction[13] = jumpMap[i].machine_code[0];
+        command->instruction[14] = jumpMap[i].machine_code[1];
+        command->instruction[15] = jumpMap[i].machine_code[2];
+        break;
+      }
     }
+  } else {
+    command->instruction[13] = '0';
+    command->instruction[14] = '0';
+    command->instruction[15] = '0';
   }
 }
 
