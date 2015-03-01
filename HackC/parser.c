@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 int MAX_COMMANDS_ALLOWED = 30000;
 
@@ -256,6 +257,10 @@ char skip_to_next_command(FILE *file, int c) {
   while (!(feof(file) || is_start_of_command(c))) {
     c = skip_whitespace(file, c);
     c = skip_comments(file, c);
+    if (!(is_start_of_command(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
+      printf("Can not parse file. Can't get passed char: %c\n", c);
+      exit(1);
+    }
   }
   return c;
 }
