@@ -409,6 +409,7 @@ char read_command(Source* source, Command commands[]) {
       c = fgetc(source->file);
       pos++;
     }
+    command.address[symbol_pos++] = '\0';
   } else {
     command.type = C_COMMAND;    
   }
