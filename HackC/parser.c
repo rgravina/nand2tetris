@@ -89,15 +89,15 @@ typedef struct {
   FILE *file;
 } Source;
 
+bool is_start_of_command(char c);
+void dec_to_bin(int decimal, char* binary);
 char skip_to_next_command(Source* source);
 char skip_whitespace(Source* source);
 char skip_comments(Source* source);
-bool is_start_of_command(char c);
 char read_command(Source* source, Command commands[]);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
-void dec_to_bin(int decimal, char* binary);
 void set_a(Command* command);
 void set_command(Command* command);
 void set_dest(Command* command);
