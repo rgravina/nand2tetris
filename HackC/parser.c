@@ -140,11 +140,9 @@ void print_command_machine_code(Command command) {
 }
 
 void set_address(Command* command) {
-  for (int i = 0; predefinedSymbolMap[i].assembly != NULL; i++) {
-    if (strcmp(command->address, predefinedSymbolMap[i].assembly) == 0) {
-      dec_to_bin(predefinedSymbolMap[i].address, command->instruction);
-      return;
-    }
+  int address = get_address(command->address);
+  if (address != -1) {
+    dec_to_bin(address, command->instruction);
   }
 }
 
