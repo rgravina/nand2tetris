@@ -93,7 +93,7 @@ char skip_to_next_command(Source* source);
 char skip_whitespace(Source* source);
 char skip_comments(Source* source);
 bool is_start_of_command(char c);
-char read_command(Source* source, Command commands[], int current_command_index);
+char read_command(Source* source, Command commands[]);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
@@ -116,7 +116,7 @@ void parse(char* filename) {
     source.command_index = 0;
     while (!feof(source.file) && source.command_index < MAX_COMMANDS_ALLOWED) {
       skip_to_next_command(&source);
-      read_command(&source, commands, source.command_index);
+      read_command(&source, commands);
       if (!feof(source.file)) {
         source.command_index++;        
       }  
@@ -326,7 +326,7 @@ bool is_start_of_command(char c) {
   }
 }
 
-char read_command(Source* source, Command commands[], int current_command_index) {
+char read_command(Source* source, Command commands[]) {
   char c = fgetc(source->file);
   if (feof(source->file)) {
     return c;
@@ -420,6 +420,6 @@ char read_command(Source* source, Command commands[], int current_command_index)
     }
     command.jump[i++] = '\0';
   }
-  commands[current_command_index] = command;
+  commands[source->command_index] = command;
   return c;
 }
