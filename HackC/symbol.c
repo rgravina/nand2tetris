@@ -44,5 +44,4 @@ int get_address(char* symbol) {
 }
 
 void add_symbol(char* symbol, int address) {
-  printf("Symbol Table: Adding symbol %s at address %i.\n", symbol, address);
 }

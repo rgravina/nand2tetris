@@ -27,6 +27,7 @@ typedef struct {
 typedef struct {
   int line;
   int command_index;
+  int total_commands;
   FILE *file;
 } Source;
 
@@ -38,6 +39,7 @@ char skip_whitespace(Source* source);
 char skip_comments(Source* source);
 char read_command(Source* source, Command commands[]);
 void print_commands(Source source, Command commands[]);
+void update_symbols(Command commands[], int total);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
 void set_address(Command* command);
@@ -57,6 +59,7 @@ void parse(char* filename) {
     Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
     source.command_index = 0;
+    source.total_commands = 0;
 
     // TODO
     // First pass - enter each label "(symbol)" as the address (i.e. command index)
@@ -70,11 +73,14 @@ void parse(char* filename) {
       skip_to_next_command(&source);
       read_command(&source, commands);
       if (!feof(source.file)) {
+        source.total_commands++;
         if (commands[source.command_index].type != S_COMMAND) {
           source.command_index++;
         }
       }  
     }
+
+    update_symbols(commands, source.total_commands);
 
     print_commands(source, commands);
     if (source.command_index == MAX_COMMANDS_ALLOWED) {
@@ -83,6 +89,16 @@ void parse(char* filename) {
     }
 
     fclose(source.file);
+  }
+}
+
+void update_symbols(Command commands[], int total) {
+  for (int i=0; i<total; i++) {
+    if (commands[i].type == A_COMMAND) {
+      if (!isdigit(commands[i].address[0])) {
+        dec_to_bin(get_address(commands[i].address), commands[i].address);
+      }
+    }
   }
 }
 
