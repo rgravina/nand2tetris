@@ -9,11 +9,11 @@
 int MAX_COMMANDS_ALLOWED = 30000;
 
 // All information about a command
+// Added a type for symbol definitions, although not really a command
 typedef struct {
-  enum {A_COMMAND, C_COMMAND} type;
-  char string[14];
-  char address[17];
-  char instruction[17];
+  enum {A_COMMAND, C_COMMAND, S_COMMAND} type;
+  char address[34];
+  char instruction[34];
   bool has_dest;
   bool has_jump;
   char dest[4];
@@ -122,6 +122,7 @@ typedef struct {
 } Source;
 
 bool is_start_of_command(char c);
+bool is_start_of_symbol(char c);
 void dec_to_bin(int decimal, char* binary);
 char skip_to_next_command(Source* source);
 char skip_whitespace(Source* source);
@@ -171,7 +172,6 @@ void print_commands(Source source, Command commands[]) {
     //print_command_description(commands[i]);
     //printf("\n\t");
     print_command_machine_code(commands[i]);
-    printf("\n");
   }
 }
 
@@ -189,6 +189,9 @@ void print_command_description(Command command) {
       if (command.has_jump) {
         printf(";%s", command.jump);
       }
+      break;
+    case S_COMMAND:
+      break;
   }
 }
 
@@ -207,6 +210,7 @@ void print_command_machine_code(Command command) {
       } else {
         set_address(&command);
       }
+      printf("%s\n", command.instruction);
       break;
     case C_COMMAND:
       command.instruction[0] = '1';
@@ -218,8 +222,11 @@ void print_command_machine_code(Command command) {
       set_dest(&command);
       set_jump(&command);
       command.instruction[16] = '\0';
+      printf("%s\n", command.instruction);
+      break;
+    case S_COMMAND:
+      break;
   }
-  printf("%s", command.instruction);
 }
 
 void set_address(Command* command) {
@@ -304,10 +311,10 @@ void dec_to_bin(int decimal, char* binary) {
 // start of the next command
 char skip_to_next_command(Source* source) {
   char c = fgetc(source->file);
-  while (!(feof(source->file) || is_start_of_command(c))) {
+  while (!(feof(source->file) || is_start_of_command(c) || is_start_of_symbol(c))) {
     c = skip_whitespace(source);
     c = skip_comments(source);
-    if (!(is_start_of_command(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
+    if (!(is_start_of_command(c) || is_start_of_symbol(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
       printf("Parse error on line %i. Unexpected char: '%c'.\n", source->line, c);
       exit(0);
     }
@@ -364,6 +371,7 @@ bool is_start_of_command(char c) {
     case 'T':
     case 'L':
     case 'E':
+    case '(':
       return true;
       break;
     default:
@@ -371,22 +379,41 @@ bool is_start_of_command(char c) {
   }
 }
 
+bool is_start_of_symbol(char c) {
+  if (c == '(') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 char read_command(Source* source, Command commands[]) {
   char c = fgetc(source->file);
+  char string[34];
   if (feof(source->file)) {
     return c;
   }
   Command command;
   int pos = 0;
   int address_pos = 0;
+  int symbol_pos = 0;
   // the at symbol tells us it's a A instruction
   if (c == '@') {
     command.type = A_COMMAND;
+  } else if (c == '(') {
+    command.type = S_COMMAND;
+    while (!feof(source->file) && !isspace(c)) {
+      if (c != '(' && c != ')') {
+        command.address[symbol_pos++] = c;
+      }
+      c = fgetc(source->file);
+      pos++;
+    }
   } else {
     command.type = C_COMMAND;    
   }
   while (!feof(source->file) && !isspace(c)) {
-    command.string[pos] = c;
+    string[pos] = c;
     // everything after the at is a postitive integer or a symbol name
     if (command.type == A_COMMAND && pos > 0) {
       command.address[address_pos++] = c;
@@ -396,8 +423,9 @@ char read_command(Source* source, Command commands[]) {
   }
   if (command.type == A_COMMAND) {
     command.address[address_pos++] = '\0';
+  } else if (command.type == C_COMMAND) {
+    string[pos++] = '\0';
   }
-  command.string[pos++] = '\0';
   //
   // Now we can work out the C instruction fields
   //
@@ -410,19 +438,19 @@ char read_command(Source* source, Command commands[]) {
   // i.e dest=comp;jump, comp;jump, dest=comp.
   command.has_dest = false;
   command.has_jump = false;
-  if (strchr(command.string, '=') != NULL) {
+  if (strchr(string, '=') != NULL) {
     command.has_dest = true;
   }
-  if (strchr(command.string, ';') != NULL) {
+  if (strchr(string, ';') != NULL) {
     command.has_jump = true;
   }
   // dest
   if (command.has_dest) {
     int i = 0;
-    char c = command.string[i];
+    char c = string[i];
     while(c != '=') {
       command.dest[i++] = c;
-      c = command.string[i];
+      c = string[i];
     }
     command.dest[i++] = '\0';
   }
@@ -430,22 +458,22 @@ char read_command(Source* source, Command commands[]) {
   // comp
   if (!command.has_dest) {
     int i = 0;
-    char c = command.string[i];
+    char c = string[i];
     while(c != ';' && c != '\0') {
       command.comp[i++] = c;
-      c = command.string[i];
+      c = string[i];
     }
     command.comp[i++] = '\0';
   }
   if (!command.has_jump) {
     int i = 0;
-    char c = command.string[i];
+    char c = string[i];
     while(c != '=') {
-      c = command.string[i++];
+      c = string[i++];
     }
     int j=0;
     while(c != '\0') {
-      c = command.string[i++];
+      c = string[i++];
       command.comp[j++] = c;
     }
     command.comp[i++] = '\0';
@@ -454,13 +482,13 @@ char read_command(Source* source, Command commands[]) {
   // jump
   if (command.has_jump) {
     int i = 0;
-    char c = command.string[i];
+    char c = string[i];
     while(c != ';') {
-      c = command.string[i++];
+      c = string[i++];
     }
     int j=0;
     while(c != '\0') {
-      c = command.string[i++];
+      c = string[i++];
       command.jump[j++] = c;
     }
     command.jump[i++] = '\0';
