@@ -89,11 +89,11 @@ typedef struct {
   FILE *file;
 } Source;
 
-char skip_to_next_command(Source* source, char c);
-char skip_whitespace(Source* source, char c);
-char skip_comments(Source* source, char c);
+char skip_to_next_command(Source* source);
+char skip_whitespace(Source* source);
+char skip_comments(Source* source);
 bool is_start_of_command(char c);
-char read_command(Source* source, char c, Command commands[], int current_command_index);
+char read_command(Source* source, Command commands[], int current_command_index);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
@@ -110,15 +110,13 @@ void parse(char* filename) {
   if (source.file == 0) {
     printf("Could not open file\n");
   } else {
-    // current char
-    char c = fgetc(source.file);
     // array of assembly commands
     Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
     source.command_index = 0;
     while (!feof(source.file) && source.command_index < MAX_COMMANDS_ALLOWED) {
-      c = skip_to_next_command(&source, c);
-      c = read_command(&source, c, commands, source.command_index);
+      skip_to_next_command(&source);
+      read_command(&source, commands, source.command_index);
       if (!feof(source.file)) {
         source.command_index++;        
       }  
@@ -259,10 +257,11 @@ void dec_to_bin(int decimal, char* binary) {
 
 // Skips all whitespace and comments until the
 // start of the next command
-char skip_to_next_command(Source* source, char c) {
+char skip_to_next_command(Source* source) {
+  char c = fgetc(source->file);
   while (!(feof(source->file) || is_start_of_command(c))) {
-    c = skip_whitespace(source, c);
-    c = skip_comments(source, c);
+    c = skip_whitespace(source);
+    c = skip_comments(source);
     if (!(is_start_of_command(c) || isspace(c) || c == '/' || c == '\n' || c == -1)) {
       printf("Parse error on line %i. Unexpected char: '%c'.\n", source->line, c);
       exit(0);
@@ -272,29 +271,32 @@ char skip_to_next_command(Source* source, char c) {
 }
 
 // Skips whitespace (including newlines)
-char skip_whitespace(Source* source, char c) {
+char skip_whitespace(Source* source) {
+  char c = fgetc(source->file);
   while (!feof(source->file) && isspace(c)) {
     c = fgetc(source->file);
     if (c == '\n') {
       source->line++;
     }
   }
+  ungetc(c, source->file);
   return c;
 }
 
 // will skip anything starting with a forward slash to the end of the line.
 // Although comments start with two forward slashes, slashes don't appear
 // in assembler instructions so we can avoid looking ahead on character. 
-char skip_comments(Source* source, char c) {
+char skip_comments(Source* source) {
+  char c = fgetc(source->file);
   if (c == '/') {
     while (!feof(source->file) && c != '\n') {
       c = fgetc(source->file);
     }
-    //consume end of line
     if (c == '\n') { 
-      c = fgetc(source->file);
       source->line++;
     }
+  } else {
+    ungetc(c, source->file);
   }
   return c;
 }
@@ -324,7 +326,8 @@ bool is_start_of_command(char c) {
   }
 }
 
-char read_command(Source* source, char c, Command commands[], int current_command_index) {
+char read_command(Source* source, Command commands[], int current_command_index) {
+  char c = fgetc(source->file);
   if (feof(source->file)) {
     return c;
   }
