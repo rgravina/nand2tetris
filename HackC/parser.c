@@ -57,6 +57,15 @@ void parse(char* filename) {
     Command commands[MAX_COMMANDS_ALLOWED];
     // Struct to keep track of position etc.
     source.command_index = 0;
+
+    // TODO
+    // First pass - enter each label "(symbol)" as the address (i.e. command index)
+    // of the following instruction into the symbol table.
+    //
+    // Second pass - parse instructions. If a symbol is found which already exists in the
+    // symbol table, use it's address. Otherwise, allocate memory for it starting at
+    // address 16.
+
     while (!feof(source.file) && source.command_index < MAX_COMMANDS_ALLOWED) {
       skip_to_next_command(&source);
       read_command(&source, commands);
