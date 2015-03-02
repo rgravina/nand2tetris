@@ -134,6 +134,7 @@ void print_command_machine_code(Command command) {
       printf("%s\n", command.instruction);
       break;
     case S_COMMAND:
+      printf("%s\n", command.address);
       break;
   }
 }
@@ -148,16 +149,14 @@ void set_address(Command* command) {
 }
 
 void set_command(Command* command) {
-  for (int i = 0; instructionMap[i].assembly != NULL; i++) {
-    if (strcmp(command->comp, instructionMap[i].assembly) == 0) {
-      command->instruction[4] = instructionMap[i].machine_code[0];
-      command->instruction[5] = instructionMap[i].machine_code[1];
-      command->instruction[6] = instructionMap[i].machine_code[2];
-      command->instruction[7] = instructionMap[i].machine_code[3];
-      command->instruction[8] = instructionMap[i].machine_code[4];
-      command->instruction[9] = instructionMap[i].machine_code[5];
-      return;
-    }
+  char* code = comp(command->comp);
+  if (code != NULL) {
+    command->instruction[4] = code[0];
+    command->instruction[5] = code[1];
+    command->instruction[6] = code[2];
+    command->instruction[7] = code[3];
+    command->instruction[8] = code[4];
+    command->instruction[9] = code[5];
   }
 }
 
@@ -172,13 +171,11 @@ void set_a(Command* command) {
 
 void set_dest(Command* command) {
   if (command->has_dest) {
-    for (int i = 0; destMap[i].assembly != NULL; i++) {
-      if (strcmp(command->dest, destMap[i].assembly) == 0) {
-        command->instruction[10] = destMap[i].machine_code[0];
-        command->instruction[11] = destMap[i].machine_code[1];
-        command->instruction[12] = destMap[i].machine_code[2];
-        break;
-      }
+    char* code = dest(command->dest);
+    if (code != NULL) {
+      command->instruction[10] = code[0];
+      command->instruction[11] = code[1];
+      command->instruction[12] = code[2];
     }
   } else {
     command->instruction[10] = '0';
@@ -189,13 +186,11 @@ void set_dest(Command* command) {
 
 void set_jump(Command* command) {
   if (command->has_jump) {
-    for (int i = 0; jumpMap[i].assembly != NULL; i++) {
-      if (strcmp(command->jump, jumpMap[i].assembly) == 0) {
-        command->instruction[13] = jumpMap[i].machine_code[0];
-        command->instruction[14] = jumpMap[i].machine_code[1];
-        command->instruction[15] = jumpMap[i].machine_code[2];
-        break;
-      }
+    char* code = jump(command->jump);
+    if (code != NULL) {
+      command->instruction[13] = code[0];
+      command->instruction[14] = code[1];
+      command->instruction[15] = code[2];
     }
   } else {
     command->instruction[13] = '0';
