@@ -82,6 +82,38 @@ const struct codeMap jumpMap[] = {
   {NULL, 0}
 };
 
+// Used to store lookup tables of symbol and addresses
+struct symbolMap {
+  char* assembly;
+  int address;
+};
+const struct symbolMap predefinedSymbolMap[] = {
+  {"SP", 0},
+  {"LCL", 1},
+  {"ARG", 2},
+  {"THIS", 3},
+  {"THAT", 4},
+  {"R0", 0},
+  {"R1", 1},
+  {"R2", 2},
+  {"R3", 3},
+  {"R4", 4},
+  {"R5", 5},
+  {"R6", 6},
+  {"R7", 7},
+  {"R8", 8},
+  {"R9", 9},
+  {"R10", 10},
+  {"R11", 11},
+  {"R12", 12},
+  {"R13", 13},
+  {"R14", 14},
+  {"R15", 15},
+  {"SCREEN", 16384},
+  {"KBD", 24576},
+  {NULL, 0}
+};
+
 // stores info about the current source file
 typedef struct {
   int line;
@@ -98,6 +130,7 @@ char read_command(Source* source, Command commands[]);
 void print_commands(Source source, Command commands[]);
 void print_command_description(Command command);
 void print_command_machine_code(Command command);
+void set_address(Command* command);
 void set_a(Command* command);
 void set_command(Command* command);
 void set_dest(Command* command);
@@ -163,6 +196,7 @@ void print_command_machine_code(Command command) {
   int dec_address = 0;
   switch(command.type) {
     case A_COMMAND:
+      // initialise all address bits to zero
       for (int i=0; i<16; i++) {
         command.instruction[i] = '0';
       }
@@ -170,6 +204,8 @@ void print_command_machine_code(Command command) {
       if (isdigit(command.address[0])) {
         sscanf(command.address, "%d", &dec_address);
         dec_to_bin(dec_address, command.instruction);
+      } else {
+        set_address(&command);
       }
       break;
     case C_COMMAND:
@@ -184,6 +220,15 @@ void print_command_machine_code(Command command) {
       command.instruction[16] = '\0';
   }
   printf("%s", command.instruction);
+}
+
+void set_address(Command* command) {
+  for (int i = 0; predefinedSymbolMap[i].assembly != NULL; i++) {
+    if (strcmp(command->address, predefinedSymbolMap[i].assembly) == 0) {
+      dec_to_bin(predefinedSymbolMap[i].address, command->instruction);
+      return;
+    }
+  }
 }
 
 void set_command(Command* command) {
@@ -342,7 +387,7 @@ char read_command(Source* source, Command commands[]) {
   }
   while (!feof(source->file) && !isspace(c)) {
     command.string[pos] = c;
-    // everything after the at is a postitive integer (for now, later could be variables)
+    // everything after the at is a postitive integer or a symbol name
     if (command.type == A_COMMAND && pos > 0) {
       command.address[address_pos++] = c;
     }
