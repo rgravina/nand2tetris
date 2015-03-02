@@ -106,13 +106,13 @@ void print_command_description(Command command) {
 
 void print_command_machine_code(Command command) {
   int dec_address = 0;
+  // initialise all bits to zero
+  for (int i=0; i<16; i++) {
+    command.instruction[i] = '0';
+  }
+  command.instruction[16] = '\0';
   switch(command.type) {
     case A_COMMAND:
-      // initialise all address bits to zero
-      for (int i=0; i<16; i++) {
-        command.instruction[i] = '0';
-      }
-      command.instruction[16] = '\0';
       if (isdigit(command.address[0])) {
         sscanf(command.address, "%d", &dec_address);
         dec_to_bin(dec_address, command.instruction);
@@ -177,10 +177,6 @@ void set_dest(Command* command) {
       command->instruction[11] = code[1];
       command->instruction[12] = code[2];
     }
-  } else {
-    command->instruction[10] = '0';
-    command->instruction[11] = '0';
-    command->instruction[12] = '0';
   }
 }
 
@@ -192,10 +188,6 @@ void set_jump(Command* command) {
       command->instruction[14] = code[1];
       command->instruction[15] = code[2];
     }
-  } else {
-    command->instruction[13] = '0';
-    command->instruction[14] = '0';
-    command->instruction[15] = '0';
   }
 }
 
