@@ -70,7 +70,9 @@ void parse(char* filename) {
       skip_to_next_command(&source);
       read_command(&source, commands);
       if (!feof(source.file)) {
-        source.command_index++;        
+        if (commands[source.command_index].type != S_COMMAND) {
+          source.command_index++;
+        }
       }  
     }
 
@@ -313,6 +315,7 @@ char read_command(Source* source, Command commands[]) {
       pos++;
     }
     command.address[symbol_pos++] = '\0';
+    add_symbol(command.address, source->command_index);
   } else {
     command.type = C_COMMAND;    
   }

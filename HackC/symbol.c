@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 // Used to store lookup tables of symbol and addresses
 struct symbolMap {
@@ -42,3 +43,6 @@ int get_address(char* symbol) {
   return -1;
 }
 
+void add_symbol(char* symbol, int address) {
+  printf("Symbol Table: Adding symbol %s at address %i.\n", symbol, address);
+}
