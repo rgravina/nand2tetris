@@ -49,26 +49,23 @@ void set_dest(Command* command);
 void set_jump(Command* command);
 
 void parse(char* filename) {
+  // Struct to keep track of position etc.
   Source source;
   source.file = fopen(filename, "r");
   source.line = 1;
   if (source.file == 0) {
     printf("Could not open file\n");
   } else {
-    // array of assembly commands
+    // Array of assembly commands. It would be better if this was a linked
+    // list.
     Command commands[MAX_COMMANDS_ALLOWED];
-    // Struct to keep track of position etc.
     source.command_index = 0;
     source.total_commands = 0;
 
-    // TODO
-    // First pass - enter each label "(symbol)" as the address (i.e. command index)
-    // of the following instruction into the symbol table.
-    //
-    // Second pass - parse instructions. If a symbol is found which already exists in the
-    // symbol table, use it's address. Otherwise, allocate memory for it starting at
-    // address 16.
-
+    // First pass - read instructions and parse A and C instructions.
+    // If an A instruction refers to an undefined symbol or label, store 
+    // the symbol name in the address field. If a label is found, add it to 
+    // the symbol table.
     while (!feof(source.file) && source.command_index < MAX_COMMANDS_ALLOWED) {
       skip_to_next_command(&source);
       read_command(&source, commands);
@@ -80,8 +77,13 @@ void parse(char* filename) {
       }  
     }
 
+    // Second pass - resolve previously undefined symbols.
+    // Symbols already in the symbol table refer to labels in the assembly code.
+    // These can be simply replaced. For others, they must be variables so
+    // they should be allocated in RAM.
     update_symbols(commands, source.total_commands);
 
+    // Now ready to print commands
     print_commands(source, commands);
     if (source.command_index == MAX_COMMANDS_ALLOWED) {
       printf("----\n");
