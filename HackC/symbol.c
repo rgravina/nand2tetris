@@ -2,12 +2,12 @@
 #include <stdio.h>
 
 // Used to store lookup tables of symbol and addresses
-struct symbolMap {
+typedef struct {
   char* assembly;
   int address;
-};
+} SymbolMap;
 
-const struct symbolMap predefinedSymbolMap[] = {
+const SymbolMap predefinedSymbolMap[] = {
   {"SP", 0},
   {"LCL", 1},
   {"ARG", 2},
