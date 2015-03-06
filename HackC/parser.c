@@ -59,8 +59,12 @@ void parse(char* filename) {
     // Array of assembly commands. It would be better if this was a linked
     // list.
     Command commands[MAX_COMMANDS_ALLOWED];
+
+    // Struct to keep track of position etc.
     source.command_index = 0;
     source.total_commands = 0;
+
+    symbol_table.count = 0;
 
     // First pass - read instructions and parse A and C instructions.
     // If an A instruction refers to an undefined symbol or label, store 
@@ -98,7 +102,7 @@ void update_symbols(Command commands[], int total) {
   for (int i=0; i<total; i++) {
     if (commands[i].type == A_COMMAND) {
       if (!isdigit(commands[i].address[0])) {
-        dec_to_bin(get_address(commands[i].address), commands[i].address);
+        dec_to_bin(get_address(commands[i].address), commands[i].instruction);
       }
     }
   }

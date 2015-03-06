@@ -1,11 +1,7 @@
 #include <string.h>
 #include <stdio.h>
-
-// Used to store lookup tables of symbol and addresses
-typedef struct {
-  char* assembly;
-  int address;
-} SymbolMap;
+#include <stdlib.h>
+#include "symbol.h"
 
 const SymbolMap predefinedSymbolMap[] = {
   {"SP", 0},
@@ -34,14 +30,25 @@ const SymbolMap predefinedSymbolMap[] = {
   {NULL, 0}
 };
 
+SymbolTable symbol_table;
+
 int get_address(char* symbol) {
   for (int i = 0; predefinedSymbolMap[i].assembly != NULL; i++) {
     if (strcmp(symbol, predefinedSymbolMap[i].assembly) == 0) {
       return predefinedSymbolMap[i].address;
     }
   }
+  for (int i = 0; i < symbol_table.count; i++) {
+    if (strcmp(symbol, symbol_table.table[i]->assembly) == 0) {
+      return symbol_table.table[i]->address;
+    }
+  }
   return -1;
 }
 
 void add_symbol(char* symbol, int address) {
+  SymbolMap *map = malloc(sizeof(SymbolMap));
+  map->assembly = strdup(symbol);
+  map->address = address;
+  symbol_table.table[symbol_table.count++] = map;
 }
