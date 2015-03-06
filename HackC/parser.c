@@ -64,6 +64,7 @@ void parse(char* filename) {
     source.command_index = 0;
     source.total_commands = 0;
 
+    // initialise the symbol table
     symbol_table.count = 0;
     symbol_table.address = 16;
 
@@ -105,6 +106,8 @@ void update_symbols(Command commands[], int total) {
       if (!isdigit(commands[i].address[0])) {
         int address = get_address(commands[i].address);
         if (address == -1) {
+          // new symbols found are variables, not labels
+          // add them at the next address in RAM
           add_symbol(commands[i].address, symbol_table.address++);
           address = get_address(commands[i].address);
         }
