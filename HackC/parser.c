@@ -14,7 +14,7 @@ int MAX_COMMANDS_ALLOWED = 30000;
 // Added a type for symbol definitions, although not really a command
 typedef struct {
   enum {A_COMMAND, C_COMMAND, S_COMMAND} type;
-  char address[34];
+  char address[65];
   char instruction[34];
   bool has_dest;
   bool has_jump;
