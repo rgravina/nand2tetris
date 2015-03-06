@@ -11,6 +11,7 @@ typedef struct {
 typedef struct {
   SymbolMap *table[MAX_SYMBOLS];
   int count;
+  int address;
 } SymbolTable;
 
 SymbolTable symbol_table;

@@ -65,6 +65,7 @@ void parse(char* filename) {
     source.total_commands = 0;
 
     symbol_table.count = 0;
+    symbol_table.address = 16;
 
     // First pass - read instructions and parse A and C instructions.
     // If an A instruction refers to an undefined symbol or label, store 
@@ -102,7 +103,12 @@ void update_symbols(Command commands[], int total) {
   for (int i=0; i<total; i++) {
     if (commands[i].type == A_COMMAND) {
       if (!isdigit(commands[i].address[0])) {
-        dec_to_bin(get_address(commands[i].address), commands[i].instruction);
+        int address = get_address(commands[i].address);
+        if (address == -1) {
+          add_symbol(commands[i].address, symbol_table.address++);
+          address = get_address(commands[i].address);
+        }
+        dec_to_bin(address, commands[i].instruction);
       }
     }
   }
