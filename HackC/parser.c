@@ -65,8 +65,7 @@ void parse(char* filename) {
     source.total_commands = 0;
 
     // initialise the symbol table
-    symbol_table.count = 0;
-    symbol_table.address = 16;
+    SymbolTable_init();
 
     // First pass - read instructions and parse A and C instructions.
     // If an A instruction refers to an undefined symbol or label, store 

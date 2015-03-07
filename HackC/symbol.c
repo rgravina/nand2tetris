@@ -32,6 +32,13 @@ const SymbolMap predefinedSymbolMap[] = {
 
 SymbolTable symbol_table;
 
+// Initialises the symbole table
+void SymbolTable_init() {
+  symbol_table.count = 0;
+  // variables begin at RAM address 16
+  symbol_table.address = 16;
+}
+
 int get_address(char* symbol) {
   for (int i = 0; predefinedSymbolMap[i].assembly != NULL; i++) {
     if (strcmp(symbol, predefinedSymbolMap[i].assembly) == 0) {
