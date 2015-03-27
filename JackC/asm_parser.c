@@ -48,7 +48,7 @@ void set_command(Command* command);
 void set_dest(Command* command);
 void set_jump(Command* command);
 
-void parse(char* filename) {
+void parse_assembly(char* filename) {
   // Struct to keep track of position etc.
   Source source;
   source.file = fopen(filename, "r");
