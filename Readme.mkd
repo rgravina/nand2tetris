@@ -1,0 +1,1 @@
+An implementation of a Jack compiler for the Hack platform as described at nand2tetris.org.
