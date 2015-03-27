@@ -1,1 +1,32 @@
 An implementation of a Jack compiler for the Hack platform as described at nand2tetris.org.
+
+If you are reading this, please attempt to create the compiler yourself. It's a great learning experience!
+
+Note: This is not nessecarily great C. My main focus was on building the compiler for learning purposes. Please don't copy any techniqures here, or use this code for any purpose other than to read.
+
+Also, please do not try and decipher the project requirements from the code or documentation. It's a great book and worth the modest asking price. The authors have also placed the first half of the book online at nand2tetris.org.
+
+TODO
+---
+- Implement VM to assembly transation
+  - Arithmetic, memory access, program flow and function calling commands
+    - Arithmetic
+      - Seven binary (pop two operands from stack, push one back)
+      - Two unanary (pop one operand from stack, push one back)
+      - eq, gt, lt return Boolean values.
+        - true is -1, false is 0 in the VM
+    - Memory access
+      - VM operates on eight virtual memory segments
+        - argument, local, static, constant, this, that, pointer, temp
+      - push segment index - push segment[index] onto the stack
+      - pop segment index - pop top stack value and store it in segment[index]
+    - Function calling
+      - function functionName nLocals - function declaration
+      - call functionName nArgs - function call
+      - return - return from function
+    - Program flow
+      - (for next chapter)
+        - label symbol - label declaration
+        - goto symbol - unconditional branching
+        - if-goto symbol - conditional branching
+  - Support parsing one .vm file, or a directory of .vm files
