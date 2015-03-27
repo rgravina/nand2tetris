@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "parser.h"
 
 void usage(char* executable_name);
@@ -7,7 +8,11 @@ int main(int argc, char *argv[]) {
   if (argc != 2) {
     usage(argv[0]);
   } else {
-    parse(argv[1]);
+    if (strstr(argv[1], ".asm")) {
+      parse(argv[1]);
+    } else {
+      usage(argv[0]);
+    }
   }
   return 0;
 }
