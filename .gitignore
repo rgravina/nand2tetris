@@ -1,7 +1,7 @@
 # Created by https://www.gitignore.io
 
 # Extras for this project
-HackC/jack
+JackC/jack
 
 ### Xcode ###
 build/
