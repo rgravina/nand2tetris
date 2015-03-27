@@ -1,10 +1,10 @@
-An implementation of a Jack compiler for the Hack platform as described at nand2tetris.org.
+An implementation of a Jack compiler for the Hack platform as described at http://nand2tetris.org.
 
 If you are reading this, please attempt to create the compiler yourself. It's a great learning experience!
 
-Note: This is not nessecarily great C. My main focus was on building the compiler for learning purposes. Please don't copy any techniqures here, or use this code for any purpose other than to read.
+Note: This is not nessecarily great C. My main focus was on building the compiler for learning purposes. Please don't copy any techniques here, or use this code for any purpose other than to read and compare with your own solution.
 
-Also, please do not try and decipher the project requirements from the code or documentation. It's a great book and worth the modest asking price. The authors have also placed the first half of the book online at nand2tetris.org.
+Please do not try and decipher the project requirements from the code or documentation. It's a great book and worth the modest asking price. The authors have also placed the first half of the book online at the website linked above.
 
 TODO
 ---
