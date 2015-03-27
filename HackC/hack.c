@@ -13,6 +13,9 @@ int main(int argc, char *argv[]) {
 }
 
 void usage(char* executable_name) {
-  printf("usage: %s <input.asm>\n", executable_name);
-  printf("An assembler for the Hack platform.\n");
+  printf("usage: %s <input>\n", executable_name);
+  printf("A Jack compiler for the Hack platform.\n\n");
+  printf("<input.asm>    - Outputs machine code from assembly language\n");
+  printf("<input.vm>     - Outputs VM code from assembly language\n");
+  printf("<directory>    - Outputs VM code from directory of assembly language files\n");
 }
