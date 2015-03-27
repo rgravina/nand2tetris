@@ -30,3 +30,32 @@ TODO
         - goto symbol - unconditional branching
         - if-goto symbol - conditional branching
   - Support parsing one .vm file, or a directory of .vm files
+  - Memory usage
+    - 0 - 15        registers
+                    0     SP
+                    1     LCL
+                    2     ARG
+                    3     THIS  (pointer segment)
+                    4     THAT  (pointer segment)
+                    5-12  temp segment
+                    13-15 can be used as general purpose registers
+    - 16 - 255      static variables (of all VM function in the VM program)
+                    static segment
+    - 256 - 2047    the stack
+    - 2048 - 16843  the heap (stores objects and arrays)
+    - 16384 - 24575 memory mapped I/O
+ - vm_parser.c
+    - reads VM commands, parses them, translates to assembly code
+    - stage 1: static arithmetic commands
+      - implement the nine stack arithmetic and logical commands and push x constant
+        - constant is a special case push of a decimal constant
+          Test with SimpleAdd
+        - handle local, argument, this and that segments
+        - handle pointer and temp segments, allowing changing the base of this and that segments
+        - handle the static segment
+          Test with SimpleTest
+    - stage 2: memory access commands
+      Test with BasicTest (push/pop on virtual memory segments)
+      Test with PointerTest (push/pop using pointer, this and that segments)
+      Test with StaticTest (push/pop on the static segment)
+
