@@ -15,7 +15,7 @@ func usage() {
 if Process.arguments.count != 2 {
   usage()
 } else {
-  let parser = Parser(file: Process.arguments.last!)
+  let parser = AssemblyParser(file: Process.arguments.last!)
   while let command = parser.advance() {
     //...
   }

@@ -1,6 +1,6 @@
 import Foundation
 
-class Parser {
+class AssemblyParser {
   // lines of the source file
   let lines: [String]
   // line we have processed up to
