@@ -17,14 +17,22 @@ class Parser {
     }
   }
 
-  // Returns the next command and advances the current line
+  // Returns the next command and advances the current line (skips whitespace and blank lines)
   func advance() -> AssemblyCommand? {
     if let lines = lines {
       if linePos < lines.count-1 {
-        linePos++;
-        return AssemblyCommand(command: lines[linePos])
+        var line = trimmed(lines[linePos])
+        while (countElements(line) == 1 || line[0..<2] == "//") {
+          linePos++;
+          line = lines[linePos]
+        }
+        return AssemblyCommand(command: lines[linePos++])
       }
     }
     return nil
+  }
+
+  private func trimmed(line: String) -> String {
+    return line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
   }
 }

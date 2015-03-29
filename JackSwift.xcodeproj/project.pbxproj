@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
+		97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E261AC7E95600A0D251 /* Extensions.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		973614EE1A9C3743001D26CB /* Hack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Hack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		97DE8E261AC7E95600A0D251 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyCommand.swift; sourceTree = "<group>"; };
 		EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyParser.swift; sourceTree = "<group>"; };
 		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				973614F11A9C3743001D26CB /* main.swift */,
 				EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */,
 				EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */,
+				97DE8E261AC7E95600A0D251 /* Extensions.swift */,
 			);
 			path = JackSwift;
 			sourceTree = "<group>";
@@ -131,6 +134,7 @@
 				EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */,
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
 				EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */,
+				97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
