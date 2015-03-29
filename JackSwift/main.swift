@@ -15,8 +15,18 @@ func usage() {
 if Process.arguments.count != 2 {
   usage()
 } else {
-  let parser = AssemblyParser(file: Process.arguments.last!)
-  while let command = parser.advance() {
-    //...
+  let fileName = Process.arguments.last!
+  let assemblyFile = fileName[Range(start:advance(fileName.endIndex, -4), end: fileName.endIndex)] == ".asm"
+  let virtualMachineFile = fileName[Range(start:advance(fileName.endIndex, -3), end: fileName.endIndex)] == ".vm"
+  if (assemblyFile) {
+    let parser = AssemblyParser(file: Process.arguments.last!)
+    while let command = parser.advance() {
+      //...
+    }
+  } else if (virtualMachineFile) {
+    let parser = VirtualMachineParser(file: Process.arguments.last!)
+    while let command = parser.advance() {
+      //...
+    }
   }
 }
