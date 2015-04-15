@@ -28,7 +28,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		973614EE1A9C3743001D26CB /* Hack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Hack; sourceTree = BUILT_PRODUCTS_DIR; };
+		9718F2571ADE06D200E4B0FD /* Readme.mkd */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.mkd; sourceTree = "<group>"; };
+		9718F2581ADE072400E4B0FD /* Todo.mkd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.mkd; sourceTree = "<group>"; };
+		973614EE1A9C3743001D26CB /* Jack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Jack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		97DE8E261AC7E95600A0D251 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualMachineParser.swift; sourceTree = "<group>"; };
@@ -62,7 +64,7 @@
 		973614EF1A9C3743001D26CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				973614EE1A9C3743001D26CB /* Hack */,
+				973614EE1A9C3743001D26CB /* Jack */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +72,7 @@
 		973614F01A9C3743001D26CB /* JackSwift */ = {
 			isa = PBXGroup;
 			children = (
+				9718F2571ADE06D200E4B0FD /* Readme.mkd */,
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
 				EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */,
@@ -77,6 +80,7 @@
 				97DE8E261AC7E95600A0D251 /* Extensions.swift */,
 				97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */,
 				97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */,
+				9718F2581ADE072400E4B0FD /* Todo.mkd */,
 			);
 			path = JackSwift;
 			sourceTree = "<group>";
@@ -84,9 +88,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		973614ED1A9C3743001D26CB /* Hack */ = {
+		973614ED1A9C3743001D26CB /* Jack */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 973614F51A9C3743001D26CB /* Build configuration list for PBXNativeTarget "Hack" */;
+			buildConfigurationList = 973614F51A9C3743001D26CB /* Build configuration list for PBXNativeTarget "Jack" */;
 			buildPhases = (
 				973614EA1A9C3743001D26CB /* Sources */,
 				973614EB1A9C3743001D26CB /* Frameworks */,
@@ -96,9 +100,9 @@
 			);
 			dependencies = (
 			);
-			name = Hack;
+			name = Jack;
 			productName = Hack;
-			productReference = 973614EE1A9C3743001D26CB /* Hack */;
+			productReference = 973614EE1A9C3743001D26CB /* Jack */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -127,7 +131,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				973614ED1A9C3743001D26CB /* Hack */,
+				973614ED1A9C3743001D26CB /* Jack */,
 			);
 		};
 /* End PBXProject section */
@@ -250,7 +254,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		973614F51A9C3743001D26CB /* Build configuration list for PBXNativeTarget "Hack" */ = {
+		973614F51A9C3743001D26CB /* Build configuration list for PBXNativeTarget "Jack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				973614F61A9C3743001D26CB /* Debug */,

@@ -23,7 +23,7 @@ class AssemblyParser {
     if linePos < lines.count-1 {
       var line = trimmed(lines[linePos])
       // skip lines if blank (just newline after trim) or starts with a comment
-      while (countElements(line) == 1 || line[0..<2] == "//") {
+      while (count(line) == 1 || line[0..<2] == "//") {
         linePos++;
         line = lines[linePos]
       }
