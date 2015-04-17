@@ -5,6 +5,6 @@ enum VirtualMachineCommandType {
 
 class VirtualMachineCommand {
   init(command: String) {
-    println(command)
+    println("\(__FILE__):\(__LINE__): \(command)")
   }
 }

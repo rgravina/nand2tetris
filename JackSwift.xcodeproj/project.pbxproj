@@ -72,17 +72,41 @@
 		973614F01A9C3743001D26CB /* JackSwift */ = {
 			isa = PBXGroup;
 			children = (
+				97DC61161AE09B710051A587 /* VirtualMachine */,
+				97DC61151AE09B670051A587 /* Extensions */,
+				97DC61141AE09B580051A587 /* Assembler */,
 				9718F2571ADE06D200E4B0FD /* Readme.mkd */,
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
-				EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */,
-				EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */,
-				97DE8E261AC7E95600A0D251 /* Extensions.swift */,
-				97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */,
-				97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */,
 				9718F2581ADE072400E4B0FD /* Todo.mkd */,
 			);
 			path = JackSwift;
+			sourceTree = "<group>";
+		};
+		97DC61141AE09B580051A587 /* Assembler */ = {
+			isa = PBXGroup;
+			children = (
+				EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */,
+				EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */,
+			);
+			name = Assembler;
+			sourceTree = "<group>";
+		};
+		97DC61151AE09B670051A587 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				97DE8E261AC7E95600A0D251 /* Extensions.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		97DC61161AE09B710051A587 /* VirtualMachine */ = {
+			isa = PBXGroup;
+			children = (
+				97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */,
+				97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */,
+			);
+			name = VirtualMachine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
