@@ -7,7 +7,7 @@ public enum VirtualMachineCommandType {
 public class VirtualMachineCommand : Printable {
   public let type:VirtualMachineCommandType
   public let arg1:String?
-  public let arg2:String?
+  public let arg2:Int?
 
   public init(command: String) {
     var tokens = split(command) {$0 == " "}
@@ -15,11 +15,11 @@ public class VirtualMachineCommand : Printable {
     case "push":
       type = .Push
       arg1 = tokens[1]
-      arg2 = tokens[2]
+      arg2 = tokens[2].toInt()
     case "push":
       type = .Pop
       arg1 = tokens[1]
-      arg2 = tokens[2]
+      arg2 = tokens[2].toInt()
     case "add":
       type = .Arithmetic
       arg1 = "add"

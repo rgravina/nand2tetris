@@ -11,7 +11,7 @@ class JackTests: QuickSpec {
         expect(vmc.description).to(equal("push constant 1"))
         expect(vmc.type).to(equal(VirtualMachineCommandType.Push))
         expect(vmc.arg1).to(equal("constant"))
-        expect(vmc.arg2).to(equal("1"))
+        expect(vmc.arg2).to(equal(1))
       }
     }
   }
