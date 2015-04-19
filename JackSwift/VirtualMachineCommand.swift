@@ -1,16 +1,50 @@
 import Foundation
 
-enum VirtualMachineCommandType : Printable {
+enum VirtualMachineCommandType {
   case Arithmetic, Push, Pop, Label, Goto, If, Function, Return, Call, Unknown
+}
+
+class VirtualMachineCommand : Printable {
+  let type:VirtualMachineCommandType
+  let arg1:String?
+  let arg2:String?
+
+  init(command: String) {
+    var tokens = split(command) {$0 == " "}
+    let last = tokens.removeLast()
+    // remove newline at end of last token
+    tokens.append(last.substringToIndex(last.endIndex.predecessor()))
+    switch(tokens.first!) {
+    case "push":
+      type = .Push
+      arg1 = tokens[1]
+      arg2 = tokens[2]
+    case "push":
+      type = .Pop
+      arg1 = tokens[1]
+      arg2 = tokens[2]
+    case "add":
+      type = .Arithmetic
+      arg1 = "add"
+      arg2 = nil
+    default:
+      type = .Unknown
+      arg1 = nil
+      arg2 = nil
+    }
+    println(self)
+  }
+
+
   var description: String {
     get {
-      switch(self) {
+      switch(type) {
       case .Arithmetic:
-        return "Arithmetic"
+        return "\(arg1!)"
       case .Push:
-        return "Push"
+        return "push \(arg1!) \(arg2!)"
       case .Pop:
-        return "Pop"
+        return "pop \(arg1!) \(arg2!)"
       case .Label:
         return "Label"
       case .Goto:
@@ -27,27 +61,5 @@ enum VirtualMachineCommandType : Printable {
         return "Unknown"
       }
     }
-  }
-}
-
-class VirtualMachineCommand {
-  let type:VirtualMachineCommandType
-
-  init(command: String) {
-    var tokens = split(command) {$0 == " "}
-    let last = tokens.removeLast()
-    // remove newline at end of last token
-    tokens.append(last.substringToIndex(last.endIndex.predecessor()))
-    switch(tokens.first!) {
-    case "push":
-      type = .Push
-    case "push":
-      type = .Pop
-    case "add":
-      type = .Arithmetic
-    default:
-      type = .Unknown
-    }
-    println(type)
   }
 }
