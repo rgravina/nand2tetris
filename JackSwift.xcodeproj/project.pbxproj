@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
+		9752A7491AE3517700720127 /* JackTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752A7481AE3517700720127 /* JackTest.swift */; };
+		9752A74F1AE3525C00720127 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; };
+		9752A7501AE3525C00720127 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; };
+		9752A7521AE3543200720127 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9752A7531AE3543800720127 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E261AC7E95600A0D251 /* Extensions.swift */; };
 		97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */; };
 		97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
@@ -25,6 +30,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		9752A7511AE3542200720127 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9752A7531AE3543800720127 /* Nimble.framework in CopyFiles */,
+				9752A7521AE3543200720127 /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +48,11 @@
 		9718F2581ADE072400E4B0FD /* Todo.mkd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.mkd; sourceTree = "<group>"; };
 		973614EE1A9C3743001D26CB /* Jack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Jack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		9752A7441AE3517700720127 /* JackTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JackTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9752A7471AE3517700720127 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9752A7481AE3517700720127 /* JackTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JackTest.swift; sourceTree = "<group>"; };
+		9752A74D1AE3525C00720127 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Nimble.framework; sourceTree = "<group>"; };
+		9752A74E1AE3525C00720127 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quick.framework; sourceTree = "<group>"; };
 		97DE8E261AC7E95600A0D251 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualMachineParser.swift; sourceTree = "<group>"; };
 		97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualMachineCommand.swift; sourceTree = "<group>"; };
@@ -48,6 +69,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9752A7411AE3517700720127 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9752A7501AE3525C00720127 /* Quick.framework in Frameworks */,
+				9752A74F1AE3525C00720127 /* Nimble.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -55,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				973614F01A9C3743001D26CB /* JackSwift */,
+				9752A7451AE3517700720127 /* JackTest */,
 				973614EF1A9C3743001D26CB /* Products */,
 			);
 			indentWidth = 2;
@@ -65,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				973614EE1A9C3743001D26CB /* Jack */,
+				9752A7441AE3517700720127 /* JackTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,6 +113,25 @@
 				9718F2581ADE072400E4B0FD /* Todo.mkd */,
 			);
 			path = JackSwift;
+			sourceTree = "<group>";
+		};
+		9752A7451AE3517700720127 /* JackTest */ = {
+			isa = PBXGroup;
+			children = (
+				9752A7481AE3517700720127 /* JackTest.swift */,
+				9752A74D1AE3525C00720127 /* Nimble.framework */,
+				9752A74E1AE3525C00720127 /* Quick.framework */,
+				9752A7461AE3517700720127 /* Supporting Files */,
+			);
+			path = JackTest;
+			sourceTree = "<group>";
+		};
+		9752A7461AE3517700720127 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9752A7471AE3517700720127 /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		97DC61141AE09B580051A587 /* Assembler */ = {
@@ -129,6 +180,24 @@
 			productReference = 973614EE1A9C3743001D26CB /* Jack */;
 			productType = "com.apple.product-type.tool";
 		};
+		9752A7431AE3517700720127 /* JackTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9752A74C1AE3517700720127 /* Build configuration list for PBXNativeTarget "JackTest" */;
+			buildPhases = (
+				9752A7401AE3517700720127 /* Sources */,
+				9752A7411AE3517700720127 /* Frameworks */,
+				9752A7421AE3517700720127 /* Resources */,
+				9752A7511AE3542200720127 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JackTest;
+			productName = JackTest;
+			productReference = 9752A7441AE3517700720127 /* JackTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -140,6 +209,9 @@
 				TargetAttributes = {
 					973614ED1A9C3743001D26CB = {
 						CreatedOnToolsVersion = 6.1.1;
+					};
+					9752A7431AE3517700720127 = {
+						CreatedOnToolsVersion = 6.3;
 					};
 				};
 			};
@@ -156,9 +228,20 @@
 			projectRoot = "";
 			targets = (
 				973614ED1A9C3743001D26CB /* Jack */,
+				9752A7431AE3517700720127 /* JackTest */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9752A7421AE3517700720127 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		973614EA1A9C3743001D26CB /* Sources */ = {
@@ -171,6 +254,14 @@
 				EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */,
 				97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */,
 				97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9752A7401AE3517700720127 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9752A7491AE3517700720127 /* JackTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +357,44 @@
 			};
 			name = Release;
 		};
+		9752A74A1AE3517700720127 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+					"$(PROJECT_DIR)/JackTest",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = JackTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9752A74B1AE3517700720127 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+					"$(PROJECT_DIR)/JackTest",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = JackTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -286,6 +415,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		9752A74C1AE3517700720127 /* Build configuration list for PBXNativeTarget "JackTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9752A74A1AE3517700720127 /* Debug */,
+				9752A74B1AE3517700720127 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
