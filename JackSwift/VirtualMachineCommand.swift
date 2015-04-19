@@ -9,6 +9,9 @@ public class VirtualMachineCommand : Printable {
   public let arg1:String?
   public let arg2:Int?
 
+  /**
+  * Takes a string representing a VM command are parses it into instruction and arguments.
+  */
   public init(command: String) {
     var tokens = split(command) {$0 == " "}
     switch(tokens.first!) {
