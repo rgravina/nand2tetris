@@ -2,7 +2,7 @@ import Foundation
 
 class VirtualMachineParser {
   // lines of the source file
-  let lines: [String]
+  var lines: [String]
   // line we have processed up to
   var linePos = 0
 
@@ -10,12 +10,13 @@ class VirtualMachineParser {
    * Open and read the file into an array of lines.
    */
   init(file: String) {
-    let currentPath = NSFileManager.defaultManager()
-    let content = String(contentsOfFile: file, encoding: NSUTF8StringEncoding, error: nil)
-    if let fileContent = content {
-      lines = fileContent.componentsSeparatedByString("\n")
+    lines = []
+    if let streamReader = StreamReader(path: file) {
+      while let line = streamReader.nextLine() {
+        lines.append(trimmed(line))
+      }
+      streamReader.close()
     } else {
-      lines = []
       println("Could not read contents of file: '\(file)'.")
     }
   }
@@ -24,10 +25,10 @@ class VirtualMachineParser {
   * Returns the next command and advances the current line (skips whitespace and blank lines)
   */
   func advance() -> VirtualMachineCommand? {
-    if linePos < lines.count-1 {
-      var line = trimmed(lines[linePos])
+    if linePos < lines.count {
+      var line = lines[linePos]
       // skip lines if blank (just newline after trim) or starts with a comment
-      while (count(line) == 1 || line[0..<2] == "//") {
+      while (count(line) == 0 || line[0..<2] == "//") {
         linePos++;
         line = lines[linePos]
       }

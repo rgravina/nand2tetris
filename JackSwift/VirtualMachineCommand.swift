@@ -36,6 +36,9 @@ public class VirtualMachineCommand : Printable {
   }
 
 
+  /**
+  * Prints command in original string form.
+  */
   public var description: String {
     get {
       switch(type) {
@@ -60,6 +63,15 @@ public class VirtualMachineCommand : Printable {
       default:
         return "Unknown"
       }
+    }
+  }
+
+  /**
+  * Prints command in assembler string form.
+  */
+  public var assembly: String {
+    get {
+      return "todo assembly instruction"
     }
   }
 }
