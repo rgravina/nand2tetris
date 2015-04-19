@@ -32,12 +32,13 @@ class VirtualMachineParser {
         line = lines[linePos]
       }
       // parse the next line as a command
-      return VirtualMachineCommand(command: lines[linePos++])
+      linePos++
+      return VirtualMachineCommand(command: line)
     }
     return nil
   }
 
   private func trimmed(line: String) -> String {
-    return line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    return line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
   }
 }

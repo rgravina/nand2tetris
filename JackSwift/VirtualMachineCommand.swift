@@ -11,9 +11,6 @@ class VirtualMachineCommand : Printable {
 
   init(command: String) {
     var tokens = split(command) {$0 == " "}
-    let last = tokens.removeLast()
-    // remove newline at end of last token
-    tokens.append(last.substringToIndex(last.endIndex.predecessor()))
     switch(tokens.first!) {
     case "push":
       type = .Push
