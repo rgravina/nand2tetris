@@ -13,12 +13,23 @@
 		9752A7501AE3525C00720127 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; };
 		9752A7521AE3543200720127 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9752A7531AE3543800720127 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9752A7561AE39BD300720127 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
 		97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E261AC7E95600A0D251 /* Extensions.swift */; };
 		97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */; };
 		97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9752A7541AE39AD100720127 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 973614E61A9C3743001D26CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 973614ED1A9C3743001D26CB;
+			remoteInfo = Jack;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		973614EC1A9C3743001D26CB /* CopyFiles */ = {
@@ -192,6 +203,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9752A7551AE39AD100720127 /* PBXTargetDependency */,
 			);
 			name = JackTest;
 			productName = JackTest;
@@ -261,11 +273,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9752A7561AE39BD300720127 /* VirtualMachineCommand.swift in Sources */,
 				9752A7491AE3517700720127 /* JackTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9752A7551AE39AD100720127 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 973614ED1A9C3743001D26CB /* Jack */;
+			targetProxy = 9752A7541AE39AD100720127 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		973614F31A9C3743001D26CB /* Debug */ = {

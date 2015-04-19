@@ -1,15 +1,15 @@
 import Foundation
 
-enum VirtualMachineCommandType {
+public enum VirtualMachineCommandType {
   case Arithmetic, Push, Pop, Label, Goto, If, Function, Return, Call, Unknown
 }
 
-class VirtualMachineCommand : Printable {
-  let type:VirtualMachineCommandType
-  let arg1:String?
-  let arg2:String?
+public class VirtualMachineCommand : Printable {
+  public let type:VirtualMachineCommandType
+  public let arg1:String?
+  public let arg2:String?
 
-  init(command: String) {
+  public init(command: String) {
     var tokens = split(command) {$0 == " "}
     switch(tokens.first!) {
     case "push":
@@ -33,7 +33,7 @@ class VirtualMachineCommand : Printable {
   }
 
 
-  var description: String {
+  public var description: String {
     get {
       switch(type) {
       case .Arithmetic:
