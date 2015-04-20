@@ -117,6 +117,7 @@
 		973614F01A9C3743001D26CB /* JackSwift */ = {
 			isa = PBXGroup;
 			children = (
+				979A36FC1AE4B71A00509C9F /* Utils */,
 				97DC61161AE09B710051A587 /* VirtualMachine */,
 				97DC61151AE09B670051A587 /* Extensions */,
 				97DC61141AE09B580051A587 /* Assembler */,
@@ -124,7 +125,6 @@
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
 				9718F2581ADE072400E4B0FD /* Todo.mkd */,
-				979A36FA1AE3CD8600509C9F /* StreamReader.swift */,
 			);
 			path = JackSwift;
 			sourceTree = "<group>";
@@ -146,6 +146,14 @@
 				9752A7471AE3517700720127 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		979A36FC1AE4B71A00509C9F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				979A36FA1AE3CD8600509C9F /* StreamReader.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		97DC61141AE09B580051A587 /* Assembler */ = {
