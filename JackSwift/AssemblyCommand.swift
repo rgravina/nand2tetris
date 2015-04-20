@@ -4,7 +4,7 @@ public enum AssemblyCommandType {
   case Address, Computation, Label
 }
 
-public class AssemblyCommand {
+public class AssemblyCommand : Printable {
   public let type:AssemblyCommandType
   public var address:String?
   public var instruction:String?
@@ -26,5 +26,25 @@ public class AssemblyCommand {
     default:
       type = .Computation
     }
+    println(self)
   }
+
+  /**
+  * Prints command in original string form.
+  */
+  public var description: String {
+    get {
+      switch(type) {
+      case .Address:
+        return "@\(address!)"
+      case .Computation:
+        return "todo"
+      case .Label:
+        return "todo"
+      default:
+        return "Unknown"
+      }
+    }
+  }
+
 }
