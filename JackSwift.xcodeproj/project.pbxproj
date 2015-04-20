@@ -20,6 +20,8 @@
 		97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */; };
 		97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
 		97E903CF1AE4B9FE00F2FF34 /* HackFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E903CE1AE4B9FE00F2FF34 /* HackFileReader.swift */; };
+		97E903D01AE4BF7E00F2FF34 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
+		97E903D11AE4C00200F2FF34 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E261AC7E95600A0D251 /* Extensions.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
 /* End PBXBuildFile section */
@@ -122,9 +124,9 @@
 			isa = PBXGroup;
 			children = (
 				979A36FC1AE4B71A00509C9F /* Utils */,
+				97DC61141AE09B580051A587 /* Assembler */,
 				97DC61161AE09B710051A587 /* VirtualMachine */,
 				97DC61151AE09B670051A587 /* Extensions */,
-				97DC61141AE09B580051A587 /* Assembler */,
 				9718F2571ADE06D200E4B0FD /* Readme.mkd */,
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
@@ -292,6 +294,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97E903D11AE4C00200F2FF34 /* Extensions.swift in Sources */,
+				97E903D01AE4BF7E00F2FF34 /* AssemblyCommand.swift in Sources */,
 				9752A7561AE39BD300720127 /* VirtualMachineCommand.swift in Sources */,
 				9752A7491AE3517700720127 /* VirtualMachineTest.swift in Sources */,
 				979A36FE1AE4B77E00509C9F /* AssemblerTest.swift in Sources */,
