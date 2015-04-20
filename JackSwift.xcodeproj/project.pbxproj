@@ -8,16 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
-		9752A7491AE3517700720127 /* JackTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752A7481AE3517700720127 /* JackTest.swift */; };
+		9752A7491AE3517700720127 /* VirtualMachineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752A7481AE3517700720127 /* VirtualMachineTest.swift */; };
 		9752A74F1AE3525C00720127 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; };
 		9752A7501AE3525C00720127 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; };
 		9752A7521AE3543200720127 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74E1AE3525C00720127 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9752A7531AE3543800720127 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9752A7561AE39BD300720127 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
 		979A36FB1AE3CD8600509C9F /* StreamReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979A36FA1AE3CD8600509C9F /* StreamReader.swift */; };
+		979A36FE1AE4B77E00509C9F /* AssemblerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979A36FD1AE4B77E00509C9F /* AssemblerTest.swift */; };
 		97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E261AC7E95600A0D251 /* Extensions.swift */; };
 		97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */; };
 		97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */; };
+		97E903CF1AE4B9FE00F2FF34 /* HackFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E903CE1AE4B9FE00F2FF34 /* HackFileReader.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
 /* End PBXBuildFile section */
@@ -62,13 +64,15 @@
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9752A7441AE3517700720127 /* JackTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JackTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9752A7471AE3517700720127 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9752A7481AE3517700720127 /* JackTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JackTest.swift; sourceTree = "<group>"; };
+		9752A7481AE3517700720127 /* VirtualMachineTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualMachineTest.swift; sourceTree = "<group>"; };
 		9752A74D1AE3525C00720127 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Nimble.framework; sourceTree = "<group>"; };
 		9752A74E1AE3525C00720127 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quick.framework; sourceTree = "<group>"; };
 		979A36FA1AE3CD8600509C9F /* StreamReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReader.swift; sourceTree = "<group>"; };
+		979A36FD1AE4B77E00509C9F /* AssemblerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblerTest.swift; sourceTree = "<group>"; };
 		97DE8E261AC7E95600A0D251 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		97DE8E281AC818F500A0D251 /* VirtualMachineParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualMachineParser.swift; sourceTree = "<group>"; };
 		97DE8E2A1AC8191000A0D251 /* VirtualMachineCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualMachineCommand.swift; sourceTree = "<group>"; };
+		97E903CE1AE4B9FE00F2FF34 /* HackFileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackFileReader.swift; sourceTree = "<group>"; };
 		EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyCommand.swift; sourceTree = "<group>"; };
 		EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyParser.swift; sourceTree = "<group>"; };
 		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -132,7 +136,8 @@
 		9752A7451AE3517700720127 /* JackTest */ = {
 			isa = PBXGroup;
 			children = (
-				9752A7481AE3517700720127 /* JackTest.swift */,
+				979A36FD1AE4B77E00509C9F /* AssemblerTest.swift */,
+				9752A7481AE3517700720127 /* VirtualMachineTest.swift */,
 				9752A74D1AE3525C00720127 /* Nimble.framework */,
 				9752A74E1AE3525C00720127 /* Quick.framework */,
 				9752A7461AE3517700720127 /* Supporting Files */,
@@ -152,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				979A36FA1AE3CD8600509C9F /* StreamReader.swift */,
+				97E903CE1AE4B9FE00F2FF34 /* HackFileReader.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -275,6 +281,7 @@
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
 				97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */,
 				979A36FB1AE3CD8600509C9F /* StreamReader.swift in Sources */,
+				97E903CF1AE4B9FE00F2FF34 /* HackFileReader.swift in Sources */,
 				EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */,
 				97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */,
 				97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */,
@@ -286,7 +293,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9752A7561AE39BD300720127 /* VirtualMachineCommand.swift in Sources */,
-				9752A7491AE3517700720127 /* JackTest.swift in Sources */,
+				9752A7491AE3517700720127 /* VirtualMachineTest.swift in Sources */,
+				979A36FE1AE4B77E00509C9F /* AssemblerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

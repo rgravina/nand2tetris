@@ -3,7 +3,7 @@ import Quick
 import Nimble
 import Jack
 
-class JackTests: QuickSpec {
+class VirtualMachineTest: QuickSpec {
   override func spec() {
     describe("a VM command") {
       it("should parse a valid push command") {
