@@ -57,6 +57,12 @@ class AssemblerTest: QuickSpec {
     }
 
     describe("the code mapper") {
+      it("should convert simple integer addresses to binary form instrunctions") {
+        var asm = AssemblyCommand(command: "@2")
+        expect(asm.machineCode).to(equal("000000000000010"))
+        asm = AssemblyCommand(command: "@3")
+        expect(asm.machineCode).to(equal("000000000000011"))
+      }
     }
   }
 }

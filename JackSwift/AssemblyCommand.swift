@@ -59,11 +59,11 @@ public class AssemblyCommand : Printable {
         jump = command[semiColonIndex!.endIndex..<command.endIndex]
       }
     }
-    println(self)
+    println(self.machineCode)
   }
 
   /**
-  * Prints command in original string form.
+  * Prints command in assembly form.
   */
   public var description: String {
     get {
@@ -88,4 +88,26 @@ public class AssemblyCommand : Printable {
     }
   }
 
+  /**
+  * Prints machine code form.
+  */
+  public var machineCode: String {
+    get {
+      switch(type) {
+      case .Address:
+        // value is already an address
+        if let intValue = address!.toInt() {
+          return String(format: "%015d", String(intValue, radix: 2).toInt()!)
+        }
+        // value is a symbol, so get its address from the symbol table
+        return description
+      case .Computation:
+        return description
+      case .Label:
+        return description
+      default:
+        return description
+      }
+    }
+  }
 }
