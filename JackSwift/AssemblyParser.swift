@@ -2,11 +2,13 @@ import Foundation
 
 class AssemblyParser {
   let reader:HackFileReader
+  let symbolTable:AssemblerSymbolTable
   /**
   * Open the file
   */
   init(file: String) {
     reader = HackFileReader(file: file)
+    symbolTable = AssemblerSymbolTable()
   }
 
   /**
