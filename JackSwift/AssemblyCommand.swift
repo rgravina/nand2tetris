@@ -110,7 +110,7 @@ public class AssemblyCommand : Printable {
         // Leftmost bit is 1 for instruction, net two 11 (unused bits)
         return "111\(compPart)\(abit)\(destPart)\(jumpPart)"
       case .Label:
-        return description
+        return address!
       default:
         return description
       }
