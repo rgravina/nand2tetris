@@ -35,6 +35,25 @@ class AssemblerTest: QuickSpec {
         expect(asm.type).to(equal(AssemblyCommandType.Address))
         expect(asm.address).to(equal("2"))
       }
+
+      it("should parse a computation command") {
+        // dest=comp;jump, comp;jump, dest=comp
+        var asm = AssemblyCommand(command: "dest=comp;jump")
+        expect(asm.type).to(equal(AssemblyCommandType.Computation))
+        expect(asm.dest).to(equal("dest"))
+        expect(asm.comp).to(equal("comp"))
+        expect(asm.jump).to(equal("jump"))
+        asm = AssemblyCommand(command: "dest=comp")
+        expect(asm.type).to(equal(AssemblyCommandType.Computation))
+        expect(asm.dest).to(equal("dest"))
+        expect(asm.comp).to(equal("comp"))
+        expect(asm.jump).to(beNil())
+        asm = AssemblyCommand(command: "comp;jump")
+        expect(asm.type).to(equal(AssemblyCommandType.Computation))
+        expect(asm.dest).to(beNil())
+        expect(asm.comp).to(equal("comp"))
+        expect(asm.jump).to(equal("jump"))
+      }
     }
 
     describe("the code mapper") {

@@ -39,15 +39,24 @@ public class AssemblyCommand : Printable {
        */
       let equalsIndex = command.rangeOfString("=")
       let semiColonIndex = command.rangeOfString(";")
+
+      // dest
       if (equalsIndex != nil) {
         dest = command[command.startIndex..<equalsIndex!.startIndex]
-      } else {
-        comp = command[command.startIndex..<semiColonIndex!.startIndex]
       }
+
+      // comp
+      if (equalsIndex == nil) {
+        comp = command[command.startIndex..<semiColonIndex!.startIndex]
+      } else if (semiColonIndex == nil) {
+        comp = command[equalsIndex!.endIndex..<command.endIndex]
+      } else {
+        comp = command[equalsIndex!.endIndex..<semiColonIndex!.startIndex]
+      }
+
+      // jump
       if (semiColonIndex != nil) {
         jump = command[semiColonIndex!.endIndex..<command.endIndex]
-      } else {
-        comp = command[equalsIndex!.endIndex..<command.endIndex]
       }
     }
     println(self)
