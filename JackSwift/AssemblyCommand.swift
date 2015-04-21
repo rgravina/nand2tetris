@@ -102,20 +102,13 @@ public class AssemblyCommand : Printable {
         // value is a symbol, so get its address from the symbol table
         return description
       case .Computation:
-        // 1 for instruction, 11 for unused bits
+        // If the comp section uses M, then the a-bit shoul be on
+        let compPart = AssemblyCodeMap.comp[comp!]!
         let abit = comp!.rangeOfString("M") != nil ? 1 : 0
-        var instruction = "111\(AssemblyCodeMap.comp[comp!]!)\(abit)"
-        if let dest = dest {
-          instruction += "\(AssemblyCodeMap.dest[dest]!)"
-        } else {
-          instruction += "000"
-        }
-        if let jump = jump {
-          instruction += "\(AssemblyCodeMap.jump[jump]!)"
-        } else {
-          instruction += "000"
-        }
-        return instruction
+        let destPart = dest != nil ? AssemblyCodeMap.dest[dest!]! : "000"
+        let jumpPart = jump != nil ? AssemblyCodeMap.jump[jump!]! : "000"
+        // Leftmost bit is 1 for instruction, net two 11 (unused bits)
+        return "111\(compPart)\(abit)\(destPart)\(jumpPart)"
       case .Label:
         return description
       default:
