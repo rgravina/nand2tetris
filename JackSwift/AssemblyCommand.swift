@@ -96,7 +96,13 @@ public class AssemblyCommand : Printable {
       case .Address:
         // value is already an address
         if let intValue = address!.toInt() {
-          return String(format: "%016d", String(intValue, radix: 2).toInt()!)
+          let binary = String(intValue, radix: 2)
+          var result = ""
+          for i in 0..<(16 - count(binary)) {
+            result += "0"
+          }
+          result += binary
+          return result
         }
         // value is a symbol, so get its address from the symbol table
         return description
