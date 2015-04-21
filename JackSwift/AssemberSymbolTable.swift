@@ -28,7 +28,4 @@ public class AssemblerSymbolTable {
   ]
   // variables begin at RAM address 16
   var address = 16
-
-  public init() {
-  }
 }
