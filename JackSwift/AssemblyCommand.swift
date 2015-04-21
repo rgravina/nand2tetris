@@ -97,12 +97,25 @@ public class AssemblyCommand : Printable {
       case .Address:
         // value is already an address
         if let intValue = address!.toInt() {
-          return String(format: "%015d", String(intValue, radix: 2).toInt()!)
+          return String(format: "%016d", String(intValue, radix: 2).toInt()!)
         }
         // value is a symbol, so get its address from the symbol table
         return description
       case .Computation:
-        return description
+        // 1 for instruction, 11 for unused bits
+        let abit = comp!.rangeOfString("M") != nil ? 1 : 0
+        var instruction = "111\(AssemblyCodeMap.comp[comp!]!)\(abit)"
+        if let dest = dest {
+          instruction += "\(AssemblyCodeMap.dest[dest]!)"
+        } else {
+          instruction += "000"
+        }
+        if let jump = jump {
+          instruction += "\(AssemblyCodeMap.jump[jump]!)"
+        } else {
+          instruction += "000"
+        }
+        return instruction
       case .Label:
         return description
       default:
