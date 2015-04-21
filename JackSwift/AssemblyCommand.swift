@@ -59,7 +59,6 @@ public class AssemblyCommand : Printable {
         jump = command[semiColonIndex!.endIndex..<command.endIndex]
       }
     }
-    println(self.machineCode)
   }
 
   /**

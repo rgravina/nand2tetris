@@ -21,7 +21,7 @@ if Process.arguments.count != 2 {
   if (assemblyFile) {
     let parser = AssemblyParser(file: Process.arguments.last!)
     while let command = parser.advance() {
-      //...
+      println(command.machineCode)
     }
   } else if (virtualMachineFile) {
     let parser = VirtualMachineParser(file: Process.arguments.last!)
