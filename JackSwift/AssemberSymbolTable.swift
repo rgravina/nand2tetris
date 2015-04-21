@@ -1,6 +1,7 @@
 import Foundation
 
 public class AssemblerSymbolTable {
+  // predefined symbols and memory locations
   static let predefinedSymbols: [String:UInt] = [
     "SP":0,
     "LCL":1,
@@ -26,6 +27,24 @@ public class AssemblerSymbolTable {
     "SCREEN":16384,
     "KBD":24576,
   ]
-  // variables begin at RAM address 16
-  var address = 16
+
+  // additional values stored in this dictionary
+  var symbols = [String:UInt]()
+
+  // variables are stored starting at RAM address 16
+  var address:UInt = 16
+
+  func get(symbol:String) -> UInt? {
+    var symbolAddress = AssemblerSymbolTable.predefinedSymbols[symbol]
+    if symbolAddress == nil {
+      symbolAddress = symbols[symbol]
+    }
+    return symbolAddress
+  }
+
+  func add(symbol:String) {
+    if symbols[symbol] == nil {
+      symbols[symbol] = address++
+    }
+  }
 }

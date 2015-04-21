@@ -18,7 +18,11 @@ class AssemblyParser {
      * the symbol table.
      */
     while let line = reader.nextCommand() {
-      commands.append(AssemblyCommand(command: line))
+      var command = AssemblyCommand(command: line)
+      if command.type == .Label {
+        symbolTable.add(command.address!)
+      }
+      commands.append(command)
     }
 
     /**
@@ -27,6 +31,9 @@ class AssemblyParser {
      * These can be simply replaced. For others, they must be variables so
      * they should be allocated in RAM.
      */
+    for command in commands {
+
+    }
   }
 
   /**
