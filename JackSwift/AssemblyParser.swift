@@ -40,7 +40,7 @@ class AssemblyParser {
         if let intValue = command.address!.toInt() {
         } else {
           if let address = symbolTable.get(command.address!) {
-            command.address =  String(stringInterpolationSegment: address)
+            command.address = String(stringInterpolationSegment: address)
           }
         }
       }
