@@ -59,10 +59,26 @@ class AssemblerTest: QuickSpec {
     describe("the code mapper") {
       it("should convert simple integer addresses to binary form instrunctions") {
         var asm = AssemblyCommand(command: "@2")
-        expect(asm.machineCode).to(equal("000000000000010"))
+        expect(asm.machineCode).to(equal("0000000000000010"))
         asm = AssemblyCommand(command: "@3")
-        expect(asm.machineCode).to(equal("000000000000011"))
+        expect(asm.machineCode).to(equal("0000000000000011"))
       }
     }
-  }
+
+    describe("the symbol table") {
+      it("should get a predefined symbol address") {
+        var st = AssemblerSymbolTable()
+        expect(st.get("R10")).to(equal(10))
+      }
+      it("should return nil if getting a symbol which doesn't exist") {
+        var st = AssemblerSymbolTable()
+        expect(st.get("HELLO")).to(beNil())
+      }
+      it("should add new symbols while incrementing the address it stores them at") {
+        var st = AssemblerSymbolTable()
+        expect(st.add("a")).to(equal(16))
+        expect(st.add("b")).to(equal(17))
+      }
+    }
+}
 }
