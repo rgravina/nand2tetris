@@ -36,7 +36,7 @@ class HackFileReader {
       // remove end of line comments
       let commentIndex = line!.rangeOfString("//")
       if (commentIndex != nil) {
-        line = line![line!.startIndex..<commentIndex!.startIndex]
+        line = trimmed(line![line!.startIndex..<commentIndex!.startIndex])
       }
       return line!
     }
