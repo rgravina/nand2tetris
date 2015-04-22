@@ -64,6 +64,19 @@ public class AssemblyCommand : Printable {
   }
 
   /**
+  * Converts an integer to binary number (padded to 16bits)
+  */
+  public class func decToBin(decimal: Int) -> String? {
+      let binary = String(decimal, radix: 2)
+    var result = ""
+    for i in 0..<(16 - count(binary)) {
+      result += "0"
+    }
+    result += binary
+    return result
+  }
+
+  /**
   * Prints command in assembly form.
   */
   public var description: String {
@@ -98,13 +111,7 @@ public class AssemblyCommand : Printable {
       case .Address:
         // value is already an address
         if let intValue = address!.toInt() {
-          let binary = String(intValue, radix: 2)
-          var result = ""
-          for i in 0..<(16 - count(binary)) {
-            result += "0"
-          }
-          result += binary
-          return result
+          return AssemblyCommand.decToBin(intValue)!
         }
         // value is a symbol, so get its address from the symbol table
         return description
@@ -116,10 +123,8 @@ public class AssemblyCommand : Printable {
         let jumpPart = jump != nil ? AssemblyCodeMap.jump[jump!]! : "000"
         // Leftmost bit is 1 for instruction, net two 11 (unused bits)
         return "111\(compPart)\(abit)\(destPart)\(jumpPart)"
-      case .Label:
-        return address!
       default:
-        return description
+        return "Can not convert instruction to machine code"
       }
     }
   }
