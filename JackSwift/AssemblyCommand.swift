@@ -53,6 +53,8 @@ public class AssemblyCommand : Printable {
       } else {
         comp = command[equalsIndex!.endIndex..<semiColonIndex!.startIndex]
       }
+      assert(comp != nil, "Could not parse the comp part of the assembly instruction '\(command)'.")
+      assert(AssemblyCodeMap.comp[comp!] != nil, "The assembly instruction comp section '\(comp!)' in '\(command)' doesn't exist.")
 
       // jump
       if (semiColonIndex != nil) {
