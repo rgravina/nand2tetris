@@ -2,7 +2,7 @@ import Foundation
 
 public class AssemblerSymbolTable {
   // predefined symbols and memory locations
-  var symbols: [String:UInt] = [
+  var symbols: [String:Int] = [
     "SP":0,
     "LCL":1,
     "ARG":2,
@@ -32,16 +32,22 @@ public class AssemblerSymbolTable {
   }
 
   // variables are stored starting at RAM address 16
-  var address:UInt = 16
+  var address:Int = 16
 
-  public func get(symbol:String) -> UInt? {
+  public func get(symbol:String) -> Int? {
     return symbols[symbol]
   }
 
-  public func add(symbol:String) -> UInt? {
+  public func add(symbol:String) -> Int? {
     if symbols[symbol] == nil {
       symbols[symbol] = address++
     }
+    return symbols[symbol]
+  }
+
+  public func add(symbol:String, address:Int) -> Int? {
+//    println("adding \(symbol) at \(address).")
+    symbols[symbol] = address
     return symbols[symbol]
   }
 }

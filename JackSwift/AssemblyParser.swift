@@ -22,7 +22,7 @@ class AssemblyParser {
       if command.type == .Label {
         // labels represent the address of the next command
         // so, don't add it to the command list
-        symbolTable.add(command.address!)
+        symbolTable.add(command.address!, address: commands.count)
       } else {
         commands.append(command)
       }
@@ -36,9 +36,12 @@ class AssemblyParser {
      */
     for command in commands {
       if command.type == .Address {
+        assert(command.address != nil)
         if let intValue = command.address!.toInt() {
         } else {
-          //command.address = String(format: "%016d", String(symbolTable.get(command.address!)!, radix: 2))
+          if let address = symbolTable.get(command.address!) {
+            command.address =  String(stringInterpolationSegment: address)
+          }
         }
       }
     }
