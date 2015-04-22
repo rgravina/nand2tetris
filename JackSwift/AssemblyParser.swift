@@ -20,9 +20,12 @@ class AssemblyParser {
     while let line = reader.nextCommand() {
       var command = AssemblyCommand(command: line)
       if command.type == .Label {
+        // labels represent the address of the next command
+        // so, don't add it to the command list
         symbolTable.add(command.address!)
+      } else {
+        commands.append(command)
       }
-      commands.append(command)
     }
 
     /**
@@ -32,7 +35,12 @@ class AssemblyParser {
      * they should be allocated in RAM.
      */
     for command in commands {
-
+      if command.type == .Address {
+        if let intValue = command.address!.toInt() {
+        } else {
+          //command.address = String(format: "%016d", String(symbolTable.get(command.address!)!, radix: 2))
+        }
+      }
     }
   }
 
