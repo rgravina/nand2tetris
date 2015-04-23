@@ -38,21 +38,21 @@ class AssemblerTest: QuickSpec {
 
       it("should parse a computation command") {
         // dest=comp;jump, comp;jump, dest=comp
-        var asm = AssemblyCommand(command: "dest=comp;jump")
+        var asm = AssemblyCommand(command: "AM=M-1;JNE")
         expect(asm.type).to(equal(AssemblyCommandType.Computation))
-        expect(asm.dest).to(equal("dest"))
-        expect(asm.comp).to(equal("comp"))
-        expect(asm.jump).to(equal("jump"))
-        asm = AssemblyCommand(command: "dest=comp")
+        expect(asm.dest).to(equal("AM"))
+        expect(asm.comp).to(equal("M-1"))
+        expect(asm.jump).to(equal("JNE"))
+        asm = AssemblyCommand(command: "D=M")
         expect(asm.type).to(equal(AssemblyCommandType.Computation))
-        expect(asm.dest).to(equal("dest"))
-        expect(asm.comp).to(equal("comp"))
+        expect(asm.dest).to(equal("D"))
+        expect(asm.comp).to(equal("M"))
         expect(asm.jump).to(beNil())
-        asm = AssemblyCommand(command: "comp;jump")
+        asm = AssemblyCommand(command: "D;JNE")
         expect(asm.type).to(equal(AssemblyCommandType.Computation))
         expect(asm.dest).to(beNil())
-        expect(asm.comp).to(equal("comp"))
-        expect(asm.jump).to(equal("jump"))
+        expect(asm.comp).to(equal("D"))
+        expect(asm.jump).to(equal("JNE"))
       }
     }
 
