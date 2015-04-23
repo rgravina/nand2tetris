@@ -70,6 +70,15 @@ public class VirtualMachineCommand : Printable {
   * Prints command in assembler string form.
   */
   public var assembly: String {
+    /* TODO implment add similar to this
+     * Computes R0 = 2 + 3
+      @2
+      D=A
+      @3
+      D=D+A
+      @0
+      M=D
+     */
     get {
       return "todo assembly instruction"
     }
