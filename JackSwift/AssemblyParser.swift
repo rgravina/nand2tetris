@@ -41,6 +41,9 @@ class AssemblyParser {
         } else {
           if let address = symbolTable.get(command.address!) {
             command.address = String(stringInterpolationSegment: address)
+          } else {
+            let address = symbolTable.add(command.address!)
+            command.address = String(stringInterpolationSegment: address!)
           }
         }
       }
