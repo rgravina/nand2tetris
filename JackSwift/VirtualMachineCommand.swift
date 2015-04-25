@@ -68,6 +68,21 @@ public class VirtualMachineCommand : Printable {
 
   /**
   * Prints command in assembler string form.
+  *
+  * Memory layout
+  *
+  * 0 - 15          Virtual registers
+  *                 0 SP
+  *                 1 LCL
+  *                 2 ARG
+  *                 3 THIS
+  *                 4 THAT
+  *                 5-12 temp segment
+  *                 13-15 general purpose registers
+  * 16 - 255        Static variables (all of the VM functions in the program)
+  * 256 - 2047      Stack
+  * 2048 - 16483    Heap (used to store objects and arrays)
+  * 16384 - 24575   Memory mapped I/O
   */
   public var assembly: String {
     /* TODO implment add similar to this
@@ -80,7 +95,43 @@ public class VirtualMachineCommand : Printable {
       M=D
      */
     get {
-      return "todo assembly instruction"
+      switch(type) {
+      case .Arithmetic:
+        switch(arg1!) {
+        case "add":
+          // pop two values from the stack
+          // add them and push back on the stack
+          // decrement SP by one.
+          return "todo (add)"
+        default:
+          return "todo"
+        }
+      case .Push:
+        switch(arg1!) {
+        case "constant":
+          // push arg2 onto the stack
+          // increment stack pointer (SP)
+          return "todo (push constant \(arg2!))"
+        default:
+          return "todo"
+        }
+      case .Pop:
+        return "pop \(arg1!) \(arg2!)"
+      case .Label:
+        return "Label"
+      case .Goto:
+        return "Goto"
+      case .If:
+        return "If"
+      case .Function:
+        return "Function"
+      case .Return:
+        return "Return"
+      case .Call:
+        return "Call"
+      default:
+        return "Unknown"
+      }
     }
   }
 }
