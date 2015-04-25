@@ -83,8 +83,21 @@ public class VirtualMachineCommand : Printable {
   * 256 - 2047      Stack
   * 2048 - 16483    Heap (used to store objects and arrays)
   * 16384 - 24575   Memory mapped I/O
+  *
+  * Hack Registers
+  *
+  * - Two 16-bit registers which can be manipulated directly - D and A
+  *  by arithmetic and logical expressions like A=D-1, D=!A
+  *
+  * D - only stores data values
+  * A - both data and address (instruction or data) values
+  *   - jump instructions look at A
+  *   - Load A with e.g. @2
+  *
+  * M - refers to the memory word whose address is the current value of the A register
+  *     e.g. D = Memory[516] - 1 is 1) @516 2) D=M-1
   */
-  public var assembly: String {
+  public var instructions: Array<String> {
     /* TODO implment add similar to this
      * Computes R0 = 2 + 3
       @2
@@ -94,44 +107,39 @@ public class VirtualMachineCommand : Printable {
       @0
       M=D
      */
-    get {
-      switch(type) {
-      case .Arithmetic:
-        switch(arg1!) {
-        case "add":
-          // pop two values from the stack
-          // add them and push back on the stack
-          // decrement SP by one.
-          return "todo (add)"
-        default:
-          return "todo"
-        }
-      case .Push:
-        switch(arg1!) {
-        case "constant":
-          // push arg2 onto the stack
-          // increment stack pointer (SP)
-          return "todo (push constant \(arg2!))"
-        default:
-          return "todo"
-        }
-      case .Pop:
-        return "pop \(arg1!) \(arg2!)"
-      case .Label:
-        return "Label"
-      case .Goto:
-        return "Goto"
-      case .If:
-        return "If"
-      case .Function:
-        return "Function"
-      case .Return:
-        return "Return"
-      case .Call:
-        return "Call"
+    var instructions = Array<String>()
+    switch(type) {
+    case .Arithmetic:
+      switch(arg1!) {
+      case "add":
+        // pop two values from the stack
+        // add them and push back on the stack
+        // decrement SP by one.
+        return instructions
       default:
-        return "Unknown"
+        return instructions
       }
+    case .Push:
+      switch(arg1!) {
+      case "constant":
+        // push arg2 onto the stack
+        //   set memory location in SP to arg2
+        //   increment stack pointer (SP)
+        return instructions
+      default:
+        return instructions
+      }
+    case .Pop:
+//      return "pop \(arg1!) \(arg2!)"
+      return instructions
+//    case .Label:
+//    case .Goto:
+//    case .If:
+//    case .Function:
+//    case .Return:
+//    case .Call:
+    default:
+      return instructions
     }
   }
 }
