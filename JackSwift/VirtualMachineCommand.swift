@@ -43,25 +43,25 @@ public class VirtualMachineCommand : Printable {
     get {
       switch(type) {
       case .Arithmetic:
-        return "\(arg1!)"
+        return "// add"
       case .Push:
-        return "push \(arg1!) \(arg2!)"
+        return "// push \(arg1!) \(arg2!)"
       case .Pop:
-        return "pop \(arg1!) \(arg2!)"
+        return "// pop \(arg1!) \(arg2!)"
       case .Label:
-        return "Label"
+        return "// Label"
       case .Goto:
-        return "Goto"
+        return "// Goto"
       case .If:
-        return "If"
+        return "// If"
       case .Function:
-        return "Function"
+        return "// Function"
       case .Return:
-        return "Return"
+        return "// Return"
       case .Call:
-        return "Call"
+        return "// Call"
       default:
-        return "Unknown"
+        return "// Unknown"
       }
     }
   }
@@ -125,6 +125,11 @@ public class VirtualMachineCommand : Printable {
         // push arg2 onto the stack
         //   set memory location in SP to arg2
         //   increment stack pointer (SP)
+        instructions.append("@\(arg2!)")
+        instructions.append("D=A")
+        instructions.append("@0")
+        instructions.append("M=D")
+        instructions.append("A+1")
         return instructions
       default:
         return instructions

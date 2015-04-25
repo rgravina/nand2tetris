@@ -27,7 +27,7 @@ if Process.arguments.count != 2 {
     let parser = VirtualMachineParser(file: Process.arguments.last!)
     while let command = parser.advance() {
       for instruction in command.instructions {
-        println(command)
+        println(instruction)
       }
     }
   }
