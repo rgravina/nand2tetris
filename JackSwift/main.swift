@@ -25,7 +25,6 @@ if Process.arguments.count != 2 {
     }
   } else if (virtualMachineFile) {
     let parser = VirtualMachineParser(file: Process.arguments.last!)
-    println("// setup")
     for instruction in VirtualMachineCommand.setup {
       println(instruction)
     }
