@@ -115,6 +115,16 @@ public class VirtualMachineCommand : Printable {
         // pop two values from the stack
         // add them and push back on the stack
         // decrement SP by one.
+        instructions.extend(decrementStackPointer())
+        instructions.append("@SP")
+        instructions.append("A=M")
+        instructions.append("D=M")
+        instructions.append("A=A-1")
+        instructions.append("A=M")
+        instructions.append("D=D+A")
+        instructions.append("@SP")
+        instructions.append("A=M-1")
+        instructions.append("M=D")
         return instructions
       default:
         return instructions
@@ -155,6 +165,17 @@ public class VirtualMachineCommand : Printable {
     instructions.append("@SP")
     instructions.append("D=M")
     instructions.append("D=D+1")
+    instructions.append("@SP")
+    instructions.append("M=D")
+    return instructions
+  }
+
+  private func decrementStackPointer() -> Array<String>  {
+    println("// decrement stack pointer")
+    var instructions = Array<String>()
+    instructions.append("@SP")
+    instructions.append("D=M")
+    instructions.append("D=D-1")
     instructions.append("@SP")
     instructions.append("M=D")
     return instructions
