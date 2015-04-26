@@ -127,9 +127,9 @@ public class VirtualMachineCommand : Printable {
         //   increment stack pointer (SP)
         instructions.append("@\(arg2!)")
         instructions.append("D=A")
-        instructions.append("@0")
+        instructions.append("@SP")
         instructions.append("M=D")
-        instructions.append("A+1")
+        instructions.extend(incrementStackPointer())
         return instructions
       default:
         return instructions
@@ -146,5 +146,25 @@ public class VirtualMachineCommand : Printable {
     default:
       return instructions
     }
+  }
+
+  private func incrementStackPointer() -> Array<String>  {
+    println("// increment stack pointer")
+    var instructions = Array<String>()
+    instructions.append("@SP")
+    instructions.append("D=M")
+    instructions.append("D=D+1")
+    instructions.append("@SP")
+    instructions.append("M=D")
+    return instructions
+  }
+
+  public static var setup: Array<String> {
+    var instructions = Array<String>()
+    instructions.append("@256")
+    instructions.append("D=A")
+    instructions.append("@SP")
+    instructions.append("M=D")
+    return instructions
   }
 }
