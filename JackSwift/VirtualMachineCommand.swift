@@ -116,12 +116,15 @@ public class VirtualMachineCommand : Printable {
         // add them and push back on the stack
         // decrement SP by one.
         instructions.extend(decrementStackPointer())
+        // get top of stack and store in D
         instructions.append("@SP")
         instructions.append("A=M")
         instructions.append("D=M")
+        // get next value from stack + A and store in D
         instructions.append("A=A-1")
         instructions.append("A=M")
         instructions.append("D=D+A")
+        // put added value back on stack
         instructions.append("@SP")
         instructions.append("A=M-1")
         instructions.append("M=D")
@@ -135,11 +138,7 @@ public class VirtualMachineCommand : Printable {
         // push arg2 onto the stack
         //   set memory location in SP to arg2
         //   increment stack pointer (SP)
-        instructions.append("@\(arg2!)")
-        instructions.append("D=A")
-        instructions.append("@SP")
-        instructions.append("A=M")
-        instructions.append("M=D")
+        instructions.extend(setTopOfStackToValue(arg2!))
         instructions.extend(incrementStackPointer())
         return instructions
       default:
@@ -160,7 +159,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func incrementStackPointer() -> Array<String>  {
-    println("// increment stack pointer")
+    println("// - increment stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("D=M")
@@ -171,12 +170,23 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func decrementStackPointer() -> Array<String>  {
-    println("// decrement stack pointer")
+    println("// - decrement stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("D=M")
     instructions.append("D=D-1")
     instructions.append("@SP")
+    instructions.append("M=D")
+    return instructions
+  }
+
+  private func setTopOfStackToValue(value: Int) -> Array<String>  {
+    println("// - set top of stack to \(value)")
+    var instructions = Array<String>()
+    instructions.append("@\(value)")
+    instructions.append("D=A")
+    instructions.append("@SP")
+    instructions.append("A=M")
     instructions.append("M=D")
     return instructions
   }
