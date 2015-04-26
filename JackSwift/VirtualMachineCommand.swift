@@ -128,6 +128,7 @@ public class VirtualMachineCommand : Printable {
         instructions.append("@\(arg2!)")
         instructions.append("D=A")
         instructions.append("@SP")
+        instructions.append("A=M")
         instructions.append("M=D")
         instructions.extend(incrementStackPointer())
         return instructions
