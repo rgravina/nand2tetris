@@ -116,15 +116,15 @@ public class VirtualMachineCommand : Printable {
         // add them and push back on the stack
         // decrement SP by one.
         instructions.extend(decrementStackPointer())
-        // get top of stack and store in D
+        println("// - get top of stack and store in D")
         instructions.append("@SP")
         instructions.append("A=M")
         instructions.append("D=M")
-        // get next value from stack + A and store in D
+        println("// - get next value from stack + A and store in D")
         instructions.append("A=A-1")
         instructions.append("A=M")
         instructions.append("D=D+A")
-        // put added value back on stack
+        println("// - put added value back on stack")
         instructions.append("@SP")
         instructions.append("A=M-1")
         instructions.append("M=D")
