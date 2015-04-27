@@ -98,15 +98,6 @@ public class VirtualMachineCommand : Printable {
   *     e.g. D = Memory[516] - 1 is 1) @516 2) D=M-1
   */
   public var instructions: Array<String> {
-    /* TODO implment add similar to this
-     * Computes R0 = 2 + 3
-      @2
-      D=A
-      @3
-      D=D+A
-      @0
-      M=D
-     */
     var instructions = Array<String>()
     switch(type) {
     case .Arithmetic:
