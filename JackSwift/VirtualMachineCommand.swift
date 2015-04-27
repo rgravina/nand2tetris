@@ -27,6 +27,10 @@ public class VirtualMachineCommand : Printable {
       type = .Arithmetic
       arg1 = "add"
       arg2 = nil
+    case "eq":
+      type = .Arithmetic
+      arg1 = "eq"
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -43,7 +47,7 @@ public class VirtualMachineCommand : Printable {
     get {
       switch(type) {
       case .Arithmetic:
-        return "// add"
+        return "// \(arg1!)"
       case .Push:
         return "// push \(arg1!) \(arg2!)"
       case .Pop:
@@ -111,6 +115,15 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setAToArg2())
         println("// - Add D and A")
         instructions.append("D=D+A")
+        instructions.extend(putDOnStack())
+        return instructions
+      case "eq":
+        instructions.extend(decrementStackPointer())
+        instructions.extend(setDToArg1())
+        instructions.extend(setAToArg2())
+        println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
+        instructions.append("D=D-A")
+//        instructions.append("D;JNE")
         instructions.extend(putDOnStack())
         return instructions
       default:
