@@ -107,18 +107,11 @@ public class VirtualMachineCommand : Printable {
         // add them and push back on the stack
         // decrement SP by one.
         instructions.extend(decrementStackPointer())
-        println("// - get top of stack and store in D")
-        instructions.append("@SP")
-        instructions.append("A=M")
-        instructions.append("D=M")
-        println("// - get next value from stack + A and store in D")
-        instructions.append("A=A-1")
-        instructions.append("A=M")
+        instructions.extend(setDToArg1())
+        instructions.extend(setAToArg2())
+        println("// - Add D and A")
         instructions.append("D=D+A")
-        println("// - put added value back on stack")
-        instructions.append("@SP")
-        instructions.append("A=M-1")
-        instructions.append("M=D")
+        instructions.extend(putDOnStack())
         return instructions
       default:
         return instructions
@@ -178,6 +171,32 @@ public class VirtualMachineCommand : Printable {
     instructions.append("D=A")
     instructions.append("@SP")
     instructions.append("A=M")
+    instructions.append("M=D")
+    return instructions
+  }
+
+  private func setDToArg1() -> Array<String>  {
+    println("// - get top of stack and store in D")
+    var instructions = Array<String>()
+    instructions.append("@SP")
+    instructions.append("A=M")
+    instructions.append("D=M")
+    return instructions
+  }
+
+  private func setAToArg2() -> Array<String>  {
+    println("// - get next value from stack and store in A")
+    var instructions = Array<String>()
+    instructions.append("A=A-1")
+    instructions.append("A=M")
+    return instructions
+  }
+
+  private func putDOnStack() -> Array<String>  {
+    println("// - put value back on stack")
+    var instructions = Array<String>()
+    instructions.append("@SP")
+    instructions.append("A=M-1")
     instructions.append("M=D")
     return instructions
   }
