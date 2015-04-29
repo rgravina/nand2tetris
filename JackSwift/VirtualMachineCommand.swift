@@ -8,6 +8,7 @@ public class VirtualMachineCommand : Printable {
   public let type:VirtualMachineCommandType
   public let arg1:String?
   public let arg2:Int?
+  public static var rip:Int = 0
 
   /**
   * Takes a string representing a VM command are parses it into instruction and arguments.
@@ -122,9 +123,19 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setDToArg1())
         instructions.extend(setAToArg2())
         println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
-        instructions.append("D=D-A")
-//        instructions.append("D;JNE")
-        instructions.extend(putDOnStack())
+        let rip = VirtualMachineCommand.rip++
+        // set top of stack to be the comparison of D and A
+        instructions.append("M=D-A")
+        instructions.append("@$RIP:\(rip)")
+        instructions.append("D=A")
+        instructions.append("@$$TRUE")
+        instructions.append("M;JEQ")
+        instructions.append("@SP")
+        instructions.append("A=A-1")
+        instructions.append("M=0")
+        instructions.append("($RIP:\(rip))")
+        instructions.append("@SP")
+        instructions.append("A=M-1")
         return instructions
       default:
         return instructions
@@ -221,6 +232,16 @@ public class VirtualMachineCommand : Printable {
     instructions.append("D=A")
     instructions.append("@SP")
     instructions.append("M=D")
+    instructions.append("@$$START")
+    instructions.append("0;JMP")
+    instructions.append("($$TRUE)")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=-1")
+    // set A to the RIP
+    instructions.append("A=D")
+    instructions.append("0;JMP")
+    instructions.append("($$START)")
     return instructions
   }
 }
