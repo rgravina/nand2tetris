@@ -113,7 +113,6 @@ public class VirtualMachineCommand : Printable {
         // decrement SP by one.
         instructions.extend(decrementStackPointer())
         instructions.extend(setDToArg1AndAToArg2())
-        println("// - Add D and A")
         instructions.append("D=D+A")
         instructions.extend(putDOnStack())
         return instructions
