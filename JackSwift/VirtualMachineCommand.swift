@@ -170,10 +170,7 @@ public class VirtualMachineCommand : Printable {
     println("// - increment stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
-    instructions.append("D=M")
-    instructions.append("D=D+1")
-    instructions.append("@SP")
-    instructions.append("M=D")
+    instructions.append("M=M+1")
     return instructions
   }
 
@@ -181,10 +178,7 @@ public class VirtualMachineCommand : Printable {
     println("// - decrement stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
-    instructions.append("D=M")
-    instructions.append("D=D-1")
-    instructions.append("@SP")
-    instructions.append("M=D")
+    instructions.append("M=M-1")
     return instructions
   }
 
