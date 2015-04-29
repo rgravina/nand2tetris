@@ -112,16 +112,14 @@ public class VirtualMachineCommand : Printable {
         // add them and push back on the stack
         // decrement SP by one.
         instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1())
-        instructions.extend(setAToArg2())
+        instructions.extend(setDToArg1AndAToArg2())
         println("// - Add D and A")
         instructions.append("D=D+A")
         instructions.extend(putDOnStack())
         return instructions
       case "eq":
         instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1())
-        instructions.extend(setAToArg2())
+        instructions.extend(setDToArg1AndAToArg2())
         println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
         let rip = VirtualMachineCommand.rip++
         // set top of stack to be the comparison of D and A
@@ -193,18 +191,13 @@ public class VirtualMachineCommand : Printable {
     return instructions
   }
 
-  private func setDToArg1() -> Array<String>  {
+  private func setDToArg1AndAToArg2() -> Array<String>  {
     println("// - get top of stack and store in D")
+    println("// - get next value from stack and store in A")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("A=M")
     instructions.append("D=M")
-    return instructions
-  }
-
-  private func setAToArg2() -> Array<String>  {
-    println("// - get next value from stack and store in A")
-    var instructions = Array<String>()
     instructions.append("A=A-1")
     instructions.append("A=M")
     return instructions
