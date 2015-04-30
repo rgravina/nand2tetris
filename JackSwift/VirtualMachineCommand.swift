@@ -121,7 +121,7 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setDToArg1AndAToArg2())
         println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
         let rip = VirtualMachineCommand.rip++
-        instructions.append("D=D-A")         // D-A == 0 if equal, non-zero otherwise
+        instructions.append("D=A-D")         // A-D == 0 if equal, <0 if arg1 < arg2, >0 if arg1 > arg2
         instructions.append("@R13")
         instructions.append("M=D")           // R13 contains comparison
         instructions.append("@$RIP:\(rip)")  // unique return instruction pointer
@@ -220,7 +220,7 @@ public class VirtualMachineCommand : Printable {
     instructions.append("0;JMP")
 
     // EQ function
-    // @R13 - should contain result of arg1 - arg2.
+    // @R13 - should contain result of arg2 - arg1.
     // @R14 - should contain the return address
     // @SP  - should point to the address after the top value on the stack
     instructions.append("($$EQ)")
