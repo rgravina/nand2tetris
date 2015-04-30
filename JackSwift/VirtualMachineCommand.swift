@@ -121,18 +121,16 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setDToArg1AndAToArg2())
         println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
         let rip = VirtualMachineCommand.rip++
-        // set top of stack to be the comparison of D and A
-        instructions.append("M=D-A")
-        instructions.append("@$RIP:\(rip)")
-        instructions.append("D=A")
-        instructions.append("@$$TRUE")
-        instructions.append("M;JEQ")
-        instructions.append("@SP")
-        instructions.append("A=A-1")
-        instructions.append("M=0")
-        instructions.append("($RIP:\(rip))")
-        instructions.append("@SP")
-        instructions.append("A=M-1")
+        instructions.append("D=D-A")         // D-A == 0 if equal, non-zero otherwise
+        instructions.append("@R13")
+        instructions.append("M=D")           // R13 contains comparison
+        instructions.append("@$RIP:\(rip)")  // unique return instruction pointer
+        instructions.append("D=A")           // need this as the next instruction overwrites A
+        instructions.append("@R14")
+        instructions.append("M=D")           // R14 contains RIP
+        instructions.append("@$$EQ")         // Jump to EQ function
+        instructions.append("0;JMP")
+        instructions.append("($RIP:\(rip))") // The end of this equals instruction
         return instructions
       default:
         return instructions
@@ -220,13 +218,30 @@ public class VirtualMachineCommand : Printable {
     instructions.append("M=D")
     instructions.append("@$$START")
     instructions.append("0;JMP")
-    instructions.append("($$TRUE)")
+
+    // EQ function
+    // @R13 - should contain result of arg1 - arg2.
+    // @R14 - should contain the return address
+    // @SP  - should point to the address after the top value on the stack
+    instructions.append("($$EQ)")
+    instructions.append("@R13")
+    instructions.append("D=M")
+    instructions.append("@$$EQ:FALSE")
+    instructions.append("D;JNE")
     instructions.append("@SP")
     instructions.append("A=M-1")
-    instructions.append("M=-1")
-    // set A to the RIP
-    instructions.append("A=D")
+    instructions.append("M=-1")   // true
+    instructions.append("@$$EQ:END")
     instructions.append("0;JMP")
+    instructions.append("($$EQ:FALSE)")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=0")    // false
+    instructions.append("($$EQ:END)")
+    instructions.append("@R14")
+    instructions.append("A=M")
+    instructions.append("0;JMP")
+
     instructions.append("($$START)")
     return instructions
   }
