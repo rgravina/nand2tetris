@@ -32,6 +32,14 @@ public class VirtualMachineCommand : Printable {
       type = .Arithmetic
       arg1 = "eq"
       arg2 = nil
+    case "lt":
+      type = .Arithmetic
+      arg1 = "lt"
+      arg2 = nil
+    case "gt":
+      type = .Arithmetic
+      arg1 = "gt"
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -116,7 +124,7 @@ public class VirtualMachineCommand : Printable {
         instructions.append("D=D+A")
         instructions.extend(putDOnStack())
         return instructions
-      case "eq":
+      case "eq", "lt", "gt":
         instructions.extend(decrementStackPointer())
         instructions.extend(setDToArg1AndAToArg2())
         println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
@@ -128,7 +136,7 @@ public class VirtualMachineCommand : Printable {
         instructions.append("D=A")           // need this as the next instruction overwrites A
         instructions.append("@R14")
         instructions.append("M=D")           // R14 contains RIP
-        instructions.append("@$$EQ")         // Jump to EQ function
+        instructions.append("@$$\(arg1!.uppercaseString)")         // Jump to EQ function
         instructions.append("0;JMP")
         instructions.append("($RIP:\(rip))") // The end of this equals instruction
         return instructions
@@ -238,6 +246,52 @@ public class VirtualMachineCommand : Printable {
     instructions.append("A=M-1")
     instructions.append("M=0")    // false
     instructions.append("($$EQ:END)")
+    instructions.append("@R14")
+    instructions.append("A=M")
+    instructions.append("0;JMP")
+
+    // LT function
+    // @R13 - should contain result of arg2 - arg1.
+    // @R14 - should contain the return address
+    // @SP  - should point to the address after the top value on the stack
+    instructions.append("($$LT)")
+    instructions.append("@R13")
+    instructions.append("D=M")
+    instructions.append("@$$LT:FALSE")
+    instructions.append("D;JGE")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=-1")   // true
+    instructions.append("@$$LT:END")
+    instructions.append("0;JMP")
+    instructions.append("($$LT:FALSE)")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=0")    // false
+    instructions.append("($$LT:END)")
+    instructions.append("@R14")
+    instructions.append("A=M")
+    instructions.append("0;JMP")
+
+    // GT function
+    // @R13 - should contain result of arg2 - arg1.
+    // @R14 - should contain the return address
+    // @SP  - should point to the address after the top value on the stack
+    instructions.append("($$GT)")
+    instructions.append("@R13")
+    instructions.append("D=M")
+    instructions.append("@$$GT:FALSE")
+    instructions.append("D;JLE")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=-1")   // true
+    instructions.append("@$$GT:END")
+    instructions.append("0;JMP")
+    instructions.append("($$GT:FALSE)")
+    instructions.append("@SP")
+    instructions.append("A=M-1")
+    instructions.append("M=0")    // false
+    instructions.append("($$GT:END)")
     instructions.append("@R14")
     instructions.append("A=M")
     instructions.append("0;JMP")
