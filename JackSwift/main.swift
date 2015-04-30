@@ -28,6 +28,7 @@ if Process.arguments.count != 2 {
     for instruction in VirtualMachineCommand.setup {
       println(instruction)
     }
+    println("//\n// Start of main program\n//\n")
     while let command = parser.advance() {
       for instruction in command.instructions {
         println(instruction)

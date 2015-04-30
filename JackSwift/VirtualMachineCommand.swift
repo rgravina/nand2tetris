@@ -230,6 +230,7 @@ public class VirtualMachineCommand : Printable {
     // @R13 - should contain result of arg2 - arg1.
     // @R14 - should contain the return address
     // @SP  - should point to the address after the top value on the stack
+    println("// EQ function")
     instructions.append("($$EQ)")
     instructions.append("@R13")
     instructions.append("D=M")
@@ -253,6 +254,7 @@ public class VirtualMachineCommand : Printable {
     // @R13 - should contain result of arg2 - arg1.
     // @R14 - should contain the return address
     // @SP  - should point to the address after the top value on the stack
+    println("// LT function")
     instructions.append("($$LT)")
     instructions.append("@R13")
     instructions.append("D=M")
@@ -276,6 +278,7 @@ public class VirtualMachineCommand : Printable {
     // @R13 - should contain result of arg2 - arg1.
     // @R14 - should contain the return address
     // @SP  - should point to the address after the top value on the stack
+    println("// GT function")
     instructions.append("($$GT)")
     instructions.append("@R13")
     instructions.append("D=M")
