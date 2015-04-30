@@ -127,7 +127,6 @@ public class VirtualMachineCommand : Printable {
       case "eq", "lt", "gt":
         instructions.extend(decrementStackPointer())
         instructions.extend(setDToArg1AndAToArg2())
-        println("// - TODO Subtract A from D and test for zero (i.e. test for eq), then set top of stack to true (-1) or false (0).")
         let rip = VirtualMachineCommand.rip++
         instructions.append("D=A-D")         // A-D == 0 if equal, <0 if arg1 < arg2, >0 if arg1 > arg2
         instructions.append("@R13")
