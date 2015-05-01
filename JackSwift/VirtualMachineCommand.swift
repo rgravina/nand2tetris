@@ -44,6 +44,22 @@ public class VirtualMachineCommand : Printable {
       type = .Arithmetic
       arg1 = "gt"
       arg2 = nil
+    case "and":
+      type = .Arithmetic
+      arg1 = "and"
+      arg2 = nil
+    case "or":
+      type = .Arithmetic
+      arg1 = "or"
+      arg2 = nil
+    case "neg":
+      type = .Arithmetic
+      arg1 = "neg"
+      arg2 = nil
+    case "not":
+      type = .Arithmetic
+      arg1 = "not"
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -145,6 +161,30 @@ public class VirtualMachineCommand : Printable {
         instructions.append("@$$\(arg1!.uppercaseString)")         // Jump to EQ function
         instructions.append("0;JMP")
         instructions.append("($RIP:\(rip))") // The end of this equals instruction
+        return instructions
+      case "and":
+        instructions.extend(decrementStackPointer())
+        instructions.extend(setDToArg1AndAToArg2())
+        instructions.append("D=A&D")
+        instructions.extend(putDOnStack())
+        return instructions
+      case "or":
+        instructions.extend(decrementStackPointer())
+        instructions.extend(setDToArg1AndAToArg2())
+        instructions.append("D=A|D")
+        instructions.extend(putDOnStack())
+        return instructions
+      case "neg":
+        instructions.append("@SP")
+        instructions.append("A=M-1")
+        instructions.append("D=-M")
+        instructions.extend(putDOnStack())
+        return instructions
+      case "not":
+        instructions.append("@SP")
+        instructions.append("A=M-1")
+        instructions.append("D=!M")
+        instructions.extend(putDOnStack())
         return instructions
       default:
         return instructions
