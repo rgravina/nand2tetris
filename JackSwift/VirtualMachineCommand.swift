@@ -28,6 +28,10 @@ public class VirtualMachineCommand : Printable {
       type = .Arithmetic
       arg1 = "add"
       arg2 = nil
+    case "sub":
+      type = .Arithmetic
+      arg1 = "sub"
+      arg2 = nil
     case "eq":
       type = .Arithmetic
       arg1 = "eq"
@@ -116,12 +120,15 @@ public class VirtualMachineCommand : Printable {
     case .Arithmetic:
       switch(arg1!) {
       case "add":
-        // pop two values from the stack
-        // add them and push back on the stack
-        // decrement SP by one.
         instructions.extend(decrementStackPointer())
         instructions.extend(setDToArg1AndAToArg2())
-        instructions.append("D=D+A")
+        instructions.append("D=A+D")
+        instructions.extend(putDOnStack())
+        return instructions
+      case "sub":
+        instructions.extend(decrementStackPointer())
+        instructions.extend(setDToArg1AndAToArg2())
+        instructions.append("D=A-D")
         instructions.extend(putDOnStack())
         return instructions
       case "eq", "lt", "gt":
