@@ -105,14 +105,15 @@ public class VirtualMachineCommand : Printable {
   * Memory layout
   *
   * 0 - 15          Virtual registers
-  *                 0 SP
-  *                 1 LCL
-  *                 2 ARG
-  *                 3 THIS
-  *                 4 THAT
-  *                 5-12 temp segment
-  *                 13-15 general purpose registers
+  *                 0 SP      (the stack pointer. Starts at 256)
+  *                 1 LCL     (the address of the start of the local segment for the current function)
+  *                 2 ARG     (the address of the start of the argument segment for the current function)
+  *                 3 THIS    (the address of the start of the this segment for the current function)
+  *                 4 THAT    (the address of the start of the that segment for the current function)
+  *                 5-12      (temp segment)
+  *                 13-15     (general purpose registers)
   * 16 - 255        Static variables (all of the VM functions in the program)
+  *                           (static segment)
   * 256 - 2047      Stack
   * 2048 - 16483    Heap (used to store objects and arrays)
   * 16384 - 24575   Memory mapped I/O
