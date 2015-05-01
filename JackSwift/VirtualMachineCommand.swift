@@ -20,7 +20,7 @@ public class VirtualMachineCommand : Printable {
       type = .Push
       arg1 = tokens[1]
       arg2 = tokens[2].toInt()
-    case "push":
+    case "pop":
       type = .Pop
       arg1 = tokens[1]
       arg2 = tokens[2].toInt()
