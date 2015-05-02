@@ -199,36 +199,33 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setTopOfStackToValue(arg2!))
         instructions.extend(incrementStackPointer())
         return instructions
+      case "local":
+        // set top of stack to the value in local + offset
+        // e.g. push local 0
+        return instructions
+      case "argument":
+        return instructions
+      case "temp":
+        return instructions
+      case "this":
+        return instructions
+      case "that":
+        return instructions
       default:
         return instructions
       }
     case .Pop:
       instructions.extend(decrementStackPointer())
-      instructions.append("@\(arg2!)")  // load offset
-      instructions.append("D=A")        // save offset in D
-      // get segment base pointer
-      switch(arg1!) {
-      case "local":
-        instructions.append("@LCL")
-      case "argument":
-        instructions.append("@ARG")
-      case "this":
-        instructions.append("@THIS")
-      case "that":
-        instructions.append("@THAT")
-      default:
-        println("// unknown segment")
-      }
-      instructions.append("D=D+M")  // set R13 location to save into
-      instructions.append("@R13")
+      instructions.extend(putAddressFromSementWithOffsetInD(arg2!))
+      instructions.append("@R13")   // store D in R13
       instructions.append("M=D")
 
       instructions.append("@SP")
       instructions.append("A=M")
-      instructions.append("D=M")    // the value
+      instructions.append("D=M")    // store the value in D
 
       instructions.append("@R13")
-      instructions.append("A=M")    // the address
+      instructions.append("A=M")    // load R13 into A
 
       // R13/A - address to save into
       // D - value to save
@@ -291,6 +288,28 @@ public class VirtualMachineCommand : Printable {
     instructions.append("@SP")
     instructions.append("A=M-1")
     instructions.append("M=D")
+    return instructions
+  }
+
+  private func putAddressFromSementWithOffsetInD(offset: Int) -> Array<String>  {
+    println("// - put address off segment+offset in D")
+    var instructions = Array<String>()
+    instructions.append("@\(offset)")  // load offset
+    instructions.append("D=A")        // save offset in D
+    // get segment base pointer
+    switch(arg1!) {
+    case "local":
+      instructions.append("@LCL")
+    case "argument":
+      instructions.append("@ARG")
+    case "this":
+      instructions.append("@THIS")
+    case "that":
+      instructions.append("@THAT")
+    default:
+      println("// unknown segment")
+    }
+    instructions.append("D=D+M")  // set R13 location to save into
     return instructions
   }
 
