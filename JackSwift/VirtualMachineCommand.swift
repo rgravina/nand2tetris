@@ -203,8 +203,38 @@ public class VirtualMachineCommand : Printable {
         return instructions
       }
     case .Pop:
-//      return "pop \(arg1!) \(arg2!)"
+      instructions.extend(decrementStackPointer())
+      instructions.append("@\(arg2!)")  // load offset
+      instructions.append("D=A")        // save offset in D
+      // get segment base pointer
+      switch(arg1!) {
+      case "local":
+        instructions.append("@LCL")
+      case "argument":
+        instructions.append("@ARG")
+      case "this":
+        instructions.append("@THIS")
+      case "that":
+        instructions.append("@THAT")
+      default:
+        println("// unknown segment")
+      }
+      instructions.append("D=D+M")  // set R13 location to save into
+      instructions.append("@R13")
+      instructions.append("M=D")
+
+      instructions.append("@SP")
+      instructions.append("A=M")
+      instructions.append("D=M")    // the value
+
+      instructions.append("@R13")
+      instructions.append("A=M")    // the address
+
+      // R13/A - address to save into
+      // D - value to save
+      instructions.append("M=D")
       return instructions
+
 //    case .Label:
 //    case .Goto:
 //    case .If:
