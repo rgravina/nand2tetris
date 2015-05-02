@@ -205,11 +205,11 @@ public class VirtualMachineCommand : Printable {
         return instructions
       case "argument":
         return instructions
-      case "temp":
-        return instructions
       case "this":
         return instructions
       case "that":
+        return instructions
+      case "temp":
         return instructions
       default:
         return instructions
