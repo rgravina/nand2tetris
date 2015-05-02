@@ -216,7 +216,7 @@ public class VirtualMachineCommand : Printable {
       }
     case .Pop:
       instructions.extend(decrementStackPointer())
-      instructions.extend(putAddressFromSementWithOffsetInD(arg2!))
+      instructions.extend(putAddressFromSementWithOffsetInD())
       instructions.append("@R13")   // store D in R13
       instructions.append("M=D")
 
@@ -291,10 +291,10 @@ public class VirtualMachineCommand : Printable {
     return instructions
   }
 
-  private func putAddressFromSementWithOffsetInD(offset: Int) -> Array<String>  {
+  private func putAddressFromSementWithOffsetInD() -> Array<String>  {
     println("// - put address off segment+offset in D")
     var instructions = Array<String>()
-    instructions.append("@\(offset)")  // load offset
+    instructions.append("@\(arg2!)")  // load offset
     instructions.append("D=A")        // save offset in D
     // get segment base pointer
     switch(arg1!) {
