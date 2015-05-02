@@ -199,7 +199,7 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(setTopOfStackToValue(arg2!))
         instructions.extend(incrementStackPointer())
         return instructions
-      case "local", "argument", "this", "that", "temp", "pointer":
+      case "local", "argument", "this", "that", "temp", "pointer", "static":
         // set top of stack to the value in local + offset
         // e.g. push local 0
         instructions.extend(putAddressFromSementWithOffsetInD())
@@ -312,6 +312,9 @@ public class VirtualMachineCommand : Printable {
       instructions.append("D=D+A")  // set R13 location to save into
     case "pointer":
       instructions.append("@3")
+      instructions.append("D=D+A")  // set R13 location to save into
+    case "static":
+      instructions.append("@16")
       instructions.append("D=D+A")  // set R13 location to save into
     default:
       println("// unknown segment")
