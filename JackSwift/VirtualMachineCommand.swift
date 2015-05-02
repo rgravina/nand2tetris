@@ -274,77 +274,36 @@ public class VirtualMachineCommand : Printable {
     instructions.append("@$$START")
     instructions.append("0;JMP")
 
-    // EQ function
-    // @R13 - should contain result of arg2 - arg1.
-    // @R14 - should contain the return address
-    // @SP  - should point to the address after the top value on the stack
-    println("// EQ function")
-    instructions.append("($$EQ)")
-    instructions.append("@R13")
-    instructions.append("D=M")
-    instructions.append("@$$EQ:FALSE")
-    instructions.append("D;JNE")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=-1")   // true
-    instructions.append("@$$EQ:END")
-    instructions.append("0;JMP")
-    instructions.append("($$EQ:FALSE)")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=0")    // false
-    instructions.append("($$EQ:END)")
-    instructions.append("@R14")
-    instructions.append("A=M")
-    instructions.append("0;JMP")
+    let comparisonFunctions:Array<(comp: String, jump: String)> = [
+      (comp: "EQ", jump: "JNE"),
+      (comp: "LT", jump: "JGE"),
+      (comp: "GT", jump: "JLE")
+    ]
 
-    // LT function
-    // @R13 - should contain result of arg2 - arg1.
-    // @R14 - should contain the return address
-    // @SP  - should point to the address after the top value on the stack
-    println("// LT function")
-    instructions.append("($$LT)")
-    instructions.append("@R13")
-    instructions.append("D=M")
-    instructions.append("@$$LT:FALSE")
-    instructions.append("D;JGE")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=-1")   // true
-    instructions.append("@$$LT:END")
-    instructions.append("0;JMP")
-    instructions.append("($$LT:FALSE)")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=0")    // false
-    instructions.append("($$LT:END)")
-    instructions.append("@R14")
-    instructions.append("A=M")
-    instructions.append("0;JMP")
-
-    // GT function
-    // @R13 - should contain result of arg2 - arg1.
-    // @R14 - should contain the return address
-    // @SP  - should point to the address after the top value on the stack
-    println("// GT function")
-    instructions.append("($$GT)")
-    instructions.append("@R13")
-    instructions.append("D=M")
-    instructions.append("@$$GT:FALSE")
-    instructions.append("D;JLE")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=-1")   // true
-    instructions.append("@$$GT:END")
-    instructions.append("0;JMP")
-    instructions.append("($$GT:FALSE)")
-    instructions.append("@SP")
-    instructions.append("A=M-1")
-    instructions.append("M=0")    // false
-    instructions.append("($$GT:END)")
-    instructions.append("@R14")
-    instructions.append("A=M")
-    instructions.append("0;JMP")
+    for comparisonFuction in comparisonFunctions {
+      // @R13 - should contain result of arg2 - arg1.
+      // @R14 - should contain the return address
+      // @SP  - should point to the address after the top value on the stack
+      println("// \(comparisonFuction.comp) function")
+      instructions.append("($$\(comparisonFuction.comp))")
+      instructions.append("@R13")
+      instructions.append("D=M")
+      instructions.append("@$$\(comparisonFuction.comp):FALSE")
+      instructions.append("D;\(comparisonFuction.jump)")
+      instructions.append("@SP")
+      instructions.append("A=M-1")
+      instructions.append("M=-1")   // true
+      instructions.append("@$$\(comparisonFuction.comp):END")
+      instructions.append("0;JMP")
+      instructions.append("($$\(comparisonFuction.comp):FALSE)")
+      instructions.append("@SP")
+      instructions.append("A=M-1")
+      instructions.append("M=0")    // false
+      instructions.append("($$\(comparisonFuction.comp):END)")
+      instructions.append("@R14")
+      instructions.append("A=M")
+      instructions.append("0;JMP")
+    }
 
     instructions.append("($$START)")
     return instructions
