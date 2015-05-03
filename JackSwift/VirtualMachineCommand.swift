@@ -230,9 +230,7 @@ public class VirtualMachineCommand : Printable {
       instructions.extend(putAddressFromSementWithOffsetInD())
       instructions.append("@R13")   // store D in R13
       instructions.append("M=D")
-      instructions.append("@SP")
-      instructions.append("A=M")
-      instructions.append("D=M")    // store the value in D
+      instructions.extend(putTopOfStackInD())
       instructions.append("@R13")
       instructions.append("A=M")    // load R13 into A
 
@@ -245,9 +243,7 @@ public class VirtualMachineCommand : Printable {
       return instructions
     case .If:
       instructions.extend(decrementStackPointer())
-      instructions.append("@SP")
-      instructions.append("A=M")
-      instructions.append("D=M")
+      instructions.extend(putTopOfStackInD())
       instructions.append("@\(arg1!)")
       instructions.append("D;JNE")
       return instructions
@@ -308,6 +304,15 @@ public class VirtualMachineCommand : Printable {
     instructions.append("@SP")
     instructions.append("A=M-1")
     instructions.append("M=D")
+    return instructions
+  }
+
+  private func putTopOfStackInD() -> Array<String>  {
+    println("// - put top of stack in D")
+    var instructions = Array<String>()
+    instructions.append("@SP")
+    instructions.append("A=M")
+    instructions.append("D=M")
     return instructions
   }
 
