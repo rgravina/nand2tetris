@@ -34,5 +34,25 @@ if Process.arguments.count != 2 {
         println(instruction)
       }
     }
+  } else {
+    let fileManager = NSFileManager.defaultManager()
+    var parser:VirtualMachineParser
+
+    if let contents = fileManager.contentsOfDirectoryAtPath(fileName, error: nil) as? [String] {
+      for instruction in VirtualMachineCommand.setup {
+        println(instruction)
+      }
+      for file in contents {
+        let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
+        if virtualMachineFile {
+          parser = VirtualMachineParser(file: "\(fileName)/\(file)")
+          while let command = parser.advance() {
+            for instruction in command.instructions {
+              println(instruction)
+            }
+          }
+        }
+      }
+    }
   }
 }
