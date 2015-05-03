@@ -94,11 +94,11 @@ public class VirtualMachineCommand : Printable {
       case .Pop:
         return "// pop \(arg1!) \(arg2!)"
       case .Label:
-        return "// label"
+        return "// label \(arg1!)"
       case .Goto:
-        return "// goto"
+        return "// goto \(arg1!)"
       case .If:
-        return "// if"
+        return "// if \(arg1!)"
       case .Function:
         return "// function"
       case .Return:
