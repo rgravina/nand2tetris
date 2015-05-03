@@ -72,6 +72,10 @@ public class VirtualMachineCommand : Printable {
       type = .Goto
       arg1 = tokens[1]
       arg2 = nil
+    case "function":
+      type = .Function
+      arg1 = tokens[1]
+      arg2 = tokens[2].toInt()
     default:
       type = .Unknown
       arg1 = nil
@@ -100,7 +104,7 @@ public class VirtualMachineCommand : Printable {
       case .If:
         return "// if \(arg1!)"
       case .Function:
-        return "// function"
+        return "// function \(arg1!) \(arg2!)"
       case .Return:
         return "// return"
       case .Call:
@@ -249,9 +253,42 @@ public class VirtualMachineCommand : Printable {
       instructions.append("@\(arg1!)")
       instructions.append("0;JMP")
       return instructions
-//    case .Function:
 //    case .Return:
 //    case .Call:
+    case .Function:
+      // declare a label for the function entry (arg1)
+      // number of local variables (arg2)
+      // initialise all local variables to zero
+      instructions.append("(\(arg1!))")
+      for i in 0..<arg2! {
+        instructions.append("@LCL")
+        instructions.append("D=M")
+        instructions.append("@\(i)")
+        instructions.append("A=D+A")
+        instructions.append("M=0")
+        instructions.extend(incrementStackPointer())
+      }
+      return instructions
+    case .Return:
+      instructions.append("@LCL")
+      instructions.append("D=M-1")
+      instructions.append("@THAT")
+      instructions.append("M=D")    // that at FRAME-1
+      instructions.append("D=D-1")
+      instructions.append("@THIS")
+      instructions.append("M=D")    // this at FRAME-2
+      instructions.append("D=D-1")
+      instructions.append("@ARG")
+      instructions.append("M=D")    // arg at FRAME-3
+      instructions.append("D=D-1")
+      instructions.append("@LCL")
+      instructions.append("M=D")    // lcl at FRAME-4
+      instructions.append("D=D-1")
+      instructions.append("A=M")    // return address at FRAME-5
+      instructions.append("0;JMP")  // jump tp return address
+return instructions
+    case .Call:
+      return instructions
     default:
       return instructions
     }
