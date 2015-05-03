@@ -266,11 +266,10 @@ public class VirtualMachineCommand : Printable {
       // number of local variables (arg2)
       // initialise all local variables to zero
       instructions.append("(\(arg1!))")
+      instructions.append("@LCL")
+      instructions.append("D=M")
       for i in 0..<arg2! {
-        instructions.append("@LCL")
-        instructions.append("D=M")
-        instructions.append("@\(i)")
-        instructions.append("A=D+A")
+        instructions.append("AD=D+1")
         instructions.append("M=0")
         instructions.extend(incrementStackPointer())
       }
