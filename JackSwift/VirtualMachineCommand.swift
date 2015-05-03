@@ -217,10 +217,8 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(putAddressFromSementWithOffsetInD())
         instructions.append("A=D")
         instructions.append("D=M")  // store value at address in D
-        instructions.append("@SP")
-        instructions.append("A=M")
-        instructions.append("M=D")  // put it on the stack
         instructions.extend(incrementStackPointer())
+        instructions.extend(putDOnStack())
         return instructions
       default:
         return instructions
