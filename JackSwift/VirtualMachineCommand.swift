@@ -64,6 +64,10 @@ public class VirtualMachineCommand : Printable {
       type = .Label
       arg1 = tokens[1]
       arg2 = nil
+    case "if-goto":
+      type = .If
+      arg1 = tokens[1]
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -235,9 +239,16 @@ public class VirtualMachineCommand : Printable {
     case .Label:
       instructions.append("(\(arg1!))")
       return instructions
+    case .If:
+      instructions.extend(decrementStackPointer())
+      instructions.append("@SP")
+      instructions.append("A=M")
+      instructions.append("D=M")
+      instructions.append("@\(arg1!)")
+      instructions.append("D;JNE")
+      return instructions
 
 //    case .Goto:
-//    case .If:
 //    case .Function:
 //    case .Return:
 //    case .Call:
