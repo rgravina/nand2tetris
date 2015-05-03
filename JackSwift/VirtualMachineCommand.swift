@@ -68,6 +68,10 @@ public class VirtualMachineCommand : Printable {
       type = .If
       arg1 = tokens[1]
       arg2 = nil
+    case "goto":
+      type = .Goto
+      arg1 = tokens[1]
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -247,8 +251,10 @@ public class VirtualMachineCommand : Printable {
       instructions.append("@\(arg1!)")
       instructions.append("D;JNE")
       return instructions
-
-//    case .Goto:
+    case .Goto:
+      instructions.append("@\(arg1!)")
+      instructions.append("0;JMP")
+      return instructions
 //    case .Function:
 //    case .Return:
 //    case .Call:
