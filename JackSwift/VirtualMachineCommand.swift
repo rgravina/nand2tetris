@@ -297,29 +297,14 @@ public class VirtualMachineCommand : Printable {
       instructions.append("@SP")
       instructions.append("M=D+1")
 
-      instructions.append("@R13")   // load frame address again
-      instructions.append("AM=M-1")  // get value of *(frame-1) and update R13
-      instructions.append("D=M")
-      instructions.append("@THAT")
-      instructions.append("M=D")    // that at FRAME-1
-
-      instructions.append("@R13")
-      instructions.append("AM=M-1")  // get value of *(frame-2) and update R13
-      instructions.append("D=M")
-      instructions.append("@THIS")
-      instructions.append("M=D")    // that at FRAME-2
-
-      instructions.append("@R13")
-      instructions.append("AM=M-1")  // get value of *(frame-3) and update R13
-      instructions.append("D=M")
-      instructions.append("@ARG")
-      instructions.append("M=D")    // that at FRAME-3
-
-      instructions.append("@R13")
-      instructions.append("AM=M-1")  // get value of *(frame-4) and update R13
-      instructions.append("D=M")
-      instructions.append("@LCL")
-      instructions.append("M=D")    // that at FRAME-4
+      let callersRegisters = ["THAT", "THIS", "ARG", "LCL"]
+      for register in callersRegisters {
+        instructions.append("@R13")    // load frame address again
+        instructions.append("AM=M-1")  // get value of *(frame-i) and update R13
+        instructions.append("D=M")
+        instructions.append("@\(register)")
+        instructions.append("M=D")    // that at FRAME-i
+      }
 
       instructions.append("@R14")   // load return address again
       instructions.append("A=M")
