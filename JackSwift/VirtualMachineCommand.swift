@@ -275,23 +275,56 @@ public class VirtualMachineCommand : Printable {
       }
       return instructions
     case .Return:
-      instructions.append("@LCL")
-      instructions.append("D=M-1")
+      instructions.append("@LCL") // use R13 to save frame address
+      instructions.append("D=M")
+      instructions.append("@R13")
+      instructions.append("M=D")
+
+      instructions.append("@5") // use R14 to save return address (frame-5)
+      instructions.append("D=D-A")
+      instructions.append("@R14")
+      instructions.append("M=D")
+
+      instructions.append("@SP") // *ARG = pop
+      instructions.append("A=M-1")
+      instructions.append("D=M")
+      instructions.append("@ARG")
+      instructions.append("A=M")
+      instructions.append("M=D")
+
+      instructions.append("@ARG") // SP=ARG+1
+      instructions.append("D=M")
+      instructions.append("@SP")
+      instructions.append("M=D+1")
+
+      instructions.append("@R13")   // load frame address again
+      instructions.append("AM=M-1")  // get value of *(frame-1) and update R13
+      instructions.append("D=M")
       instructions.append("@THAT")
       instructions.append("M=D")    // that at FRAME-1
-      instructions.append("D=D-1")
+
+      instructions.append("@R13")
+      instructions.append("AM=M-1")  // get value of *(frame-2) and update R13
+      instructions.append("D=M")
       instructions.append("@THIS")
-      instructions.append("M=D")    // this at FRAME-2
-      instructions.append("D=D-1")
+      instructions.append("M=D")    // that at FRAME-2
+
+      instructions.append("@R13")
+      instructions.append("AM=M-1")  // get value of *(frame-3) and update R13
+      instructions.append("D=M")
       instructions.append("@ARG")
-      instructions.append("M=D")    // arg at FRAME-3
-      instructions.append("D=D-1")
+      instructions.append("M=D")    // that at FRAME-3
+
+      instructions.append("@R13")
+      instructions.append("AM=M-1")  // get value of *(frame-4) and update R13
+      instructions.append("D=M")
       instructions.append("@LCL")
-      instructions.append("M=D")    // lcl at FRAME-4
-      instructions.append("D=D-1")
-      instructions.append("A=M")    // return address at FRAME-5
-      instructions.append("0;JMP")  // jump tp return address
-return instructions
+      instructions.append("M=D")    // that at FRAME-4
+
+      instructions.append("@R14")   // load return address again
+      instructions.append("A=M")
+      instructions.append("0;JMP")  // jump to return address
+      return instructions
     case .Call:
       return instructions
     default:
