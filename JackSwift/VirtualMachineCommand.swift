@@ -388,11 +388,6 @@ return instructions
   public static var setup: Array<String> {
     println("// initialise stack pointer to 256")
     var instructions = Array<String>()
-    instructions.append("@256")
-    instructions.append("D=A")
-    instructions.append("@SP")
-    instructions.append("M=D")
-
     instructions.append("@$$START")
     instructions.append("0;JMP")
 
