@@ -334,12 +334,19 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(incrementStackPointer())
       }
 
-      // reposition ARG
-      instructions.append("@\(arg2! - 5)")
+      // reposition ARG = SP - nArgs - 5
+      instructions.append("@\((0 - arg2! - 5) * -1)")
       instructions.append("D=A")
       instructions.append("@SP")
-      instructions.append("A=M")
-      instructions.append("M=M-D")
+      instructions.append("D=M-D")
+      instructions.append("@ARG")
+      instructions.append("M=D")
+
+      // set LCL to SP
+      instructions.append("@SP")
+      instructions.append("D=M")
+      instructions.append("@LCL")
+      instructions.append("M=D")
 
       // make function call
       instructions.append("@\(arg1!)")
