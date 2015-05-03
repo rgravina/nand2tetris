@@ -60,6 +60,10 @@ public class VirtualMachineCommand : Printable {
       type = .Arithmetic
       arg1 = "not"
       arg2 = nil
+    case "label":
+      type = .Label
+      arg1 = tokens[1]
+      arg2 = nil
     default:
       type = .Unknown
       arg1 = nil
@@ -82,19 +86,19 @@ public class VirtualMachineCommand : Printable {
       case .Pop:
         return "// pop \(arg1!) \(arg2!)"
       case .Label:
-        return "// Label"
+        return "// label"
       case .Goto:
-        return "// Goto"
+        return "// goto"
       case .If:
-        return "// If"
+        return "// if"
       case .Function:
-        return "// Function"
+        return "// function"
       case .Return:
-        return "// Return"
+        return "// return"
       case .Call:
-        return "// Call"
+        return "// call"
       default:
-        return "// Unknown"
+        return "// unknown"
       }
     }
   }
@@ -228,8 +232,10 @@ public class VirtualMachineCommand : Printable {
       // D - value to save
       instructions.append("M=D")
       return instructions
+    case .Label:
+      instructions.append("(\(arg1!))")
+      return instructions
 
-//    case .Label:
 //    case .Goto:
 //    case .If:
 //    case .Function:
