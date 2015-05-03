@@ -275,32 +275,32 @@ public class VirtualMachineCommand : Printable {
       }
       return instructions
     case .Return:
-      instructions.append("@LCL") // use R13 to save frame address
+      instructions.append("@LCL")   // use R13 to save frame address
       instructions.append("D=M")
       instructions.append("@R13")
       instructions.append("M=D")
 
-      instructions.append("@5") // use R14 to save return address (frame-5)
+      instructions.append("@5")     // use R14 to save return address (frame-5)
       instructions.append("D=D-A")
       instructions.append("@R14")
       instructions.append("M=D")
 
-      instructions.append("@SP") // *ARG = pop
+      instructions.append("@SP")    // eet *ARG = top of stack (i.e. return value)
       instructions.append("A=M-1")
       instructions.append("D=M")
       instructions.append("@ARG")
       instructions.append("A=M")
       instructions.append("M=D")
 
-      instructions.append("@ARG") // SP=ARG+1
+      instructions.append("@ARG")   // set SP = ARG + 1
       instructions.append("D=M")
       instructions.append("@SP")
       instructions.append("M=D+1")
 
       let callersRegisters = ["THAT", "THIS", "ARG", "LCL"]
       for register in callersRegisters {
-        instructions.append("@R13")    // load frame address again
-        instructions.append("AM=M-1")  // get value of *(frame-i) and update R13
+        instructions.append("@R13")   // load frame address again
+        instructions.append("AM=M-1") // get value of *(frame-i) and update R13
         instructions.append("D=M")
         instructions.append("@\(register)")
         instructions.append("M=D")    // that at FRAME-i
