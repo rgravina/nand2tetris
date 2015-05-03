@@ -442,7 +442,11 @@ public class VirtualMachineCommand : Printable {
   public static var setup: Array<String> {
     println("// initialise stack pointer to 256")
     var instructions = Array<String>()
-    instructions.append("@$$START")
+    instructions.append("@256")
+    instructions.append("D=A")
+    instructions.append("@SP")
+    instructions.append("M=D")
+    instructions.append("@Sys.init")
     instructions.append("0;JMP")
 
     let comparisonFunctions:Array<(comp: String, jump: String)> = [
@@ -476,7 +480,6 @@ public class VirtualMachineCommand : Printable {
       instructions.append("0;JMP")
     }
 
-    instructions.append("($$START)")
     return instructions
   }
 }
