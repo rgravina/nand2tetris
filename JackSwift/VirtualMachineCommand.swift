@@ -356,27 +356,6 @@ public class VirtualMachineCommand : Printable {
     instructions.append("@SP")
     instructions.append("M=D")
 
-    // for testing lcl, arg, this and that segments
-    instructions.append("@300")
-    instructions.append("D=A")
-    instructions.append("@LCL")
-    instructions.append("M=D")
-
-    instructions.append("@400")
-    instructions.append("D=A")
-    instructions.append("@ARG")
-    instructions.append("M=D")
-
-    instructions.append("@3000")
-    instructions.append("D=A")
-    instructions.append("@THIS")
-    instructions.append("M=D")
-
-    instructions.append("@3010")
-    instructions.append("D=A")
-    instructions.append("@THAT")
-    instructions.append("M=D")
-
     instructions.append("@$$START")
     instructions.append("0;JMP")
 
