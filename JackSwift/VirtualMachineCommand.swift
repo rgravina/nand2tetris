@@ -116,7 +116,7 @@ public class VirtualMachineCommand : Printable {
       case .Return:
         return "// return"
       case .Call:
-        return "// call"
+        return "// call \(arg1!) \(arg2!)"
       default:
         return "// unknown"
       }
@@ -311,6 +311,37 @@ public class VirtualMachineCommand : Printable {
       instructions.append("0;JMP")  // jump to return address
       return instructions
     case .Call:
+      let rip = VirtualMachineCommand.rip++
+      instructions.append("@$RIP:\(rip)")  // push RIP
+      instructions.append("D=A")
+      instructions.append("@SP")
+      instructions.append("A=M")
+      instructions.append("M=D")
+      instructions.extend(incrementStackPointer())
+
+      // push pointers on stack
+      let callersRegisters = ["LCL", "ARG", "THIS", "THAT"]
+      for register in callersRegisters {
+        instructions.append("@\(register)")
+        instructions.append("D=M")
+        instructions.append("@SP")
+        instructions.append("A=M")
+        instructions.append("M=D")
+        instructions.extend(incrementStackPointer())
+      }
+
+      // reposition ARG
+      instructions.append("@\(arg2! - 5)")
+      instructions.append("D=A")
+      instructions.append("@SP")
+      instructions.append("A=M")
+      instructions.append("M=M-D")
+
+      // make function call
+      instructions.append("@\(arg1!)")
+      instructions.append("0;JMP")
+
+      instructions.append("($RIP:\(rip))") // the instruction after this function call
       return instructions
     default:
       return instructions
