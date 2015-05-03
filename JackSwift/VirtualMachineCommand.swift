@@ -76,6 +76,14 @@ public class VirtualMachineCommand : Printable {
       type = .Function
       arg1 = tokens[1]
       arg2 = tokens[2].toInt()
+    case "return":
+      type = .Return
+      arg1 = nil
+      arg2 = nil
+    case "call":
+      type = .Call
+      arg1 = tokens[1]
+      arg2 = tokens[2].toInt()
     default:
       type = .Unknown
       arg1 = nil
@@ -253,8 +261,6 @@ public class VirtualMachineCommand : Printable {
       instructions.append("@\(arg1!)")
       instructions.append("0;JMP")
       return instructions
-//    case .Return:
-//    case .Call:
     case .Function:
       // declare a label for the function entry (arg1)
       // number of local variables (arg2)
