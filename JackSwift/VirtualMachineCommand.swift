@@ -334,45 +334,7 @@ public class VirtualMachineCommand : Printable {
       instructions.append("0;JMP")  // jump to return address
       return instructions
     case .Call:
-      let rip = VirtualMachineCommand.rip++
-      instructions.append("@$RIP:\(rip)")  // push RIP
-      instructions.append("D=A")
-      instructions.append("@SP")
-      instructions.append("A=M")
-      instructions.append("M=D")
-      instructions.extend(incrementStackPointer())
-
-      // push pointers on stack
-      let callersRegisters = ["LCL", "ARG", "THIS", "THAT"]
-      for register in callersRegisters {
-        instructions.append("@\(register)")
-        instructions.append("D=M")
-        instructions.append("@SP")
-        instructions.append("A=M")
-        instructions.append("M=D")
-        instructions.extend(incrementStackPointer())
-      }
-
-      // reposition ARG = SP - nArgs - 5
-      instructions.append("@\((0 - arg2! - 5) * -1)")
-      instructions.append("D=A")
-      instructions.append("@SP")
-      instructions.append("D=M-D")
-      instructions.append("@ARG")
-      instructions.append("M=D")
-
-      // set LCL to SP
-      instructions.append("@SP")
-      instructions.append("D=M")
-      instructions.append("@LCL")
-      instructions.append("M=D")
-
-      // make function call
-      instructions.append("@\(arg1!)")
-      instructions.append("0;JMP")
-
-      instructions.append("($RIP:\(rip))") // the instruction after this function call
-      return instructions
+      return VirtualMachineCommand.call(arg1!, arguments: arg2!)
     default:
       return instructions
     }
@@ -443,6 +405,54 @@ public class VirtualMachineCommand : Printable {
     }
   }
 
+
+  private static func call(function: String, arguments: Int) -> Array<String>  {
+    println("// - call function")
+    var instructions = Array<String>()
+    let rip = VirtualMachineCommand.rip++
+    instructions.append("@$RIP:\(rip)")  // push RIP
+    instructions.append("D=A")
+    instructions.append("@SP")
+    instructions.append("A=M")
+    instructions.append("M=D")
+    instructions.append("@SP")    // inc stack pointer
+    instructions.append("M=M+1")
+
+    // push pointers on stack
+    let callersRegisters = ["LCL", "ARG", "THIS", "THAT"]
+    for register in callersRegisters {
+      instructions.append("@\(register)")
+      instructions.append("D=M")
+      instructions.append("@SP")
+      instructions.append("A=M")
+      instructions.append("M=D")
+      instructions.append("@SP")  // inc stack pointer
+      instructions.append("M=M+1")
+    }
+
+    // reposition ARG = SP - nArgs - 5
+    instructions.append("@\((0 - arguments - 5) * -1)")
+    instructions.append("D=A")
+    instructions.append("@SP")
+    instructions.append("D=M-D")
+    instructions.append("@ARG")
+    instructions.append("M=D")
+
+    // set LCL to SP
+    instructions.append("@SP")
+    instructions.append("D=M")
+    instructions.append("@LCL")
+    instructions.append("M=D")
+
+    // make function call
+    instructions.append("@255")
+    instructions.append("@\(function)")
+    instructions.append("0;JMP")
+
+    instructions.append("($RIP:\(rip))") // the instruction after this function call
+    return instructions
+  }
+
   private func putAddressFromSementWithOffsetInD() -> Array<String>  {
     println("// - put address off segment+offset in D")
     var instructions = Array<String>()
@@ -481,8 +491,7 @@ public class VirtualMachineCommand : Printable {
     instructions.append("D=A")
     instructions.append("@SP")
     instructions.append("M=D")
-    instructions.append("@Sys.init")
-    instructions.append("0;JMP")
+    instructions.extend(VirtualMachineCommand.call("Sys.init", arguments: 0))
 
     let comparisonFunctions:Array<(comp: String, jump: String)> = [
       (comp: "EQ", jump: "JNE"),
