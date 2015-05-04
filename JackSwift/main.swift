@@ -45,7 +45,7 @@ if Process.arguments.count != 2 {
       for file in contents {
         let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
         if virtualMachineFile {
-          parser = VirtualMachineParser(file: "\(fileName)/\(file)")
+          parser = VirtualMachineParser(path: fileName, file: file)
           while let command = parser.advance() {
             for instruction in command.instructions {
               println(instruction)

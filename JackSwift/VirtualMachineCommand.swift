@@ -5,6 +5,7 @@ public enum VirtualMachineCommandType {
 }
 
 public class VirtualMachineCommand : Printable {
+  public let fileName:String
   public let type:VirtualMachineCommandType
   public let arg1:String?
   public let arg2:Int?
@@ -14,7 +15,8 @@ public class VirtualMachineCommand : Printable {
   /**
   * Takes a string representing a VM command are parses it into instruction and arguments.
   */
-  public init(command: String) {
+  public init(fileName: String, command: String) {
+    self.fileName = fileName
     var tokens = split(command) {$0 == " "}
     switch(tokens.first!) {
     case "push":
@@ -234,7 +236,7 @@ public class VirtualMachineCommand : Printable {
         instructions.extend(putDOnStack())
         return instructions
       case "static":
-        instructions.append("@\(VirtualMachineCommand.currentFunctionName!).\(arg2!)")
+        instructions.append("@\(fileName).\(arg2!)")
         instructions.append("D=M")  // store value at address in D
         instructions.extend(incrementStackPointer())
         instructions.extend(putDOnStack())
@@ -246,7 +248,7 @@ public class VirtualMachineCommand : Printable {
       instructions.extend(decrementStackPointer())
       switch(arg1!) {
         case "static":
-          instructions.append("@\(VirtualMachineCommand.currentFunctionName!).\(arg2!)")
+          instructions.append("@\(fileName).\(arg2!)")
           instructions.append("D=A")
         default:
           instructions.extend(putAddressFromSementWithOffsetInD())
