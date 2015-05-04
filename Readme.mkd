@@ -1,0 +1,3 @@
+The book [The Elements of Computing Systems](http://nand2tetris.org) covers the specification of a platform (Hack) and programming language (Jack).
+
+This is my implementation of a compiler for Jack in Swift.
