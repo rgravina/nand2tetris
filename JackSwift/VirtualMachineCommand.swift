@@ -431,7 +431,7 @@ public class VirtualMachineCommand : Printable {
     }
 
     // reposition ARG = SP - nArgs - 5
-    instructions.append("@\((0 - arguments - 5) * -1)")
+    instructions.append("@\((arguments + 5))")
     instructions.append("D=A")
     instructions.append("@SP")
     instructions.append("D=M-D")
