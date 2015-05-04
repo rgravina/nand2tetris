@@ -29,7 +29,7 @@ if Process.arguments.count != 2 {
       println(instruction)
     }
     println("//\n// Start of main program\n//\n")
-    while let command = parser.advance() {
+    while let command = parser.next() {
       for instruction in command.instructions {
         println(instruction)
       }
@@ -46,7 +46,7 @@ if Process.arguments.count != 2 {
         let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
         if virtualMachineFile {
           parser = VirtualMachineParser(path: fileName, file: file)
-          while let command = parser.advance() {
+          while let command = parser.next() {
             for instruction in command.instructions {
               println(instruction)
             }
