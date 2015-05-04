@@ -293,9 +293,6 @@ public class VirtualMachineCommand : Printable {
       }
       return instructions
     case .Return:
-      // clear current function name
-      VirtualMachineCommand.currentFunctionName = nil
-
       instructions.append("@LCL")   // use R13 to save frame address
       instructions.append("D=M")
       instructions.append("@R13")
