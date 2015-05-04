@@ -20,7 +20,7 @@ if Process.arguments.count != 2 {
   let virtualMachineFile = fileName[Range(start:advance(fileName.endIndex, -3), end: fileName.endIndex)] == ".vm"
   if (assemblyFile) {
     let parser = AssemblyParser(file: Process.arguments.last!)
-    while let command = parser.advance() {
+    while let command = parser.next() {
       println(command.machineCode)
     }
   } else if (virtualMachineFile) {

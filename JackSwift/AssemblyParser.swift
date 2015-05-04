@@ -53,7 +53,7 @@ class AssemblyParser {
   /**
   * Returns the next command
   */
-  func advance() -> AssemblyCommand? {
+  func next() -> AssemblyCommand? {
     if currentCommand < count(commands) {
       return commands[currentCommand++]
     }
