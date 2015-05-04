@@ -264,16 +264,16 @@ public class VirtualMachineCommand : Printable {
       instructions.append("M=D")
       return instructions
     case .Label:
-      instructions.append(getFullLabelName())
+      instructions.append("(\(getFullLabelName()))")
       return instructions
     case .If:
       instructions.extend(decrementStackPointer())
       instructions.extend(putTopOfStackInD())
-      instructions.append(getFullLabelName())
+      instructions.append("@\(getFullLabelName())")
       instructions.append("D;JNE")
       return instructions
     case .Goto:
-      instructions.append(getFullLabelName())
+      instructions.append("@\(getFullLabelName())")
       instructions.append("0;JMP")
       return instructions
     case .Function:
@@ -399,9 +399,9 @@ public class VirtualMachineCommand : Printable {
 
   private func getFullLabelName() -> String {
     if let functionName = VirtualMachineCommand.currentFunctionName {
-      return "(\(functionName)$\(arg1!))"
+      return "\(functionName)$\(arg1!)"
     } else {
-      return "(\(arg1!))"
+      return arg1!
     }
   }
 
@@ -523,7 +523,6 @@ public class VirtualMachineCommand : Printable {
       instructions.append("0;JMP")
     }
 
-    //instructions.append("(Sys.init)")
     return instructions
   }
 }
