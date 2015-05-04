@@ -447,7 +447,6 @@ public class VirtualMachineCommand : Printable {
     instructions.append("M=D")
 
     // make function call
-    instructions.append("@255")
     instructions.append("@\(function)")
     instructions.append("0;JMP")
 
