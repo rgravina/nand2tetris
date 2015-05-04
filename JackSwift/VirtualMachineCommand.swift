@@ -430,6 +430,7 @@ public class VirtualMachineCommand : Printable {
       return "(\(arg1!))"
     }
   }
+
   private func putAddressFromSementWithOffsetInD() -> Array<String>  {
     println("// - put address off segment+offset in D")
     var instructions = Array<String>()
