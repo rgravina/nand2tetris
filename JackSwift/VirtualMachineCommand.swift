@@ -9,6 +9,7 @@ public class VirtualMachineCommand : Printable {
   public let arg1:String?
   public let arg2:Int?
   public static var rip:Int = 0
+  public static var currentFunctionName:String?
 
   /**
   * Takes a string representing a VM command are parses it into instruction and arguments.
@@ -249,19 +250,22 @@ public class VirtualMachineCommand : Printable {
       instructions.append("M=D")
       return instructions
     case .Label:
-      instructions.append("(\(arg1!))")
+      instructions.append(getFullLabelName())
       return instructions
     case .If:
       instructions.extend(decrementStackPointer())
       instructions.extend(putTopOfStackInD())
-      instructions.append("@\(arg1!)")
+      instructions.append(getFullLabelName())
       instructions.append("D;JNE")
       return instructions
     case .Goto:
-      instructions.append("@\(arg1!)")
+      instructions.append(getFullLabelName())
       instructions.append("0;JMP")
       return instructions
     case .Function:
+      // set function name it it can be used in lables
+      VirtualMachineCommand.currentFunctionName = arg1!
+
       // declare a label for the function entry (arg1)
       // number of local variables (arg2)
       // initialise all local variables to zero
@@ -275,6 +279,9 @@ public class VirtualMachineCommand : Printable {
       }
       return instructions
     case .Return:
+      // clear current function name
+      VirtualMachineCommand.currentFunctionName = nil
+
       instructions.append("@LCL")   // use R13 to save frame address
       instructions.append("D=M")
       instructions.append("@R13")
@@ -416,6 +423,13 @@ public class VirtualMachineCommand : Printable {
     return instructions
   }
 
+  private func getFullLabelName() -> String {
+    if let functionName = VirtualMachineCommand.currentFunctionName {
+      return "(\(functionName)$\(arg1!))"
+    } else {
+      return "(\(arg1!))"
+    }
+  }
   private func putAddressFromSementWithOffsetInD() -> Array<String>  {
     println("// - put address off segment+offset in D")
     var instructions = Array<String>()
@@ -491,6 +505,7 @@ public class VirtualMachineCommand : Printable {
       instructions.append("0;JMP")
     }
 
+    //instructions.append("(Sys.init)")
     return instructions
   }
 }
