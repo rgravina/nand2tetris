@@ -302,7 +302,8 @@ public class VirtualMachineCommand : Printable {
       instructions.append("M=D")
 
       instructions.append("@5")     // use R14 to save return address (frame-5)
-      instructions.append("D=D-A")
+      instructions.append("A=D-A")
+      instructions.append("D=M")
       instructions.append("@R14")
       instructions.append("M=D")
 
