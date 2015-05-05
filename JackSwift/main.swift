@@ -39,17 +39,27 @@ if Process.arguments.count != 2 {
     var parser:VirtualMachineParser
 
     if let contents = fileManager.contentsOfDirectoryAtPath(fileName, error: nil) as? [String] {
-      for instruction in VirtualMachineCommand.setup {
-        println(instruction)
-      }
+      var printedSetup = false
       for file in contents {
         let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
+        let jackSourceFile = file[Range(start:advance(file.endIndex, -5), end: file.endIndex)] == ".jack"
         if virtualMachineFile {
+          if (!printedSetup) {
+            for instruction in VirtualMachineCommand.setup {
+              println(instruction)
+            }
+            printedSetup = true
+          }
           parser = VirtualMachineParser(path: fileName, file: file)
           while let command = parser.next() {
             for instruction in command.instructions {
               println(instruction)
             }
+          }
+        } else if jackSourceFile {
+          let tokeniser = JackTokeniser(path: fileName, file: file)
+          while let token = tokeniser.next() {
+            println(token)
           }
         }
       }

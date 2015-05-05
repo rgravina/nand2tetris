@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		972438961AF885A2005B6C8C /* Tokeniser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972438951AF885A2005B6C8C /* Tokeniser.swift */; };
+		972438961AF885A2005B6C8C /* JackTokeniser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972438951AF885A2005B6C8C /* JackTokeniser.swift */; };
 		973614F21A9C3743001D26CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973614F11A9C3743001D26CB /* main.swift */; };
 		9752A7491AE3517700720127 /* VirtualMachineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752A7481AE3517700720127 /* VirtualMachineTest.swift */; };
 		9752A74F1AE3525C00720127 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9752A74D1AE3525C00720127 /* Nimble.framework */; };
@@ -67,7 +67,7 @@
 /* Begin PBXFileReference section */
 		9718F2571ADE06D200E4B0FD /* Readme.mkd */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.mkd; sourceTree = "<group>"; };
 		9718F2581ADE072400E4B0FD /* Todo.mkd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.mkd; sourceTree = "<group>"; };
-		972438951AF885A2005B6C8C /* Tokeniser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tokeniser.swift; sourceTree = "<group>"; };
+		972438951AF885A2005B6C8C /* JackTokeniser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JackTokeniser.swift; sourceTree = "<group>"; };
 		973614EE1A9C3743001D26CB /* Jack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Jack; sourceTree = BUILT_PRODUCTS_DIR; };
 		973614F11A9C3743001D26CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9752A7441AE3517700720127 /* JackTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JackTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,7 +111,7 @@
 		972438941AF88562005B6C8C /* Parser */ = {
 			isa = PBXGroup;
 			children = (
-				972438951AF885A2005B6C8C /* Tokeniser.swift */,
+				972438951AF885A2005B6C8C /* JackTokeniser.swift */,
 			);
 			name = Parser;
 			sourceTree = "<group>";
@@ -300,7 +300,7 @@
 			files = (
 				EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */,
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
-				972438961AF885A2005B6C8C /* Tokeniser.swift in Sources */,
+				972438961AF885A2005B6C8C /* JackTokeniser.swift in Sources */,
 				97E903D51AE60EF600F2FF34 /* AssemberSymbolTable.swift in Sources */,
 				97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */,
 				979A36FB1AE3CD8600509C9F /* StreamReader.swift in Sources */,
