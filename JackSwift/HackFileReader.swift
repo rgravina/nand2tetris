@@ -1,6 +1,6 @@
 /**
-* Reads a hack or VM file a command at a time when nextCommand is called.
-* Skips whitespace and comments, and trims commands.
+* Reads a hack or VM file a line at a time when nextLine is called.
+* Skips whitespace and comments, and trims lines.
 */
 import Foundation
 
@@ -17,7 +17,7 @@ class HackFileReader {
   /**
   * Returns the next line (skips whitespace and blank lines)
   */
-  func nextCommand() -> String? {
+  func nextLine() -> String? {
     if let reader = streamReader {
       var line = reader.nextLine()
       if (line == nil) {
