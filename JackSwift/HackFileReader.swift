@@ -25,7 +25,7 @@ class HackFileReader {
         return nil
       }
       line = trimmed(line!)
-      while (count(line!) == 0 || line![0..<2] == "//") {
+      while (count(line!) == 0 || (count(line!) > 2 && line![0..<2] == "//")) {
         line = reader.nextLine()
         if (line == nil) {
           reader.close()
