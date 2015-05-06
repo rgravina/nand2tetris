@@ -57,12 +57,8 @@ if Process.arguments.count != 2 {
             }
           }
         } else if jackSourceFile {
-          let tokeniser = JackTokeniser(path: fileName, file: file)
-          println("<tokens>")
-          while let token = tokeniser.next() {
-            println(token)
-          }
-          println("<tokens>")
+          let parser = JackParse(path: fileName, file: file)
+          parser.parse()
         }
       }
     }

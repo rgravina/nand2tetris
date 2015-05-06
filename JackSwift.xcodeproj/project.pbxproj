@@ -28,6 +28,7 @@
 		97E903D51AE60EF600F2FF34 /* AssemberSymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E903D41AE60EF600F2FF34 /* AssemberSymbolTable.swift */; };
 		97E903D61AE72D3300F2FF34 /* AssemblyCodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E903D21AE6073E00F2FF34 /* AssemblyCodeMap.swift */; };
 		97E903D71AE72D6300F2FF34 /* AssemberSymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E903D41AE60EF600F2FF34 /* AssemberSymbolTable.swift */; };
+		97FF77371AFA1B34004E7817 /* JackParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FF77361AFA1B34004E7817 /* JackParser.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
 /* End PBXBuildFile section */
@@ -85,6 +86,7 @@
 		97E903CE1AE4B9FE00F2FF34 /* HackFileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackFileReader.swift; sourceTree = "<group>"; };
 		97E903D21AE6073E00F2FF34 /* AssemblyCodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyCodeMap.swift; sourceTree = "<group>"; };
 		97E903D41AE60EF600F2FF34 /* AssemberSymbolTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemberSymbolTable.swift; sourceTree = "<group>"; };
+		97FF77361AFA1B34004E7817 /* JackParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JackParser.swift; sourceTree = "<group>"; };
 		EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyCommand.swift; sourceTree = "<group>"; };
 		EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyParser.swift; sourceTree = "<group>"; };
 		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			children = (
 				972438951AF885A2005B6C8C /* JackTokeniser.swift */,
 				972438971AF9B8C0005B6C8C /* JackToken.swift */,
+				97FF77361AFA1B34004E7817 /* JackParser.swift */,
 			);
 			name = Parser;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				972438981AF9B8C0005B6C8C /* JackToken.swift in Sources */,
 				97DE8E271AC7E95600A0D251 /* Extensions.swift in Sources */,
 				97E903D31AE6073E00F2FF34 /* AssemblyCodeMap.swift in Sources */,
+				97FF77371AFA1B34004E7817 /* JackParser.swift in Sources */,
 				97DE8E2B1AC8191000A0D251 /* VirtualMachineCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
