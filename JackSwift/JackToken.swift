@@ -4,18 +4,37 @@ public enum JackTokenType {
   case Keyword, Symbol, Identifier, IntConstant, StringConstant, Unknown
 }
 
-public enum JackTokenKeyword {
-  case Class, Method, Function, Contructor,
-  Int, Boolean, Char, Void,
-  Var, Static, Field, Let,
-  Do, If, Else, While,
-  Return, True, False,
-  Null, This, Unknown
+public enum JackTokenKeyword: String, Printable {
+  case Class = "class"
+  case Method = "method"
+  case Function = "function"
+  case Constructor = "constructor"
+  case Int = "int"
+  case Boolean = "boolean"
+  case Char = "char"
+  case Void = "void"
+  case Var = "var"
+  case Static = "static"
+  case Field = "field"
+  case Let = "let"
+  case Do = "do"
+  case If = "if"
+  case Else = "else"
+  case While = "while"
+  case Return = "return"
+  case True = "true"
+  case False = "false"
+  case Null = "null"
+  case This = "this"
+
+  public var description: String {
+    return self.rawValue
+  }
 }
 
 public class JackToken : Printable{
   public let type:JackTokenType
-  public let keyword:String?
+  public let keyword:JackTokenKeyword?
   public let symbol:Character?
   public let identifier:String?
   public let intVal:Int?
@@ -33,7 +52,7 @@ public class JackToken : Printable{
       identifier = nil
     } else if JackToken.isKeyword(string)  {
       type = .Keyword
-      keyword = string
+      keyword = JackToken.keywordFromString(string)
       symbol = nil
       intVal = nil
       stringVal = nil
@@ -75,12 +94,7 @@ public class JackToken : Printable{
   }
 
   internal static func isKeyword(s: String) -> Bool {
-    switch (s) {
-    case "class", "constructor", "function", "method", "field", "static", "var", "int", "char", "boolean", "void", "true", "false", "null", "this", "that", "let", "do", "if", "else", "while", "return":
-      return true
-    default:
-      return false
-    }
+    return JackToken.keywordFromString(s) != nil
   }
 
   internal static func isIntVal(s: String) -> Bool {
@@ -89,6 +103,10 @@ public class JackToken : Printable{
 
   internal static func isStringVal(s: String) -> Bool {
     return s[0] == "\""
+  }
+
+  internal static func keywordFromString(s: String) -> JackTokenKeyword? {
+    return JackTokenKeyword(rawValue: s)
   }
 
   public var description: String {
