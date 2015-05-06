@@ -18,4 +18,22 @@ extension String
     let range = start..<end
     return self[range]
   }
+
+  func substringToIndex(index:Int) -> String {
+    return self.substringToIndex(advance(self.startIndex, index))
+  }
+
+  func substringFromIndex(index:Int) -> String {
+    return self.substringFromIndex(advance(self.startIndex, index))
+  }
+
+  func indexOf(target: String) -> Int
+  {
+    var range = self.rangeOfString(target)
+    if let range = range {
+      return distance(self.startIndex, range.startIndex)
+    } else {
+      return -1
+    }
+  }
 }
