@@ -66,7 +66,7 @@ public class JackToken : Printable{
 
   internal static func isSymbol(c: Character) -> Bool {
     switch (c) {
-    case "{", "}", "(", ")", "[", "]", ".", ",", ";", "+", "-", "*", "/", "&", "|", "<", ">", "=", "-":
+    case "{", "}", "(", ")", "[", "]", ".", ",", ";", "+", "-", "*", "/", "&", "|", "<", ">", "=", "~":
       return true
     default:
       return false
