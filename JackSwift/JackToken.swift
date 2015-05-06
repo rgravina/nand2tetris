@@ -50,7 +50,8 @@ public class JackToken : Printable{
       symbol = nil
       keyword = nil
       intVal = nil
-      stringVal = string
+      // remove double quotes from string
+      stringVal = string[1..<count(string)-1]
       identifier = nil
     } else {
       type = .Identifier
