@@ -9,7 +9,7 @@ class JackTokeniser {
    * Open the file
    */
   init(path: String, file: String) {
-    println(file)
+    println("Tokenising \(file)...")
     reader = StreamReader(path: "\(path)/\(file)", delimiter: "")
     source = reader!.nextLine()!
     length = count(source)
