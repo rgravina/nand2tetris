@@ -68,7 +68,6 @@
 
 /* Begin PBXFileReference section */
 		9718F2571ADE06D200E4B0FD /* Readme.mkd */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.mkd; sourceTree = "<group>"; };
-		9718F2581ADE072400E4B0FD /* Todo.mkd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.mkd; sourceTree = "<group>"; };
 		972438951AF885A2005B6C8C /* JackTokeniser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JackTokeniser.swift; sourceTree = "<group>"; };
 		972438971AF9B8C0005B6C8C /* JackToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JackToken.swift; sourceTree = "<group>"; };
 		973614EE1A9C3743001D26CB /* Jack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Jack; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -153,7 +152,6 @@
 				9718F2571ADE06D200E4B0FD /* Readme.mkd */,
 				EC407A8D1A9C7785006FDDC0 /* Makefile */,
 				973614F11A9C3743001D26CB /* main.swift */,
-				9718F2581ADE072400E4B0FD /* Todo.mkd */,
 			);
 			path = JackSwift;
 			sourceTree = "<group>";
