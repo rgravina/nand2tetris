@@ -36,48 +36,152 @@ class JackParse {
   private func compileClassVarDec() {
     // zero or more
     // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
-    writeOpenTag("classVarDec")
-    writeNextToken()  // static or field
-    writeNextToken()  // type
-    writeNextToken()  // varName
     var token = tokeniser.peek()!
-    while(token.symbol == ",") {
-      writeNextToken()  // commad
+    while(token.keyword == .Static || token.keyword == .Field) {
+      writeOpenTag("classVarDec")
+      writeNextToken()  // static or field
+      writeNextToken()  // type
       writeNextToken()  // varName
       token = tokeniser.peek()!
+      while(token.symbol != ";") {
+        writeNextToken()  // comma
+        writeNextToken()  // varName
+        token = tokeniser.peek()!
+      }
+      writeNextToken()
+      writeCloseTag("classVarDec")
+      token = tokeniser.peek()!
     }
-    writeNextToken()
-    writeCloseTag("classVarDec")
   }
 
   private func compileSubroutineDec() {
     // zero or more
-    // subroutineDec: ('constructor' | 'function' | 'method' | 'void'  | type) subroutineName '(' parameterList ')' subroutineBody
-  }
-
-  private func compileType() {
-    // 'int' | 'char' | 'boolean' | className
-    writeNextToken()
+    // subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) subroutineName '(' parameterList ')' subroutineBody
+    writeOpenTag("subroutineDec")
+    writeNextToken()  // constructor etc.
+    writeNextToken()  // 'void' or type
+    writeNextToken()  // subroutineName
+    writeNextToken()  // '('
+    compileParameterList()
+    compileSubroutineBody()
+    writeNextToken()  // ')'
+    writeCloseTag("subroutineDec")
   }
 
   private func compileParameterList() {
     // ((type varName) (',' type varName)*)?
+    var token = tokeniser.peek()!
+    if token.symbol != ")" {
+      writeOpenTag("parameterList")
+      writeNextToken()  // type
+      writeNextToken()  // varName
+      token = tokeniser.peek()!
+      while(token.symbol == ",") {
+        writeNextToken()  // comma
+        writeNextToken()  // type
+        writeNextToken()  // varName
+        token = tokeniser.peek()!
+      }
+      writeCloseTag("parameterList")
+    }
+    writeNextToken()  // ')'
   }
 
   private func compileSubroutineBody() {
     // '{' varDec* statements '}'
+    writeOpenTag("subroutineBody")
+    writeNextToken()  // '{'
+    compileVarDec()
+    compileStatements()
+    writeNextToken()  // '}'
+    writeCloseTag("subroutineBody")
   }
 
-//  private func compileVarName() {
-//    // identifier
-//  }
+  private func compileVarDec() {
+    var token = tokeniser.peek()!
+    if token.keyword == .Var {
+      writeOpenTag("varDec")
+      writeNextToken()  // var
+      writeNextToken()  // type
+      writeNextToken()  // varName
+      token = tokeniser.peek()!
+      while(token.symbol == ",") {
+        writeNextToken()  // comma
+        writeNextToken()  // varName
+        token = tokeniser.peek()!
+      }
+      writeNextToken()  // ';'
+      writeCloseTag("varDec")
+    }
+  }
 
-//  private func compileClassName() {
-//    // identifier
-//  }
+  private func compileStatements() {
+    // statement*
+    writeOpenTag("statements")
+    // letStatement | ifStatement | whileStatement | doStatement | returnStatement
+    var token = tokeniser.peek()!
+    while(token.symbol != "}") {
+      println(token)
+      switch(token.keyword!) {
+      case .Let:
+        // 'let' varName ('[' expression ']')? '=' expression ';'
+        writeNextToken()  // let
+        writeNextToken()  // varName
+        token = tokeniser.peek()!
+        if(token.symbol == "[") {
+          writeNextToken()  // '[]
+          writeNextToken()  // expression
+          writeNextToken()  // ']'
+        }
+        writeNextToken()  // '='
+        writeNextToken()  // expression
+        writeNextToken()  // ';'
+      case .If:
+        true
+      case .While:
+        true
+      case .Do:
+        // 'do' subroutineCall ';'
+        writeNextToken()  // 'do'
+        compileSubroutineCall();
+        writeNextToken()  // ';'
+        true
+        // writeNextToken()  // 'do'
+      case .Return:
+        true
+      default:
+        true
+      }
+      token = tokeniser.peek()!
+    }
+    writeCloseTag("statements")
+  }
 
-  private func subroutineName() {
-    // identifier
+  private func compileSubroutineCall() {
+    // subroutineName '(' expressionList ')' |
+    // (className | varName) '.' subroutineName '(' expressionList ')'
+    writeNextToken()  // subroutineName | className or varName
+    var token = tokeniser.peek()!
+    if(token.symbol == "(") {
+      writeNextToken()  // '('
+      token = tokeniser.peek()!
+      if(token.symbol != ")") {
+        compileExpressionList()
+      }
+    } else {
+      writeNextToken()  // '.'
+      writeNextToken()  // subroutineName
+      writeNextToken()  // '('
+      token = tokeniser.peek()!
+      if(token.symbol != ")") {
+        compileExpressionList()
+      }
+    }
+    writeNextToken()  // ')'
+  }
+
+  private func compileExpressionList() {
+    // (expression (',' expression)*)?
   }
 
   private func writeOpenTag(tag: String) {
