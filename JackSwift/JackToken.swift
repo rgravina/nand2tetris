@@ -109,6 +109,30 @@ public class JackToken : Printable{
     return JackTokenKeyword(rawValue: s)
   }
 
+  public var binaryOperator: Bool {
+    if (symbol == nil) {
+      return false
+    }
+    switch (symbol!) {
+    case "+", "-", "*", "/", "&", "|", "<", ">", "=":
+      return true
+    default:
+      return false
+    }
+  }
+
+  public var unaryOperator: Bool {
+    if (symbol == nil) {
+      return false
+    }
+    switch (symbol!) {
+    case "-", "~":
+      return true
+    default:
+      return false
+    }
+  }
+
   public var description: String {
     get {
       switch(type) {
