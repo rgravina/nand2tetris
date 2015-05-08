@@ -24,17 +24,30 @@ class JackParse {
   private func compileClass() {
     // 'class' className '{' classVarDec* compileSubroutineDec* '}'
     writeOpenTag("class")
-    writeNextToken()
-    writeNextToken()
-    writeNextToken()
+    writeNextToken()  // 'class'
+    writeNextToken()  // className
+    writeNextToken()  // '{'
     compileClassVarDec()
     compileSubroutineDec()
+    //writeNextToken()  // '}'
     writeCloseTag("class")
   }
   
   private func compileClassVarDec() {
     // zero or more
     // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
+    writeOpenTag("classVarDec")
+    writeNextToken()  // static or field
+    writeNextToken()  // type
+    writeNextToken()  // varName
+    var token = tokeniser.peek()!
+    while(token.symbol == ",") {
+      writeNextToken()  // commad
+      writeNextToken()  // varName
+      token = tokeniser.peek()!
+    }
+    writeNextToken()
+    writeCloseTag("classVarDec")
   }
 
   private func compileSubroutineDec() {
@@ -44,6 +57,7 @@ class JackParse {
 
   private func compileType() {
     // 'int' | 'char' | 'boolean' | className
+    writeNextToken()
   }
 
   private func compileParameterList() {
@@ -54,13 +68,13 @@ class JackParse {
     // '{' varDec* statements '}'
   }
 
-  private func compileVarName() {
-    // identifier
-  }
+//  private func compileVarName() {
+//    // identifier
+//  }
 
-  private func compileClassName() {
-    // identifier
-  }
+//  private func compileClassName() {
+//    // identifier
+//  }
 
   private func subroutineName() {
     // identifier

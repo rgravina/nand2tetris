@@ -5,8 +5,10 @@ class JackTokeniser {
   let source:String
   let length:Int
   var pos:Int = 0
+  var peekedToken:JackToken? // lookahead token
+
   /**
-   * Open the file
+   * Open the source file and read contents
    */
   init(path: String, file: String) {
     reader = StreamReader(path: "\(path)/\(file)", delimiter: "")
@@ -21,9 +23,17 @@ class JackTokeniser {
   }
 
   /**
-  * Returns the next command and advances the current line (skips whitespace and blank lines)
-  */
+   * Returns the next command and advances the current line (skips whitespace and blank lines)
+   */
   func next() -> JackToken? {
+    // if a lookahead was performed, return that token instead of getting the next from the stream
+    if (peekedToken != nil) {
+      var tempPeekedToken = peekedToken
+      peekedToken = nil
+      return tempPeekedToken
+    }
+
+    // get next token from the source file
     var token = ""
     while pos < length {
       if ((length - pos) >= 2) {
@@ -59,5 +69,15 @@ class JackTokeniser {
       }
     }
     return nil
+  }
+
+  /**
+   * Looks ahead one token without advacing the token stream. Calling repeatedly returns the same token.
+   */
+  func peek() -> JackToken? {
+    if (peekedToken == nil) {
+      peekedToken = next()
+    }
+    return peekedToken
   }
 }
