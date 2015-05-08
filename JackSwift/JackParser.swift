@@ -21,7 +21,8 @@ class JackParse {
     out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
   }
   
-  func compileClass() {
+  private func compileClass() {
+    // 'class' className '{' classVarDec* compileSubroutineDec* '}'
     writeOpenTag("class")
     writeNextToken()
     writeNextToken()
@@ -31,12 +32,38 @@ class JackParse {
     writeCloseTag("class")
   }
   
-  func compileClassVarDec() {
+  private func compileClassVarDec() {
     // zero or more
+    // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
   }
 
-  func compileSubroutineDec() {
+  private func compileSubroutineDec() {
     // zero or more
+    // subroutineDec: ('constructor' | 'function' | 'method' | 'void'  | type) subroutineName '(' parameterList ')' subroutineBody
+  }
+
+  private func compileType() {
+    // 'int' | 'char' | 'boolean' | className
+  }
+
+  private func compileParameterList() {
+    // ((type varName) (',' type varName)*)?
+  }
+
+  private func compileSubroutineBody() {
+    // '{' varDec* statements '}'
+  }
+
+  private func compileVarName() {
+    // identifier
+  }
+
+  private func compileClassName() {
+    // identifier
+  }
+
+  private func subroutineName() {
+    // identifier
   }
 
   private func writeOpenTag(tag: String) {
