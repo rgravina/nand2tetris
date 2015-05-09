@@ -142,7 +142,22 @@ class JackParse {
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
-        true
+        writeOpenTag("ifStatement")
+        writeNextToken()  // if
+        writeNextToken()  // '('
+        compileExpression()  // expression
+        writeNextToken()  // ')'
+        writeNextToken()  // '{'
+        compileStatements() // statements
+        writeNextToken()  // '}'
+        writeCloseTag("ifStatement")
+        token = tokeniser.peek()!
+        if(token.keyword == .Else) {
+          writeNextToken()  // else
+          writeNextToken()  // '{'
+          compileStatements() // statements
+          writeNextToken()  // '}'
+        }
       case .While:
         true
       case .Do:
@@ -220,14 +235,20 @@ class JackParse {
   }
 
   private func writeOpenTag(tag: String) {
-    out += "<\(tag)>\n"
+    var token = "<\(tag)>\n"
+    println(token)
+    out += token
   }
 
   private func writeCloseTag(tag: String) {
-    out += "</\(tag)>\n"
+    var token = "</\(tag)>\n"
+    println(token)
+    out += token
   }
 
   private func writeNextToken() {
-    out += "\(tokeniser.next()!)\n"
+    var token = "\(tokeniser.next()!)\n"
+    println(token)
+    out += token
   }
 }
