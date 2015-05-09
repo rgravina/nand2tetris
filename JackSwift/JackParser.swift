@@ -94,7 +94,6 @@ class JackParse {
     // '{' varDec* statements '}'
     writeOpenTag("subroutineBody")
     writeNextToken()  // '{'
-    var token = tokeniser.peek()!
     compileVarDec()
     compileStatements()
     writeNextToken()  // '}'
@@ -103,7 +102,7 @@ class JackParse {
 
   private func compileVarDec() {
     var token = tokeniser.peek()!
-    if token.keyword == .Var {
+    while token.keyword == .Var {
       writeOpenTag("varDec")
       writeNextToken()  // var
       writeNextToken()  // type
@@ -116,6 +115,7 @@ class JackParse {
       }
       writeNextToken()  // ';'
       writeCloseTag("varDec")
+      token = tokeniser.peek()!
     }
   }
 
