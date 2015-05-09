@@ -159,6 +159,7 @@ class JackParse {
           writeNextToken()  // '}'
         }
       case .While:
+        writeOpenTag("whileStatement")
         writeNextToken()  // while
         writeNextToken()  // '('
         compileExpression()  // expression
@@ -166,6 +167,7 @@ class JackParse {
         writeNextToken()  // '{'
         compileStatements() // statements
         writeNextToken()  // '}'
+        writeCloseTag("whileStatement")
       case .Do:
         writeOpenTag("doStatement")
         // 'do' subroutineCall ';'
