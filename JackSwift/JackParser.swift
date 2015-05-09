@@ -198,6 +198,7 @@ class JackParse {
       while(token.symbol == ",") {
         writeNextToken() // ','
         compileExpression()
+        token = tokeniser.peek()!
       }
     }
     writeCloseTag("expressionList")
