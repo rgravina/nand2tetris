@@ -230,9 +230,7 @@ class JackParse {
   private func compileExpression() {
     // term (op term)*
     writeOpenTag("expression")
-    writeOpenTag("term")
     compileTerm()
-    writeCloseTag("term")
     var token = tokeniser.peek()!
     while(token.binaryOperator) {
       writeNextToken() // op
@@ -244,7 +242,9 @@ class JackParse {
 
   private func compileTerm() {
     // integerConstant | stringConstant | keywordConstant | varName | varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp term
+    writeOpenTag("term")
     writeNextToken() // identifier (for now)
+    writeCloseTag("term")
   }
 
   private func writeOpenTag(tag: String) {
