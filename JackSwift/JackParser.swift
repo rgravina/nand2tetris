@@ -172,6 +172,7 @@ class JackParse {
         writeOpenTag("doStatement")
         // 'do' subroutineCall ';'
         writeNextToken()  // 'do'
+        writeNextToken()  // subroutineName | className or varName
         compileSubroutineCall();
         writeNextToken()  // ';'
         writeCloseTag("doStatement")
@@ -197,7 +198,7 @@ class JackParse {
   private func compileSubroutineCall() {
     // subroutineName '(' expressionList ')' |
     // (className | varName) '.' subroutineName '(' expressionList ')'
-    writeNextToken()  // subroutineName | className or varName
+    // expects the caller has output the first token
     var token = tokeniser.peek()!
     if(token.symbol == "(") {
       writeNextToken()  // '('
@@ -250,7 +251,33 @@ class JackParse {
     // To test if varName, varName '[' expression ']' or subroutineCall need to lookahead twice.
     //   -> subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName '(' expressionList ')'
     writeOpenTag("term")
-    writeNextToken() // identifier (for now)
+    var token = tokeniser.peek()!
+    if (token.type == .IntConstant) {
+      writeNextToken()
+    } else if (token.type == .StringConstant) {
+      writeNextToken()
+    } else if (token.keywordConstant) {
+      writeNextToken()
+    } else if (token.symbol == "(") {
+      writeNextToken() // '('
+      compileExpression()
+      writeNextToken() // ')'
+    } else if (token.unaryOperator) {
+      writeNextToken() // op
+      compileTerm()
+    } else {
+      writeNextToken() // varName
+      token = tokeniser.peek()!
+      if (token.symbol == "[") {
+        writeNextToken() // '['
+        compileExpression()
+        writeNextToken() // ']'
+      } else if (token.symbol == "(" || token.symbol == ".") {
+        compileSubroutineCall()
+      } else {
+        // nothing else needs to be done for identifiers
+      }
+    }
     writeCloseTag("term")
   }
 
