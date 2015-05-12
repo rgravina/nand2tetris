@@ -17,7 +17,7 @@ class AssemblyParser {
      * the symbol name in the address field. If a label is found, add it to
      * the symbol table.
      */
-    while let line = reader.nextCommand() {
+    while let line = reader.nextLine() {
       var command = AssemblyCommand(command: line)
       if command.type == .Label {
         // labels represent the address of the next command

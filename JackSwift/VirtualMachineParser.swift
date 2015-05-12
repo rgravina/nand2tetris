@@ -21,7 +21,7 @@ class VirtualMachineParser {
   * Returns the next command and advances the current line (skips whitespace and blank lines)
   */
   func next() -> VirtualMachineCommand? {
-    if let line = reader.nextCommand() {
+    if let line = reader.nextLine() {
       return VirtualMachineCommand(className: className, command: line)
     }
     return nil
