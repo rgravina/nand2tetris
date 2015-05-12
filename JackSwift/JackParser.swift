@@ -242,6 +242,8 @@ class JackParse {
 
   private func compileTerm() {
     // integerConstant | stringConstant | keywordConstant | varName | varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp term
+    // To test if varName, varName '[' expression ']' or subroutineCall need to lookahead twice.
+    //   -> subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName '(' expressionList ')'
     writeOpenTag("term")
     writeNextToken() // identifier (for now)
     writeCloseTag("term")
