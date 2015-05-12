@@ -109,6 +109,18 @@ public class JackToken : Printable{
     return JackTokenKeyword(rawValue: s)
   }
 
+  public var keywordConstant: Bool {
+    if (keyword == nil) {
+      return false
+    }
+    switch (keyword!) {
+    case .True, .False, .Null, .This:
+      return true
+    default:
+      return false
+    }
+  }
+
   public var binaryOperator: Bool {
     if (symbol == nil) {
       return false
