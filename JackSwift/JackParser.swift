@@ -282,20 +282,14 @@ class JackParse {
   }
 
   private func writeOpenTag(tag: String) {
-    var token = "<\(tag)>\n"
-    println(token)
-    out += token
+    out += "<\(tag)>\n"
   }
 
   private func writeCloseTag(tag: String) {
-    var token = "</\(tag)>\n"
-    println(token)
-    out += token
+    out += "</\(tag)>\n"
   }
 
   private func writeNextToken() {
-    var token = "\(tokeniser.next()!)\n"
-    println(token)
-    out += token
+    out += "\(tokeniser.next()!)\n"
   }
 }
