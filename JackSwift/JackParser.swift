@@ -2,17 +2,20 @@ import Foundation
 
 class JackParse {
   let tokeniser:JackTokeniser
+  let symbolTable:JackSymbolTable
   let outputFile:String
   var out:String = ""
 
   init(path: String, file: String) {
     println("Parsing \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
+    symbolTable = JackSymbolTable()
     self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5])2.xml")
   }
 
   init(file: String) {
     tokeniser = JackTokeniser(file: file)
+    symbolTable = JackSymbolTable()
     self.outputFile = "\(file[0..<count(file)-5])2.xml"
   }
 

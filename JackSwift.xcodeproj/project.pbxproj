@@ -31,6 +31,7 @@
 		97FF77371AFA1B34004E7817 /* JackParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FF77361AFA1B34004E7817 /* JackParser.swift */; };
 		EC13D2FB1A9D916600A70F63 /* AssemblyCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */; };
 		EC407A8C1A9C7678006FDDC0 /* AssemblyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */; };
+		ECE872AA1B03063E003F0D13 /* JackSymboTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE872A91B03063E003F0D13 /* JackSymboTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		EC13D2FA1A9D916600A70F63 /* AssemblyCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyCommand.swift; sourceTree = "<group>"; };
 		EC407A8B1A9C7678006FDDC0 /* AssemblyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssemblyParser.swift; sourceTree = "<group>"; };
 		EC407A8D1A9C7785006FDDC0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		ECE872A91B03063E003F0D13 /* JackSymboTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JackSymboTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				972438951AF885A2005B6C8C /* JackTokeniser.swift */,
 				972438971AF9B8C0005B6C8C /* JackToken.swift */,
 				97FF77361AFA1B34004E7817 /* JackParser.swift */,
+				ECE872A91B03063E003F0D13 /* JackSymboTable.swift */,
 			);
 			name = Parser;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				973614F21A9C3743001D26CB /* main.swift in Sources */,
 				972438961AF885A2005B6C8C /* JackTokeniser.swift in Sources */,
 				97E903D51AE60EF600F2FF34 /* AssemberSymbolTable.swift in Sources */,
+				ECE872AA1B03063E003F0D13 /* JackSymboTable.swift in Sources */,
 				97DE8E291AC818F500A0D251 /* VirtualMachineParser.swift in Sources */,
 				979A36FB1AE3CD8600509C9F /* StreamReader.swift in Sources */,
 				97E903CF1AE4B9FE00F2FF34 /* HackFileReader.swift in Sources */,
