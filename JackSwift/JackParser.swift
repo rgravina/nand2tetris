@@ -36,14 +36,22 @@ class JackParse {
     writeCloseTag("class")
   }
 
-  private func define(varName: JackToken, type: JackToken, kind:JackToken) {
-    var typeName:String?
+  private func getTypeName(type: JackToken) -> String {
+    var typeName:String
     if (type.keyword != nil) {
       typeName = type.keyword!.rawValue
     } else {
       typeName = type.identifier!
     }
-    symbolTable.define(varName.identifier!, type: typeName!, kind: kind.keyword!)
+    return typeName
+  }
+
+  private func define(varName: JackToken, type: JackToken, kind:JackToken) {
+    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind.keyword!.rawValue)
+  }
+
+  private func define(varName: JackToken, type: JackToken) {
+    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: "arg")
   }
 
   private func compileClassVarDec() {
@@ -92,13 +100,15 @@ class JackParse {
     writeOpenTag("parameterList")
     var token = tokeniser.peek()!
     if token.symbol != ")" {
-      writeNextToken()  // type
-      writeNextToken()  // varName
+      var type = writeNextToken()  // type
+      var varName = writeNextToken()  // varName
+      define(varName, type: type)
       token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken()  // comma
-        writeNextToken()  // type
-        writeNextToken()  // varName
+        type = writeNextToken()  // type
+        varName = writeNextToken()  // varName
+        define(varName, type: type)
         token = tokeniser.peek()!
       }
     }

@@ -21,7 +21,7 @@ public class JackSymbolTable {
     subroutineScope.removeAll()
   }
 
-  public func define(name: String, type: String, kind: JackTokenKeyword) {
+  public func define(name: String, type: String, kind: String) {
     println("Defining new variable name:\(name), type:\(type), kind:\(kind).")
   }
 
