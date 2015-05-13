@@ -35,7 +35,17 @@ class JackParse {
     writeNextToken()  // '}'
     writeCloseTag("class")
   }
-  
+
+  private func define(varName: JackToken, type: JackToken, kind:JackToken) {
+    var typeName:String?
+    if (type.keyword != nil) {
+      typeName = type.keyword!.rawValue
+    } else {
+      typeName = type.identifier!
+    }
+    symbolTable.define(varName.identifier!, type: typeName!, kind: kind.keyword!)
+  }
+
   private func compileClassVarDec() {
     // zero or more
     // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
@@ -45,24 +55,12 @@ class JackParse {
       var kind = writeNextToken()  // static or field
       var type = writeNextToken()  // type
       var varName = writeNextToken()  // varName
-      if (type.keyword != nil) {
-        // int, bool etc.
-        symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
-      } else {
-        // class
-        symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
-      }
+      define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
       while(token.symbol != ";") {
         writeNextToken()  // comma
         varName = writeNextToken()  // varName
-        if (type.keyword != nil) {
-          // int, bool etc.
-          symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
-        } else {
-          // class
-          symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
-        }
+        define(varName, type: type, kind: kind)
         token = tokeniser.peek()!
       }
       writeNextToken()
@@ -124,24 +122,12 @@ class JackParse {
       var kind = writeNextToken()  // var
       var type = writeNextToken()  // type
       var varName = writeNextToken()  // varName
-      if (type.keyword != nil) {
-        // int, bool etc.
-        symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
-      } else {
-        // class
-        symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
-      }
+      define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken()  // comma
         varName = writeNextToken()  // varName
-        if (type.keyword != nil) {
-          // int, bool etc.
-          symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
-        } else {
-          // class
-          symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
-        }
+        define(varName, type: type, kind: kind)
         token = tokeniser.peek()!
       }
       writeNextToken()  // ';'
