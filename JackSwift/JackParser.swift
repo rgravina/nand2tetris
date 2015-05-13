@@ -82,6 +82,7 @@ class JackParse {
     // subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) subroutineName '(' parameterList ')' subroutineBody
     var token = tokeniser.peek()!
     while(token.symbol != "}") {
+      symbolTable.startSubroutineScope()
       writeOpenTag("subroutineDec")
       writeNextToken()  // constructor etc.
       writeNextToken()  // 'void' or type
