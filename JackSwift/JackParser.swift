@@ -42,13 +42,27 @@ class JackParse {
     var token = tokeniser.peek()!
     while(token.keyword == .Static || token.keyword == .Field) {
       writeOpenTag("classVarDec")
-      writeNextToken()  // static or field
-      writeNextToken()  // type
-      writeNextToken()  // varName
+      var kind = writeNextToken()  // static or field
+      var type = writeNextToken()  // type
+      var varName = writeNextToken()  // varName
+      if (type.keyword != nil) {
+        // int, bool etc.
+        symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
+      } else {
+        // class
+        symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
+      }
       token = tokeniser.peek()!
       while(token.symbol != ";") {
         writeNextToken()  // comma
-        writeNextToken()  // varName
+        varName = writeNextToken()  // varName
+        if (type.keyword != nil) {
+          // int, bool etc.
+          symbolTable.define(varName.identifier!, type: type.keyword!, kind: kind.keyword!)
+        } else {
+          // class
+          symbolTable.define(varName.identifier!, type: type.identifier!, kind: kind.keyword!)
+        }
         token = tokeniser.peek()!
       }
       writeNextToken()
@@ -292,7 +306,9 @@ class JackParse {
     out += "</\(tag)>\n"
   }
 
-  private func writeNextToken() {
-    out += "\(tokeniser.next()!)\n"
+  private func writeNextToken() -> JackToken {
+    var token = tokeniser.next()!
+    out += "\(token)\n"
+    return token
   }
 }
