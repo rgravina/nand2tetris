@@ -61,9 +61,17 @@ class JackTokeniser {
           pos++
           return JackToken(string: token)
         }
+        var inString = source[pos] == "\""
         pos++
-        while (source[pos] != " " && source[pos] != "\r\n" && !JackToken.isSymbol(source[pos])) {
-          token.append(source[pos++])
+        while (inString || (source[pos] != " " && !JackToken.isSymbol(source[pos])) && source[pos] != "\r\n" ) {
+          if inString {
+            token.append(source[pos++])
+            if source[pos] == "\"" {
+              inString = false
+            }
+          } else {
+            token.append(source[pos++])
+          }
         }
         return JackToken(string: token)
       }
