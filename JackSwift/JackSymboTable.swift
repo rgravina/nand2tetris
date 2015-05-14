@@ -20,11 +20,12 @@ public class JackSymbolTable {
     indexes = ["static": 0, "field": 0]
   }
 
-  public func startSubroutineScope(method: String, className: String) {
+  public func startSubroutineScope(method: String, className: String, returnType: String, subroutineName: String) {
     // reset arg and local indexes and clear all subroutine variables from the symbol table
     indexes["arg"] = 0
     indexes["var"] = 0
     subroutineScope.removeAll()
+    define(subroutineName, type: returnType, kind: method)
     // methods should have 'this' as the first argument
     if method == "method" {
       define("this", type: className, kind: "arg")
@@ -33,7 +34,11 @@ public class JackSymbolTable {
 
   public func define(name: String, type: String, kind: String) {
     // TODO: wrote to the symbol table
-    println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(indexes[kind]!++)")
+    if kind == "static" || kind == "field" || kind == "arg" || kind == "var" {
+      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(indexes[kind]!++)")
+    } else {
+      println("Defining new \(kind) name:\(name), type:\(type), kind:\(kind)")
+    }
   }
 
   public func varCount(kind: JackTokenKeyword) -> Int {

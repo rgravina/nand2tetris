@@ -29,6 +29,7 @@ class JackParse {
     writeOpenTag("class")
     writeNextToken()  // 'class'
     let className = writeNextToken()  // className
+    define(className, type:className, kind: "class")
     writeNextToken()  // '{'
     compileClassVarDec()
     compileSubroutineDec(className)
@@ -50,8 +51,8 @@ class JackParse {
     symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind.keyword!.rawValue)
   }
 
-  private func define(varName: JackToken, type: JackToken) {
-    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: "arg")
+  private func define(varName: JackToken, type: JackToken, kind: String) {
+    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind)
   }
 
   private func compileClassVarDec() {
@@ -84,9 +85,9 @@ class JackParse {
     while(token.symbol != "}") {
       writeOpenTag("subroutineDec")
       let method = writeNextToken()  // constructor etc.
-      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!)
-      writeNextToken()  // 'void' or type
-      writeNextToken()  // subroutineName
+      let returnType = writeNextToken()  // 'void' or type
+      let subroutineName = writeNextToken()  // subroutineName
+      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!, returnType: getTypeName(returnType), subroutineName:subroutineName.identifier!)
       writeNextToken()  // '('
       compileParameterList()
       writeNextToken()  // ')'
@@ -103,13 +104,13 @@ class JackParse {
     if token.symbol != ")" {
       var type = writeNextToken()  // type
       var varName = writeNextToken()  // varName
-      define(varName, type: type)
+      define(varName, type: type, kind: "arg")
       token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken()  // comma
         type = writeNextToken()  // type
         varName = writeNextToken()  // varName
-        define(varName, type: type)
+        define(varName, type: type, kind: "arg")
         token = tokeniser.peek()!
       }
     }
