@@ -33,9 +33,14 @@ public class JackSymbolTable {
   }
 
   public func define(name: String, type: String, kind: String) {
-    // TODO: wrote to the symbol table
-    if kind == "static" || kind == "field" || kind == "arg" || kind == "var" {
-      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(indexes[kind]!++)")
+    if kind == "static" || kind == "field" {
+      // TODO: write to class symbol table
+      let index = indexes[kind]!++
+      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
+    } else if kind == "arg" || kind == "var" {
+      // TODO: write to subroutine symbol table
+      let index = indexes[kind]!++
+      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else {
       println("Defining new \(kind) name:\(name), type:\(type), kind:\(kind)")
     }
