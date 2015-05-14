@@ -20,11 +20,15 @@ public class JackSymbolTable {
     indexes = ["static": 0, "field": 0]
   }
 
-  public func startSubroutineScope() {
+  public func startSubroutineScope(method: String, className: String) {
     // reset arg and local indexes and clear all subroutine variables from the symbol table
     indexes["arg"] = 0
     indexes["var"] = 0
     subroutineScope.removeAll()
+    // methods should have 'this' as the first argument
+    if method == "method" {
+      define("this", type: className, kind: "arg")
+    }
   }
 
   public func define(name: String, type: String, kind: String) {

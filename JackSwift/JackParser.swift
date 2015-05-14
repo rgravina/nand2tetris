@@ -28,10 +28,10 @@ class JackParse {
     // 'class' className '{' classVarDec* compileSubroutineDec* '}'
     writeOpenTag("class")
     writeNextToken()  // 'class'
-    writeNextToken()  // className
+    let className = writeNextToken()  // className
     writeNextToken()  // '{'
     compileClassVarDec()
-    compileSubroutineDec()
+    compileSubroutineDec(className)
     writeNextToken()  // '}'
     writeCloseTag("class")
   }
@@ -77,14 +77,14 @@ class JackParse {
     }
   }
 
-  private func compileSubroutineDec() {
+  private func compileSubroutineDec(className: JackToken) {
     // zero or more
     // subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) subroutineName '(' parameterList ')' subroutineBody
     var token = tokeniser.peek()!
     while(token.symbol != "}") {
-      symbolTable.startSubroutineScope()
       writeOpenTag("subroutineDec")
-      writeNextToken()  // constructor etc.
+      let method = writeNextToken()  // constructor etc.
+      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!)
       writeNextToken()  // 'void' or type
       writeNextToken()  // subroutineName
       writeNextToken()  // '('
