@@ -12,6 +12,10 @@ class JackVMWriter {
     self.outputFile = "\(file[0..<count(file)-5]).vm"
   }
 
+  func writeFunction(className: String, subroutineName: String, numLocals: Int) {
+    out += "function \(className).\(subroutineName) \(numLocals)"
+  }
+
   func write() {
     out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
   }

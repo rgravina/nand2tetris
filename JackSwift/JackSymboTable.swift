@@ -55,12 +55,8 @@ public class JackSymbolTable {
     }
   }
 
-  public func varCount(kind: JackTokenKeyword) -> Int {
-    return 0
-  }
-
-  public func varCount(name: String) -> JackVarKind {
-    return .Static
+  public func varCount(kind: String) -> Int {
+    return indexes[kind]!
   }
 
   public func typeOf(name: String) -> JackTokenKeyword {

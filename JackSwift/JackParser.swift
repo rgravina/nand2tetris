@@ -89,6 +89,7 @@ class JackParse {
       writeNextToken()  // '('
       compileParameterList()
       writeNextToken()  // ')'
+      vmWriter.writeFunction(className.identifier!, subroutineName: subroutineName.identifier!, numLocals: symbolTable.varCount("arg"))
       compileSubroutineBody()
       writeCloseTag("subroutineDec")
       token = tokeniser.peek()!
