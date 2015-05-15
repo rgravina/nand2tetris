@@ -304,12 +304,20 @@ class JackParse {
     writeOpenTag("term")
     var token = tokeniser.peek()!
     if (token.type == .IntConstant) {
-      var int = writeNextToken()
+      let int = writeNextToken()
       vmWriter.writePush("constant", index: int.intVal!)
     } else if (token.type == .StringConstant) {
       writeNextToken()
     } else if (token.keywordConstant) {
-      writeNextToken()
+      let keyword = writeNextToken()
+      // false
+      if keyword.keyword == .False || keyword.keyword == .True {
+        vmWriter.writePush("constant", index: 0)
+        if keyword.keyword == .True {
+          // not false to get true
+          vmWriter.writeArithmetic("not")
+        }
+      }
     } else if (token.symbol == "(") {
       writeNextToken() // '('
       compileExpression()
