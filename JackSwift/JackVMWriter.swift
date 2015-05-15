@@ -36,6 +36,18 @@ class JackVMWriter {
     out += "return\n"
   }
 
+  func writeLabel(label: String) {
+    out += "label \(label)\n"
+  }
+
+  func writeIf(label: String) {
+    out += "if-goto \(label)\n"
+  }
+
+  func writeGoto(label: String) {
+    out += "goto \(label)\n"
+  }
+
   func write() {
     out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
   }

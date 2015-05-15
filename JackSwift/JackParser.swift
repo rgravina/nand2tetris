@@ -4,6 +4,7 @@ class JackParse {
   let tokeniser:JackTokeniser
   let symbolTable:JackSymbolTable
   var vmWriter:JackVMWriter
+  var whileRip = 0
 
   init(path: String, file: String) {
     println("Parsing \(file)...")
@@ -196,12 +197,19 @@ class JackParse {
       case .While:
         writeOpenTag("whileStatement")
         writeNextToken()  // while
+        let rip = whileRip++
+        vmWriter.writeLabel("WHILE_EXP\(rip)")
         writeNextToken()  // '('
         compileExpression()  // expression
+        // not the value and jump to test for truth
+        vmWriter.writeArithmetic("not")
+        vmWriter.writeIf("WHILE_END\(rip)")
         writeNextToken()  // ')'
         writeNextToken()  // '{'
         compileStatements() // statements
+        vmWriter.writeGoto("WHILE_EXP\(rip)")
         writeNextToken()  // '}'
+        vmWriter.writeLabel("WHILE_END\(rip)")
         writeCloseTag("whileStatement")
       case .Do:
         writeOpenTag("doStatement")
