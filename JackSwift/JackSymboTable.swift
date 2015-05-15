@@ -45,13 +45,13 @@ public class JackSymbolTable {
     if kind == "static" || kind == "field" {
       let index = indexes[kind]!++
       classScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
-      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
+      //println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else if kind == "arg" || kind == "var" {
       let index = indexes[kind]!++
       subroutineScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
-      println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
+      //println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else {
-      println("Found method or class indentifier... ignoring. name:\(name), type:\(type), kind:\(kind)")
+      //println("Found method or class indentifier... ignoring. name:\(name), type:\(type), kind:\(kind)")
     }
   }
 
