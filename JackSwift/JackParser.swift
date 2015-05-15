@@ -10,13 +10,13 @@ class JackParse {
     println("Parsing \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
     symbolTable = JackSymbolTable()
-    self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5])2.xml")
+    self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5]).vm")
   }
 
   init(file: String) {
     tokeniser = JackTokeniser(file: file)
     symbolTable = JackSymbolTable()
-    self.outputFile = "\(file[0..<count(file)-5])2.xml"
+    self.outputFile = "\(file[0..<count(file)-5]).vm"
   }
 
   func parse() {
@@ -310,16 +310,16 @@ class JackParse {
   }
 
   private func writeOpenTag(tag: String) {
-    out += "<\(tag)>\n"
+    //out += "<\(tag)>\n"
   }
 
   private func writeCloseTag(tag: String) {
-    out += "</\(tag)>\n"
+    //out += "</\(tag)>\n"
   }
 
   private func writeNextToken() -> JackToken {
     var token = tokeniser.next()!
-    out += "\(token)\n"
+    //out += "\(token)\n"
     return token
   }
 }
