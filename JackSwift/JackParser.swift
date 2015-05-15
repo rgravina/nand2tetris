@@ -29,7 +29,6 @@ class JackParse {
     writeOpenTag("class")
     writeNextToken()  // 'class'
     let className = writeNextToken()  // className
-    define(className, type:className, kind: "class")
     writeNextToken()  // '{'
     compileClassVarDec()
     compileSubroutineDec(className)
@@ -87,7 +86,7 @@ class JackParse {
       let method = writeNextToken()  // constructor etc.
       let returnType = writeNextToken()  // 'void' or type
       let subroutineName = writeNextToken()  // subroutineName
-      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!, returnType: getTypeName(returnType), subroutineName:subroutineName.identifier!)
+      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!)
       writeNextToken()  // '('
       compileParameterList()
       writeNextToken()  // ')'
