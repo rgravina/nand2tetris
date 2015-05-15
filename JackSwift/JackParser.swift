@@ -262,8 +262,16 @@ class JackParse {
     compileTerm()
     var token = tokeniser.peek()!
     while(token.binaryOperator) {
-      writeNextToken() // op
+      var op = writeNextToken() // op
       compileTerm()
+      switch(op.symbol!) {
+       case "*":
+        vmWriter.writeCall("Math.multiply", numArgs: 2)
+      case "+":
+        vmWriter.writeArithmetic("add")
+      default:
+        true
+      }
       token = tokeniser.peek()!
     }
     writeCloseTag("expression")
