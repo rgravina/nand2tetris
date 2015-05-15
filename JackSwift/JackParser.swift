@@ -3,25 +3,24 @@ import Foundation
 class JackParse {
   let tokeniser:JackTokeniser
   let symbolTable:JackSymbolTable
-  let outputFile:String
-  var out:String = ""
+  var vmWriter:JackVMWriter
 
   init(path: String, file: String) {
     println("Parsing \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
     symbolTable = JackSymbolTable()
-    self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5]).vm")
+    vmWriter = JackVMWriter(path: path, file: file)
   }
 
   init(file: String) {
     tokeniser = JackTokeniser(file: file)
     symbolTable = JackSymbolTable()
-    self.outputFile = "\(file[0..<count(file)-5]).vm"
+    vmWriter = JackVMWriter(file: file)
   }
 
   func parse() {
     compileClass()
-    out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
+    vmWriter.write()
   }
   
   private func compileClass() {
