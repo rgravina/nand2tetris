@@ -59,8 +59,8 @@ public class JackSymbolTable {
     return indexes[kind]!
   }
 
-  public func typeOf(name: String) -> JackTokenKeyword {
-    return .This
+  public func kindOf(name: String) -> String {
+    return subroutineScope[name]!.kind
   }
 
   public func indexOf(name: String) -> Int {

@@ -93,9 +93,14 @@ class JackParse {
       writeNextToken()  // ')'
       //FIXME: the num locals isn't known yet
       compileSubroutineBody(className, subroutineName: subroutineName)
+      // rest RIPs
+      whileRip = 0
+      ifRip = 0
       if (returnType.keyword != nil) && (returnType.keyword! == .Void) {
         // void == 0
         vmWriter.writePush("constant", index: 0);
+      } else {
+        // TODO: returning a type
       }
       vmWriter.writeReturn();
       writeCloseTag("subroutineDec")
@@ -374,7 +379,12 @@ class JackParse {
         compileSubroutineCall(varName)
       } else {
         // nothing else needs to be done for identifiers for parsing
-        vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
+        let kind = symbolTable.kindOf(varName.identifier!)
+        if kind == "var" {
+          vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
+        } else {
+          vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
+        }
       }
     }
     writeCloseTag("term")
