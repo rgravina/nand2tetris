@@ -64,6 +64,6 @@ public class JackSymbolTable {
   }
 
   public func indexOf(name: String) -> Int {
-    return 0
+    return subroutineScope[name]!.index
   }
 }

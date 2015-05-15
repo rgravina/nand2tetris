@@ -89,8 +89,13 @@ class JackParse {
       writeNextToken()  // '('
       compileParameterList()
       writeNextToken()  // ')'
-      vmWriter.writeFunction(className.identifier!, subroutineName: subroutineName.identifier!, numLocals: symbolTable.varCount("arg"))
-      compileSubroutineBody()
+      //FIXME: the num locals isn't known yet
+      compileSubroutineBody(className, subroutineName: subroutineName)
+      if (returnType.keyword != nil) && (returnType.keyword! == .Void) {
+        // void == 0
+        vmWriter.writePush("constant", index: 0);
+      }
+      vmWriter.writeReturn();
       writeCloseTag("subroutineDec")
       token = tokeniser.peek()!
     }
@@ -116,11 +121,12 @@ class JackParse {
     writeCloseTag("parameterList")
   }
 
-  private func compileSubroutineBody() {
+  private func compileSubroutineBody(className: JackToken, subroutineName: JackToken) {
     // '{' varDec* statements '}'
     writeOpenTag("subroutineBody")
     writeNextToken()  // '{'
     compileVarDec()
+    vmWriter.writeFunction(className.identifier!, subroutineName: subroutineName.identifier!, numLocals: symbolTable.varCount("var"))
     compileStatements()
     writeNextToken()  // '}'
     writeCloseTag("subroutineBody")
@@ -158,7 +164,7 @@ class JackParse {
         writeOpenTag("letStatement")
         // 'let' varName ('[' expression ']')? '=' expression ';'
         writeNextToken()  // let
-        writeNextToken()  // varName
+        let varName = writeNextToken()  // varName
         token = tokeniser.peek()!
         if(token.symbol == "[") {
           writeNextToken()  // '[]
@@ -167,6 +173,7 @@ class JackParse {
         }
         writeNextToken()  // '='
         compileExpression()  // expression
+        vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
@@ -200,8 +207,10 @@ class JackParse {
         writeOpenTag("doStatement")
         // 'do' subroutineCall ';'
         writeNextToken()  // 'do'
-        writeNextToken()  // subroutineName | className or varName
-        compileSubroutineCall();
+        var callee = writeNextToken()  // subroutineName | className or varName
+        compileSubroutineCall(callee);
+        // igmore the return value
+        vmWriter.writePop("temp", index: 0)
         writeNextToken()  // ';'
         writeCloseTag("doStatement")
       case .Return:
@@ -223,7 +232,7 @@ class JackParse {
     writeCloseTag("statements")
   }
 
-  private func compileSubroutineCall() {
+  private func compileSubroutineCall(callee: JackToken) {
     // subroutineName '(' expressionList ')' |
     // (className | varName) '.' subroutineName '(' expressionList ')'
     // expects the caller has output the first token
@@ -231,29 +240,35 @@ class JackParse {
     if(token.symbol == "(") {
       writeNextToken()  // '('
       compileExpressionList()
+      vmWriter.writeCall(callee.identifier!, numArgs: symbolTable.varCount("args"))
     } else {
       writeNextToken()  // '.'
-      writeNextToken()  // subroutineName
+      var subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
-      compileExpressionList()
+      var numExpressions = compileExpressionList()
+      vmWriter.writeCall("\(callee.identifier!).\(subroutineName.identifier!)", numArgs: numExpressions)
     }
     writeNextToken()  // ')'
   }
 
-  private func compileExpressionList() {
+  private func compileExpressionList() -> Int {
     // (expression (',' expression)*)?
     writeOpenTag("expressionList")
+    var numExpressions = 0
     var token = tokeniser.peek()!
     if(token.symbol != ")") {
       compileExpression()
+      numExpressions++
       var token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken() // ','
         compileExpression()
+        numExpressions++
         token = tokeniser.peek()!
       }
     }
     writeCloseTag("expressionList")
+    return numExpressions
   }
 
   private func compileExpression() {
@@ -300,19 +315,28 @@ class JackParse {
       compileExpression()
       writeNextToken() // ')'
     } else if (token.unaryOperator) {
-      writeNextToken() // op
+      let op = writeNextToken() // op
       compileTerm()
+      switch(op.symbol!) {
+      case "-":
+        vmWriter.writeArithmetic("neg")
+      case "~":
+        vmWriter.writeArithmetic("not")
+      default:
+        true
+      }
     } else {
-      writeNextToken() // varName
+      var varName = writeNextToken() // varName
       token = tokeniser.peek()!
       if (token.symbol == "[") {
         writeNextToken() // '['
         compileExpression()
         writeNextToken() // ']'
       } else if (token.symbol == "(" || token.symbol == ".") {
-        compileSubroutineCall()
+        compileSubroutineCall(varName)
       } else {
-        // nothing else needs to be done for identifiers
+        // nothing else needs to be done for identifiers for parsing
+        vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
       }
     }
     writeCloseTag("term")
