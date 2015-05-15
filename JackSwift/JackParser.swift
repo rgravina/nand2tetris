@@ -5,6 +5,7 @@ class JackParse {
   let symbolTable:JackSymbolTable
   var vmWriter:JackVMWriter
   var whileRip = 0
+  var ifRip = 0
 
   init(path: String, file: String) {
     println("Parsing \(file)...")
@@ -180,13 +181,19 @@ class JackParse {
       case .If:
         writeOpenTag("ifStatement")
         writeNextToken()  // if
+        let rip = ifRip++
         writeNextToken()  // '('
         compileExpression()  // expression
         writeNextToken()  // ')'
+        vmWriter.writeIf("IF_TRUE\(rip)")
+        vmWriter.writeGoto("IF_FALSE\(rip)")
+        vmWriter.writeLabel("IF_TRUE\(rip)")
         writeNextToken()  // '{'
         compileStatements() // statements
         writeNextToken()  // '}'
         writeCloseTag("ifStatement")
+        vmWriter.writeGoto("IF_END\(rip)")
+        vmWriter.writeLabel("IF_FALSE\(rip)")
         token = tokeniser.peek()!
         if(token.keyword == .Else) {
           writeNextToken()  // else
@@ -194,6 +201,7 @@ class JackParse {
           compileStatements() // statements
           writeNextToken()  // '}'
         }
+        vmWriter.writeLabel("IF_END\(rip)")
       case .While:
         writeOpenTag("whileStatement")
         writeNextToken()  // while
@@ -288,10 +296,24 @@ class JackParse {
       var op = writeNextToken() // op
       compileTerm()
       switch(op.symbol!) {
-       case "*":
+      case "*":
         vmWriter.writeCall("Math.multiply", numArgs: 2)
+      case "/":
+        vmWriter.writeCall("Math.divide", numArgs: 2)
       case "+":
         vmWriter.writeArithmetic("add")
+      case "-":
+        vmWriter.writeArithmetic("sub")
+      case ">":
+        vmWriter.writeArithmetic("gt")
+      case "<":
+        vmWriter.writeArithmetic("lt")
+      case "=":
+        vmWriter.writeArithmetic("eq")
+      case "&":
+        vmWriter.writeArithmetic("and")
+      case "|":
+        vmWriter.writeArithmetic("or")
       default:
         true
       }
