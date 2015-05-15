@@ -10,9 +10,19 @@ public enum JackVarKind: String, Printable {
   }
 }
 
+struct SymbolTableEntry : Printable {
+  var type:String
+  var kind:String
+  var index:Int
+
+  var description: String {
+    return "type:\(type), kind:\(kind) index:\(index)"
+  }
+}
+
 public class JackSymbolTable {
-  var classScope = [String:Int]()
-  var subroutineScope = [String:Int]()
+  var classScope = [String:SymbolTableEntry]()
+  var subroutineScope = [String:SymbolTableEntry]()
   var indexes = [String:Int]()
 
   public init() {
@@ -34,14 +44,15 @@ public class JackSymbolTable {
 
   public func define(name: String, type: String, kind: String) {
     if kind == "static" || kind == "field" {
-      // TODO: write to class symbol table
       let index = indexes[kind]!++
+      classScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
       println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else if kind == "arg" || kind == "var" {
-      // TODO: write to subroutine symbol table
       let index = indexes[kind]!++
+      subroutineScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
       println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else {
+      classScope[name] = SymbolTableEntry(type: type, kind: kind, index: 0)
       println("Defining new \(kind) name:\(name), type:\(type), kind:\(kind)")
     }
   }
