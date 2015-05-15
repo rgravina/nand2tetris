@@ -281,7 +281,8 @@ class JackParse {
     writeOpenTag("term")
     var token = tokeniser.peek()!
     if (token.type == .IntConstant) {
-      writeNextToken()
+      var int = writeNextToken()
+      vmWriter.writePush("constant", index: int.intVal!)
     } else if (token.type == .StringConstant) {
       writeNextToken()
     } else if (token.keywordConstant) {

@@ -13,7 +13,27 @@ class JackVMWriter {
   }
 
   func writeFunction(className: String, subroutineName: String, numLocals: Int) {
-    out += "function \(className).\(subroutineName) \(numLocals)"
+    out += "function \(className).\(subroutineName) \(numLocals)\n"
+  }
+
+  func writePush(segment: String, index: Int) {
+    out += "push \(segment) \(index)\n"
+  }
+
+  func writePop(segment: String, index: Int) {
+    out += "pop \(segment) \(index)\n"
+  }
+
+  func writeCall(name: String, numArgs: Int) {
+    out += "call \(name) \(numArgs)\n"
+  }
+
+  func writeArithmetic(command: String) {
+    out += "\(command)\n"
+  }
+
+  func writeReturn() {
+    out += "return\n"
   }
 
   func write() {
