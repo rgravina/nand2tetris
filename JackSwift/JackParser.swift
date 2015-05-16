@@ -263,13 +263,21 @@ class JackParse {
     if(token.symbol == "(") {
       writeNextToken()  // '('
       compileExpressionList()
+      // it's a method call, need to put this onto the stack
+      vmWriter.writePush("local", index: 0)
       vmWriter.writeCall(callee.identifier!, numArgs: symbolTable.varCount("arg"))
     } else {
       writeNextToken()  // '.'
       var subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
       var numExpressions = compileExpressionList()
-      vmWriter.writeCall("\(symbolTable.typeOf(callee.identifier!)).\(subroutineName.identifier!)", numArgs: numExpressions)
+      // if it's a method call, need to put this onto the stack
+      let calleeType = symbolTable.typeOf(callee.identifier!)
+      if (calleeType != callee.identifier!) {
+        vmWriter.writePush("local", index: 0)
+        numExpressions++
+      }
+      vmWriter.writeCall("\(calleeType).\(subroutineName.identifier!)", numArgs: numExpressions)
     }
     writeNextToken()  // ')'
   }
