@@ -60,14 +60,27 @@ public class JackSymbolTable {
   }
 
   public func kindOf(name: String) -> String {
-    return subroutineScope[name]!.kind
+    if let subScope = subroutineScope[name] {
+      return subScope.kind
+    }
+    return classScope[name]!.kind
   }
 
   public func typeOf(name: String) -> String {
-    return subroutineScope[name]!.type
+    if let subScope = subroutineScope[name] {
+      return subScope.type
+    } else if let clsScope = classScope[name] {
+      return clsScope.type
+    } else {
+      // for class idetifiers, their type is the same as the name of the class
+      return name
+    }
   }
 
   public func indexOf(name: String) -> Int {
-    return subroutineScope[name]!.index
+    if let subScope = subroutineScope[name] {
+      return subScope.index
+    }
+    return classScope[name]!.index
   }
 }
