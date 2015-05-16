@@ -96,13 +96,6 @@ class JackParse {
       // rest RIPs
       whileRip = 0
       ifRip = 0
-      if (returnType.keyword != nil) && (returnType.keyword! == .Void) {
-        // void == 0
-        vmWriter.writePush("constant", index: 0);
-      } else {
-        // TODO: returning a type
-      }
-      vmWriter.writeReturn();
       writeCloseTag("subroutineDec")
       token = tokeniser.peek()!
     }
@@ -241,6 +234,10 @@ class JackParse {
         token = tokeniser.peek()!
         if(token.symbol != ";") {
           compileExpression()
+          vmWriter.writeReturn();
+        } else {
+          vmWriter.writePush("constant", index: 0);
+          vmWriter.writeReturn();
         }
         writeNextToken()  // ';'
         writeCloseTag("returnStatement")
