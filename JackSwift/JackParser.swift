@@ -173,7 +173,12 @@ class JackParse {
         }
         writeNextToken()  // '='
         compileExpression()  // expression
-        vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
+        let kind = symbolTable.kindOf(varName.identifier!)
+        if kind == "var" {
+          vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
+        } else {
+          vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
+        }
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
