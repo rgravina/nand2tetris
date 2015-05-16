@@ -63,6 +63,10 @@ public class JackSymbolTable {
     return subroutineScope[name]!.kind
   }
 
+  public func typeOf(name: String) -> String {
+    return subroutineScope[name]!.type
+  }
+
   public func indexOf(name: String) -> Int {
     return subroutineScope[name]!.index
   }

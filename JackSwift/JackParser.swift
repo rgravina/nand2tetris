@@ -269,7 +269,7 @@ class JackParse {
       var subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
       var numExpressions = compileExpressionList()
-      vmWriter.writeCall("\(callee.identifier!).\(subroutineName.identifier!)", numArgs: numExpressions)
+      vmWriter.writeCall("\(symbolTable.typeOf(callee.identifier!)).\(subroutineName.identifier!)", numArgs: numExpressions)
     }
     writeNextToken()  // ')'
   }
