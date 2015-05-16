@@ -263,7 +263,7 @@ class JackParse {
     if(token.symbol == "(") {
       writeNextToken()  // '('
       compileExpressionList()
-      vmWriter.writeCall(callee.identifier!, numArgs: symbolTable.varCount("args"))
+      vmWriter.writeCall(callee.identifier!, numArgs: symbolTable.varCount("arg"))
     } else {
       writeNextToken()  // '.'
       var subroutineName = writeNextToken()  // subroutineName
