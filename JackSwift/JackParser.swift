@@ -376,6 +376,8 @@ class JackParse {
           // not false to get true
           vmWriter.writeArithmetic("not")
         }
+      } else if keyword.keyword == .This {
+        vmWriter.writePush("pointer", index: 0)
       }
     } else if (token.symbol == "(") {
       writeNextToken() // '('
