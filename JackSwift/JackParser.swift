@@ -184,9 +184,12 @@ class JackParse {
         writeNextToken()  // '='
         compileExpression()  // expression
         let kind = symbolTable.kindOf(varName.identifier!)
-        if kind == "var" {
+        switch(kind) {
+        case "var" :
           vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
-        } else {
+        case "field":
+          vmWriter.writePop("this", index: symbolTable.indexOf(varName.identifier!))
+        default:
           vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
         }
         writeNextToken()  // ';'
