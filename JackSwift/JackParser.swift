@@ -213,16 +213,20 @@ class JackParse {
         compileStatements() // statements
         writeNextToken()  // '}'
         writeCloseTag("ifStatement")
-        vmWriter.writeGoto("IF_END\(rip)")
-        vmWriter.writeLabel("IF_FALSE\(rip)")
         token = tokeniser.peek()!
+        if(token.keyword == .Else) {
+          vmWriter.writeGoto("IF_END\(rip)")
+        }
+        vmWriter.writeLabel("IF_FALSE\(rip)")
         if(token.keyword == .Else) {
           writeNextToken()  // else
           writeNextToken()  // '{'
           compileStatements() // statements
           writeNextToken()  // '}'
         }
-        vmWriter.writeLabel("IF_END\(rip)")
+        if(token.keyword == .Else) {
+          vmWriter.writeLabel("IF_END\(rip)")
+        }
       case .While:
         writeOpenTag("whileStatement")
         writeNextToken()  // while
