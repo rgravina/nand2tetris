@@ -30,6 +30,7 @@ class JackParse {
     writeOpenTag("class")
     writeNextToken()  // 'class'
     let className = writeNextToken()  // className
+    symbolTable.className = className.identifier!
     writeNextToken()  // '{'
     compileClassVarDec()
     compileSubroutineDec(className)
@@ -278,7 +279,7 @@ class JackParse {
       let numExpressions = compileExpressionList()
       // it's a method call, need to put this onto the stack
       vmWriter.writePush("pointer", index: 0)
-      vmWriter.writeCall(callee.identifier!, numArgs: numExpressions+1)
+      vmWriter.writeCall("\(symbolTable.className!).\(callee.identifier!)", numArgs: numExpressions+1)
     } else {
       writeNextToken()  // '.'
       let subroutineName = writeNextToken()  // subroutineName

@@ -21,6 +21,7 @@ struct SymbolTableEntry : Printable {
 }
 
 public class JackSymbolTable {
+  var className:String?
   var classScope = [String:SymbolTableEntry]()
   var subroutineScope = [String:SymbolTableEntry]()
   var indexes = [String:Int]()
