@@ -137,6 +137,10 @@ class JackParse {
       vmWriter.writePush("constant", index: symbolTable.varCount("field"))
       vmWriter.writeCall("Memory.alloc", numArgs: 1)
       vmWriter.writePop("pointer", index: 0)
+    } else if (method.keyword!.rawValue == "method") {
+      // this
+      vmWriter.writePush("argument", index: 0)
+      vmWriter.writePop("pointer", index: 0)
     }
     compileStatements()
     writeNextToken()  // '}'
