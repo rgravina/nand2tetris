@@ -92,7 +92,7 @@ class JackParse {
       compileParameterList()
       writeNextToken()  // ')'
       //FIXME: the num locals isn't known yet
-      compileSubroutineBody(className, subroutineName: subroutineName)
+      compileSubroutineBody(className, subroutineName: subroutineName, method: method)
       // rest RIPs
       whileRip = 0
       ifRip = 0
@@ -121,12 +121,22 @@ class JackParse {
     writeCloseTag("parameterList")
   }
 
-  private func compileSubroutineBody(className: JackToken, subroutineName: JackToken) {
+  private func compileSubroutineBody(className: JackToken, subroutineName: JackToken, method: JackToken) {
     // '{' varDec* statements '}'
     writeOpenTag("subroutineBody")
     writeNextToken()  // '{'
     compileVarDec()
     vmWriter.writeFunction(className.identifier!, subroutineName: subroutineName.identifier!, numLocals: symbolTable.varCount("var"))
+    // if a constructor, allocate RAM for the object
+    // e.g. for three fields
+    //  push constant 3
+    //  call Memory.alloc 1
+    //  pop pointer 0   // pops return value of Memory.alloc to this
+    if (method.keyword!.rawValue == "constructor") {
+      vmWriter.writePush("constant", index: symbolTable.varCount("field"))
+      vmWriter.writeCall("Memory.alloc", numArgs: 1)
+      vmWriter.writePop("pointer", index: 0)
+    }
     compileStatements()
     writeNextToken()  // '}'
     writeCloseTag("subroutineBody")
