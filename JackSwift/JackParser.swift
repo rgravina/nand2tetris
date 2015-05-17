@@ -297,6 +297,8 @@ class JackParse {
       // e.g. Foo.new, Foo.something, foo.something
       let calleeType = symbolTable.typeOf(callee.identifier!)
       if (calleeType != nil) {
+        // if the callee does exist in the symbol table
+        // push the location of the callee on the stack
         let calleeKind = symbolTable.kindOf(callee.identifier!)
         if (calleeKind == "field") {
           vmWriter.writePush("this", index: symbolTable.indexOf(callee.identifier!))
@@ -305,6 +307,7 @@ class JackParse {
         }
         vmWriter.writeCall("\(calleeType!).\(subroutineName.identifier!)", numArgs: numExpressions+1)
       } else {
+        // if the callee doesn't exist in the symbol table, assume it's a class function
         vmWriter.writeCall("\(callee.identifier!).\(subroutineName.identifier!)", numArgs: numExpressions)
       }
     }
