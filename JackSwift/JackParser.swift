@@ -275,13 +275,13 @@ class JackParse {
     var token = tokeniser.peek()!
     if(token.symbol == "(") {
       writeNextToken()  // '('
-      compileExpressionList()
+      let numExpressions = compileExpressionList()
       // it's a method call, need to put this onto the stack
-      vmWriter.writePush("local", index: 0)
-      vmWriter.writeCall(callee.identifier!, numArgs: symbolTable.varCount("arg"))
+      vmWriter.writePush("pointer", index: 0)
+      vmWriter.writeCall(callee.identifier!, numArgs: numExpressions+1)
     } else {
       writeNextToken()  // '.'
-      var subroutineName = writeNextToken()  // subroutineName
+      let subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
       var numExpressions = compileExpressionList()
       // if it's a method call, need to put this onto the stack
