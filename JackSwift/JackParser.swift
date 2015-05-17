@@ -295,11 +295,26 @@ class JackParse {
       var numExpressions = compileExpressionList()
       // if it's a method call, need to put this onto the stack
       let calleeType = symbolTable.typeOf(callee.identifier!)
-      if (calleeType != callee.identifier!) {
+      if (callee.identifier! == symbolTable.className!) {
         vmWriter.writePush("local", index: 0)
         numExpressions++
+        vmWriter.writeCall("\(symbolTable.className!).\(subroutineName.identifier!)", numArgs: numExpressions)
+      } else if (calleeType != callee.identifier!){
+        if (calleeType == symbolTable.className) {
+          vmWriter.writePush("this", index: symbolTable.indexOf(callee.identifier!))
+        } else {
+          let kind = symbolTable.kindOf(callee.identifier!)
+          if (kind == "field") {
+            vmWriter.writePush("this", index: symbolTable.indexOf(callee.identifier!))
+          } else {
+            vmWriter.writePush("local", index: symbolTable.indexOf(callee.identifier!))
+          }
+        }
+        numExpressions++
+        vmWriter.writeCall("\(calleeType).\(subroutineName.identifier!)", numArgs: numExpressions)
+      } else {
+        vmWriter.writeCall("\(calleeType).\(subroutineName.identifier!)", numArgs: numExpressions)
       }
-      vmWriter.writeCall("\(calleeType).\(subroutineName.identifier!)", numArgs: numExpressions)
     }
     writeNextToken()  // ')'
   }
