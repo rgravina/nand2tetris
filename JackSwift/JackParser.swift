@@ -412,7 +412,9 @@ class JackParse {
         let kind = symbolTable.kindOf(varName.identifier!)
         if kind == "var" {
           vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
-        } else {
+        } else if kind == "field" {
+          vmWriter.writePush("this", index: symbolTable.indexOf(varName.identifier!))
+        }else {
           vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
         }
       }
