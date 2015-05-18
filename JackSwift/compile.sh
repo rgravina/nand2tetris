@@ -22,8 +22,18 @@
 # JackCompiler.sh ../11/Average/
 # diff -wu ../11/Average/Main2.vm ../11/Average/Main.vm
 
-make file=../11/ComplexArrays/
-mv ../11/ComplexArrays/Main.vm ../11/ComplexArrays/Main2.vm
-JackCompiler.sh ../11/ComplexArrays/
-diff -wu ../11/ComplexArrays/Main2.vm ../11/ComplexArrays/Main.vm
+# make file=../11/ComplexArrays/
+# mv ../11/ComplexArrays/Main.vm ../11/ComplexArrays/Main2.vm
+# JackCompiler.sh ../11/ComplexArrays/
+# diff -wu ../11/ComplexArrays/Main2.vm ../11/ComplexArrays/Main.vm
 
+make file=../11/Pong/
+mv ../11/Pong/Main.vm ../11/Pong/Main2.vm
+mv ../11/Pong/Ball.vm ../11/Pong/Ball2.vm
+mv ../11/Pong/Bat.vm ../11/Pong/Bat2.vm
+mv ../11/Pong/PongGame.vm ../11/Pong/PongGame2.vm
+JackCompiler.sh ../11/Pong/
+diff -wu ../11/Pong/Main2.vm ../11/Pong/Main.vm
+diff -wu ../11/Pong/Ball2.vm ../11/Pong/Ball.vm
+diff -wu ../11/Pong/Bat2.vm ../11/Pong/Bat.vm
+diff -wu ../11/Pong/PongGame2.vm ../11/Pong/PongGame.vm
