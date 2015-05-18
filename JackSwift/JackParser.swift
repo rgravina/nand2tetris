@@ -415,6 +415,8 @@ class JackParse {
         }
       } else if keyword.keyword == .This {
         vmWriter.writePush("pointer", index: 0)
+      } else if keyword.keyword == .Null {
+        vmWriter.writePush("constant", index: 0)
       }
     } else if (token.symbol == "(") {
       writeNextToken() // '('
