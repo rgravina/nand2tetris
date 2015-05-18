@@ -185,6 +185,8 @@ class JackParse {
           writeNextToken()  // '['
           compileExpression()  // expression
           writeNextToken()  // ']'
+          pushVariableOffset(varName)
+          vmWriter.writeArithmetic("add")
         }
         writeNextToken()  // '='
         compileExpression()  // expression
@@ -425,6 +427,8 @@ class JackParse {
         writeNextToken() // '['
         compileExpression()
         writeNextToken() // ']'
+        pushVariableOffset(varName)
+        vmWriter.writeArithmetic("add")
       } else if (token.symbol == "(" || token.symbol == ".") {
         compileSubroutineCall(varName)
       } else {
