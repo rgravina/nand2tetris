@@ -384,12 +384,21 @@ class JackParse {
       let int = writeNextToken()
       vmWriter.writePush("constant", index: int.intVal!)
     } else if (token.type == .StringConstant) {
-      var stringToken = writeNextToken()
+      let stringToken = writeNextToken()
       // e.g. "How many numbers? "
       //push constant 18
       //call String.new 1
-      vmWriter.writePush("constant", index: count(stringToken.stringVal!))
+      let stringVal = stringToken.stringVal!
+      vmWriter.writePush("constant", index: count(stringVal))
       vmWriter.writeCall("String.new", numArgs: 1)
+      // write each character
+      //push constant 72
+      //call String.appendChar 2
+      let chars = stringVal.unicodeScalars
+      for char in chars {
+        vmWriter.writePush("constant", index: Int(char.value))
+        vmWriter.writeCall("String.appendChar", numArgs: 2)
+      }
     } else if (token.keywordConstant) {
       let keyword = writeNextToken()
       // false
