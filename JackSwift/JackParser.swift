@@ -188,15 +188,7 @@ class JackParse {
         }
         writeNextToken()  // '='
         compileExpression()  // expression
-        let kind = symbolTable.kindOf(varName.identifier!)
-        switch(kind) {
-        case "var" :
-          vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
-        case "field":
-          vmWriter.writePop("this", index: symbolTable.indexOf(varName.identifier!))
-        default:
-          vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
-        }
+        popVariableOffset(varName)
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
@@ -437,17 +429,34 @@ class JackParse {
         compileSubroutineCall(varName)
       } else {
         // nothing else needs to be done for identifiers for parsing
-        let kind = symbolTable.kindOf(varName.identifier!)
-        if kind == "var" {
-          vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
-        } else if kind == "field" {
-          vmWriter.writePush("this", index: symbolTable.indexOf(varName.identifier!))
-        }else {
-          vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
-        }
+        pushVariableOffset(varName)
       }
     }
     writeCloseTag("term")
+  }
+
+  private func pushVariableOffset(varName: JackToken) {
+    let kind = symbolTable.kindOf(varName.identifier!)
+    switch(kind) {
+    case "var":
+      vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
+    case "field":
+      vmWriter.writePush("this", index: symbolTable.indexOf(varName.identifier!))
+    default:
+      vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
+    }
+  }
+
+  private func popVariableOffset(varName: JackToken) {
+    let kind = symbolTable.kindOf(varName.identifier!)
+    switch(kind) {
+    case "var":
+      vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
+    case "field":
+      vmWriter.writePop("this", index: symbolTable.indexOf(varName.identifier!))
+    default:
+      vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
+    }
   }
 
   private func writeOpenTag(tag: String) {
