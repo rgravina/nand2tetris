@@ -463,6 +463,8 @@ class JackParse {
       vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
     case "field":
       vmWriter.writePush("this", index: symbolTable.indexOf(varName.identifier!))
+    case "static":
+      vmWriter.writePush("static", index: symbolTable.indexOf(varName.identifier!))
     default:
       vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
     }
@@ -475,6 +477,8 @@ class JackParse {
       vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
     case "field":
       vmWriter.writePop("this", index: symbolTable.indexOf(varName.identifier!))
+    case "static":
+      vmWriter.writePop("static", index: symbolTable.indexOf(varName.identifier!))
     default:
       vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
     }
