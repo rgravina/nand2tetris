@@ -182,7 +182,7 @@ class JackParse {
         let varName = writeNextToken()  // varName
         token = tokeniser.peek()!
         if(token.symbol == "[") {
-          writeNextToken()  // '[]
+          writeNextToken()  // '['
           compileExpression()  // expression
           writeNextToken()  // ']'
         }
