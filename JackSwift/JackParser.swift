@@ -289,17 +289,14 @@ class JackParse {
     var token = tokeniser.peek()!
     if(token.symbol == "(") {
       writeNextToken()  // '('
-      let numExpressions = compileExpressionList()
       // it's a method call, need to put this onto the stack
       vmWriter.writePush("pointer", index: 0)
+      let numExpressions = compileExpressionList()
       vmWriter.writeCall("\(symbolTable.className!).\(callee.identifier!)", numArgs: numExpressions+1)
     } else {
       writeNextToken()  // '.'
       let subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
-      var numExpressions = compileExpressionList()
-      // (className | varName) '.' subroutineName '(' expressionList ')'
-      // e.g. Foo.new, Foo.something, foo.something
       let calleeType = symbolTable.typeOf(callee.identifier!)
       if (calleeType != nil) {
         // if the callee does exist in the symbol table
@@ -310,6 +307,11 @@ class JackParse {
         } else {
           vmWriter.writePush("local", index: symbolTable.indexOf(callee.identifier!))
         }
+      }
+      var numExpressions = compileExpressionList()
+      // (className | varName) '.' subroutineName '(' expressionList ')'
+      // e.g. Foo.new, Foo.something, foo.something
+      if (calleeType != nil) {
         vmWriter.writeCall("\(calleeType!).\(subroutineName.identifier!)", numArgs: numExpressions+1)
       } else {
         // if the callee doesn't exist in the symbol table, assume it's a class function
