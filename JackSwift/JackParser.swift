@@ -190,7 +190,18 @@ class JackParse {
         }
         writeNextToken()  // '='
         compileExpression()  // expression
-        popVariableOffset(varName)
+        if(token.symbol == "[") {
+          // pop temp 0
+          // pop pointer 1
+          // push temp 0
+          // pop that 0
+          vmWriter.writePop("temp", index: 0)
+          vmWriter.writePop("pointer", index: 1)
+          vmWriter.writePush("temp", index: 0)
+          vmWriter.writePop("that", index: 0)
+        } else {
+          popVariableOffset(varName)
+        }
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
@@ -429,6 +440,8 @@ class JackParse {
         writeNextToken() // ']'
         pushVariableOffset(varName)
         vmWriter.writeArithmetic("add")
+        vmWriter.writePop("pointer", index: 1)
+        vmWriter.writePush("that", index: 0)
       } else if (token.symbol == "(" || token.symbol == ".") {
         compileSubroutineCall(varName)
       } else {
