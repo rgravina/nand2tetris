@@ -36,30 +36,32 @@ if Process.arguments.count != 2 {
     }
   } else {
     let fileManager = NSFileManager.defaultManager()
-    var parser:VirtualMachineParser
+//    var parser:VirtualMachineParser
 
     if let contents = fileManager.contentsOfDirectoryAtPath(fileName, error: nil) as? [String] {
-      var printedSetup = false
+//      var printedSetup = false
       for file in contents {
-        let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
+//        let virtualMachineFile = file[Range(start:advance(file.endIndex, -3), end: file.endIndex)] == ".vm"
         let jackSourceFile = file[Range(start:advance(file.endIndex, -5), end: file.endIndex)] == ".jack"
-        if virtualMachineFile {
-          if (!printedSetup) {
-            for instruction in VirtualMachineCommand.setup {
-              println(instruction)
-            }
-            printedSetup = true
+//        if virtualMachineFile {
+//          if (!printedSetup) {
+//            for instruction in VirtualMachineCommand.setup {
+//              println(instruction)
+//            }
+//            printedSetup = true
+//          }
+//          parser = VirtualMachineParser(path: fileName, file: file)
+//          while let command = parser.next() {
+//            for instruction in command.instructions {
+//              println(instruction)
+//            }
+//          }
+//        } else if jackSourceFile {
+          if jackSourceFile {
+            let parser = JackParse(path: fileName, file: file)
+            parser.parse()
           }
-          parser = VirtualMachineParser(path: fileName, file: file)
-          while let command = parser.next() {
-            for instruction in command.instructions {
-              println(instruction)
-            }
-          }
-        } else if jackSourceFile {
-          let parser = JackParse(path: fileName, file: file)
-          parser.parse()
-        }
+//        }
       }
     }
   }

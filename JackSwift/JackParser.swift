@@ -2,50 +2,75 @@ import Foundation
 
 class JackParse {
   let tokeniser:JackTokeniser
-  let outputFile:String
-  var out:String = ""
+  let symbolTable:JackSymbolTable
+  var vmWriter:JackVMWriter
+  var whileRip = 0
+  var ifRip = 0
 
   init(path: String, file: String) {
-    println("Parsing \(file)...")
+    println("Compiling \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
-    self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5])2.xml")
+    symbolTable = JackSymbolTable()
+    vmWriter = JackVMWriter(path: path, file: file)
   }
 
   init(file: String) {
     tokeniser = JackTokeniser(file: file)
-    self.outputFile = "\(file[0..<count(file)-5])2.xml"
+    symbolTable = JackSymbolTable()
+    vmWriter = JackVMWriter(file: file)
   }
 
   func parse() {
     compileClass()
-    out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
+    vmWriter.write()
   }
   
   private func compileClass() {
     // 'class' className '{' classVarDec* compileSubroutineDec* '}'
     writeOpenTag("class")
     writeNextToken()  // 'class'
-    writeNextToken()  // className
+    let className = writeNextToken()  // className
+    symbolTable.className = className.identifier!
     writeNextToken()  // '{'
     compileClassVarDec()
-    compileSubroutineDec()
+    compileSubroutineDec(className)
     writeNextToken()  // '}'
     writeCloseTag("class")
   }
-  
+
+  private func getTypeName(type: JackToken) -> String {
+    let typeName:String
+    if (type.keyword != nil) {
+      typeName = type.keyword!.rawValue
+    } else {
+      typeName = type.identifier!
+    }
+    return typeName
+  }
+
+  private func define(varName: JackToken, type: JackToken, kind:JackToken) {
+    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind.keyword!.rawValue)
+  }
+
+  private func define(varName: JackToken, type: JackToken, kind: String) {
+    symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind)
+  }
+
   private func compileClassVarDec() {
     // zero or more
     // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
     var token = tokeniser.peek()!
     while(token.keyword == .Static || token.keyword == .Field) {
       writeOpenTag("classVarDec")
-      writeNextToken()  // static or field
-      writeNextToken()  // type
-      writeNextToken()  // varName
+      let kind = writeNextToken()  // static or field
+      let type = writeNextToken()  // type
+      var varName = writeNextToken()  // varName
+      define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
       while(token.symbol != ";") {
         writeNextToken()  // comma
-        writeNextToken()  // varName
+        varName = writeNextToken()  // varName
+        define(varName, type: type, kind: kind)
         token = tokeniser.peek()!
       }
       writeNextToken()
@@ -54,19 +79,24 @@ class JackParse {
     }
   }
 
-  private func compileSubroutineDec() {
+  private func compileSubroutineDec(className: JackToken) {
     // zero or more
     // subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) subroutineName '(' parameterList ')' subroutineBody
     var token = tokeniser.peek()!
     while(token.symbol != "}") {
       writeOpenTag("subroutineDec")
-      writeNextToken()  // constructor etc.
-      writeNextToken()  // 'void' or type
-      writeNextToken()  // subroutineName
+      let method = writeNextToken()  // constructor etc.
+      let returnType = writeNextToken()  // 'void' or type
+      let subroutineName = writeNextToken()  // subroutineName
+      symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!)
       writeNextToken()  // '('
       compileParameterList()
       writeNextToken()  // ')'
-      compileSubroutineBody()
+      //FIXME: the num locals isn't known yet
+      compileSubroutineBody(className, subroutineName: subroutineName, method: method)
+      // rest RIPs
+      whileRip = 0
+      ifRip = 0
       writeCloseTag("subroutineDec")
       token = tokeniser.peek()!
     }
@@ -77,24 +107,41 @@ class JackParse {
     writeOpenTag("parameterList")
     var token = tokeniser.peek()!
     if token.symbol != ")" {
-      writeNextToken()  // type
-      writeNextToken()  // varName
+      var type = writeNextToken()  // type
+      var varName = writeNextToken()  // varName
+      define(varName, type: type, kind: "arg")
       token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken()  // comma
-        writeNextToken()  // type
-        writeNextToken()  // varName
+        type = writeNextToken()  // type
+        varName = writeNextToken()  // varName
+        define(varName, type: type, kind: "arg")
         token = tokeniser.peek()!
       }
     }
     writeCloseTag("parameterList")
   }
 
-  private func compileSubroutineBody() {
+  private func compileSubroutineBody(className: JackToken, subroutineName: JackToken, method: JackToken) {
     // '{' varDec* statements '}'
     writeOpenTag("subroutineBody")
     writeNextToken()  // '{'
     compileVarDec()
+    vmWriter.writeFunction(className.identifier!, subroutineName: subroutineName.identifier!, numLocals: symbolTable.varCount("var"))
+    // if a constructor, allocate RAM for the object
+    // e.g. for three fields
+    //  push constant 3
+    //  call Memory.alloc 1
+    //  pop pointer 0   // pops return value of Memory.alloc to this
+    if (method.keyword!.rawValue == "constructor") {
+      vmWriter.writePush("constant", index: symbolTable.varCount("field"))
+      vmWriter.writeCall("Memory.alloc", numArgs: 1)
+      vmWriter.writePop("pointer", index: 0)
+    } else if (method.keyword!.rawValue == "method") {
+      // this
+      vmWriter.writePush("argument", index: 0)
+      vmWriter.writePop("pointer", index: 0)
+    }
     compileStatements()
     writeNextToken()  // '}'
     writeCloseTag("subroutineBody")
@@ -104,13 +151,15 @@ class JackParse {
     var token = tokeniser.peek()!
     while token.keyword == .Var {
       writeOpenTag("varDec")
-      writeNextToken()  // var
-      writeNextToken()  // type
-      writeNextToken()  // varName
+      let kind = writeNextToken()  // var
+      let type = writeNextToken()  // type
+      var varName = writeNextToken()  // varName
+      define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken()  // comma
-        writeNextToken()  // varName
+        varName = writeNextToken()  // varName
+        define(varName, type: type, kind: kind)
         token = tokeniser.peek()!
       }
       writeNextToken()  // ';'
@@ -130,50 +179,84 @@ class JackParse {
         writeOpenTag("letStatement")
         // 'let' varName ('[' expression ']')? '=' expression ';'
         writeNextToken()  // let
-        writeNextToken()  // varName
+        let varName = writeNextToken()  // varName
         token = tokeniser.peek()!
         if(token.symbol == "[") {
-          writeNextToken()  // '[]
+          writeNextToken()  // '['
           compileExpression()  // expression
           writeNextToken()  // ']'
+          pushVariableOffset(varName)
+          vmWriter.writeArithmetic("add")
         }
         writeNextToken()  // '='
         compileExpression()  // expression
+        if(token.symbol == "[") {
+          // pop temp 0
+          // pop pointer 1
+          // push temp 0
+          // pop that 0
+          vmWriter.writePop("temp", index: 0)
+          vmWriter.writePop("pointer", index: 1)
+          vmWriter.writePush("temp", index: 0)
+          vmWriter.writePop("that", index: 0)
+        } else {
+          popVariableOffset(varName)
+        }
         writeNextToken()  // ';'
         writeCloseTag("letStatement")
       case .If:
         writeOpenTag("ifStatement")
         writeNextToken()  // if
+        let rip = ifRip++
         writeNextToken()  // '('
         compileExpression()  // expression
         writeNextToken()  // ')'
+        vmWriter.writeIf("IF_TRUE\(rip)")
+        vmWriter.writeGoto("IF_FALSE\(rip)")
+        vmWriter.writeLabel("IF_TRUE\(rip)")
         writeNextToken()  // '{'
         compileStatements() // statements
         writeNextToken()  // '}'
         writeCloseTag("ifStatement")
         token = tokeniser.peek()!
         if(token.keyword == .Else) {
+          vmWriter.writeGoto("IF_END\(rip)")
+        }
+        vmWriter.writeLabel("IF_FALSE\(rip)")
+        if(token.keyword == .Else) {
           writeNextToken()  // else
           writeNextToken()  // '{'
           compileStatements() // statements
           writeNextToken()  // '}'
         }
+        if(token.keyword == .Else) {
+          vmWriter.writeLabel("IF_END\(rip)")
+        }
       case .While:
         writeOpenTag("whileStatement")
         writeNextToken()  // while
+        let rip = whileRip++
+        vmWriter.writeLabel("WHILE_EXP\(rip)")
         writeNextToken()  // '('
         compileExpression()  // expression
+        // not the value and jump to test for truth
+        vmWriter.writeArithmetic("not")
+        vmWriter.writeIf("WHILE_END\(rip)")
         writeNextToken()  // ')'
         writeNextToken()  // '{'
         compileStatements() // statements
+        vmWriter.writeGoto("WHILE_EXP\(rip)")
         writeNextToken()  // '}'
+        vmWriter.writeLabel("WHILE_END\(rip)")
         writeCloseTag("whileStatement")
       case .Do:
         writeOpenTag("doStatement")
         // 'do' subroutineCall ';'
         writeNextToken()  // 'do'
-        writeNextToken()  // subroutineName | className or varName
-        compileSubroutineCall();
+        let callee = writeNextToken()  // subroutineName | className or varName
+        compileSubroutineCall(callee);
+        // igmore the return value
+        vmWriter.writePop("temp", index: 0)
         writeNextToken()  // ';'
         writeCloseTag("doStatement")
       case .Return:
@@ -183,6 +266,10 @@ class JackParse {
         token = tokeniser.peek()!
         if(token.symbol != ";") {
           compileExpression()
+          vmWriter.writeReturn();
+        } else {
+          vmWriter.writePush("constant", index: 0);
+          vmWriter.writeReturn();
         }
         writeNextToken()  // ';'
         writeCloseTag("returnStatement")
@@ -195,37 +282,63 @@ class JackParse {
     writeCloseTag("statements")
   }
 
-  private func compileSubroutineCall() {
+  private func compileSubroutineCall(callee: JackToken) {
     // subroutineName '(' expressionList ')' |
     // (className | varName) '.' subroutineName '(' expressionList ')'
     // expects the caller has output the first token
     var token = tokeniser.peek()!
     if(token.symbol == "(") {
       writeNextToken()  // '('
-      compileExpressionList()
+      // it's a method call, need to put this onto the stack
+      vmWriter.writePush("pointer", index: 0)
+      let numExpressions = compileExpressionList()
+      vmWriter.writeCall("\(symbolTable.className!).\(callee.identifier!)", numArgs: numExpressions+1)
     } else {
       writeNextToken()  // '.'
-      writeNextToken()  // subroutineName
+      let subroutineName = writeNextToken()  // subroutineName
       writeNextToken()  // '('
-      compileExpressionList()
+      let calleeType = symbolTable.typeOf(callee.identifier!)
+      if (calleeType != nil) {
+        // if the callee does exist in the symbol table
+        // push the location of the callee on the stack
+        let calleeKind = symbolTable.kindOf(callee.identifier!)
+        if (calleeKind == "field") {
+          vmWriter.writePush("this", index: symbolTable.indexOf(callee.identifier!))
+        } else {
+          vmWriter.writePush("local", index: symbolTable.indexOf(callee.identifier!))
+        }
+      }
+      let numExpressions = compileExpressionList()
+      // (className | varName) '.' subroutineName '(' expressionList ')'
+      // e.g. Foo.new, Foo.something, foo.something
+      if (calleeType != nil) {
+        vmWriter.writeCall("\(calleeType!).\(subroutineName.identifier!)", numArgs: numExpressions+1)
+      } else {
+        // if the callee doesn't exist in the symbol table, assume it's a class function
+        vmWriter.writeCall("\(callee.identifier!).\(subroutineName.identifier!)", numArgs: numExpressions)
+      }
     }
     writeNextToken()  // ')'
   }
 
-  private func compileExpressionList() {
+  private func compileExpressionList() -> Int {
     // (expression (',' expression)*)?
     writeOpenTag("expressionList")
+    var numExpressions = 0
     var token = tokeniser.peek()!
     if(token.symbol != ")") {
       compileExpression()
+      numExpressions++
       var token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken() // ','
         compileExpression()
+        numExpressions++
         token = tokeniser.peek()!
       }
     }
     writeCloseTag("expressionList")
+    return numExpressions
   }
 
   private func compileExpression() {
@@ -234,8 +347,30 @@ class JackParse {
     compileTerm()
     var token = tokeniser.peek()!
     while(token.binaryOperator) {
-      writeNextToken() // op
+      let op = writeNextToken() // op
       compileTerm()
+      switch(op.symbol!) {
+      case "*":
+        vmWriter.writeCall("Math.multiply", numArgs: 2)
+      case "/":
+        vmWriter.writeCall("Math.divide", numArgs: 2)
+      case "+":
+        vmWriter.writeArithmetic("add")
+      case "-":
+        vmWriter.writeArithmetic("sub")
+      case ">":
+        vmWriter.writeArithmetic("gt")
+      case "<":
+        vmWriter.writeArithmetic("lt")
+      case "=":
+        vmWriter.writeArithmetic("eq")
+      case "&":
+        vmWriter.writeArithmetic("and")
+      case "|":
+        vmWriter.writeArithmetic("or")
+      default:
+        true
+      }
       token = tokeniser.peek()!
     }
     writeCloseTag("expression")
@@ -253,43 +388,113 @@ class JackParse {
     writeOpenTag("term")
     var token = tokeniser.peek()!
     if (token.type == .IntConstant) {
-      writeNextToken()
+      let int = writeNextToken()
+      vmWriter.writePush("constant", index: int.intVal!)
     } else if (token.type == .StringConstant) {
-      writeNextToken()
+      let stringToken = writeNextToken()
+      // e.g. "How many numbers? "
+      //push constant 18
+      //call String.new 1
+      let stringVal = stringToken.stringVal!
+      vmWriter.writePush("constant", index: count(stringVal))
+      vmWriter.writeCall("String.new", numArgs: 1)
+      // write each character
+      //push constant 72
+      //call String.appendChar 2
+      let chars = stringVal.unicodeScalars
+      for char in chars {
+        vmWriter.writePush("constant", index: Int(char.value))
+        vmWriter.writeCall("String.appendChar", numArgs: 2)
+      }
     } else if (token.keywordConstant) {
-      writeNextToken()
+      let keyword = writeNextToken()
+      // false
+      if keyword.keyword == .False || keyword.keyword == .True {
+        vmWriter.writePush("constant", index: 0)
+        if keyword.keyword == .True {
+          // not false to get true
+          vmWriter.writeArithmetic("not")
+        }
+      } else if keyword.keyword == .This {
+        vmWriter.writePush("pointer", index: 0)
+      } else if keyword.keyword == .Null {
+        vmWriter.writePush("constant", index: 0)
+      }
     } else if (token.symbol == "(") {
       writeNextToken() // '('
       compileExpression()
       writeNextToken() // ')'
     } else if (token.unaryOperator) {
-      writeNextToken() // op
+      let op = writeNextToken() // op
       compileTerm()
+      switch(op.symbol!) {
+      case "-":
+        vmWriter.writeArithmetic("neg")
+      case "~":
+        vmWriter.writeArithmetic("not")
+      default:
+        true
+      }
     } else {
-      writeNextToken() // varName
+      let varName = writeNextToken() // varName
       token = tokeniser.peek()!
       if (token.symbol == "[") {
         writeNextToken() // '['
         compileExpression()
         writeNextToken() // ']'
+        pushVariableOffset(varName)
+        vmWriter.writeArithmetic("add")
+        vmWriter.writePop("pointer", index: 1)
+        vmWriter.writePush("that", index: 0)
       } else if (token.symbol == "(" || token.symbol == ".") {
-        compileSubroutineCall()
+        compileSubroutineCall(varName)
       } else {
-        // nothing else needs to be done for identifiers
+        // nothing else needs to be done for identifiers for parsing
+        pushVariableOffset(varName)
       }
     }
     writeCloseTag("term")
   }
 
+  private func pushVariableOffset(varName: JackToken) {
+    let kind = symbolTable.kindOf(varName.identifier!)
+    switch(kind) {
+    case "var":
+      vmWriter.writePush("local", index: symbolTable.indexOf(varName.identifier!))
+    case "field":
+      vmWriter.writePush("this", index: symbolTable.indexOf(varName.identifier!))
+    case "static":
+      vmWriter.writePush("static", index: symbolTable.indexOf(varName.identifier!))
+    default:
+      vmWriter.writePush("argument", index: symbolTable.indexOf(varName.identifier!))
+    }
+  }
+
+  private func popVariableOffset(varName: JackToken) {
+    let kind = symbolTable.kindOf(varName.identifier!)
+    switch(kind) {
+    case "var":
+      vmWriter.writePop("local", index: symbolTable.indexOf(varName.identifier!))
+    case "field":
+      vmWriter.writePop("this", index: symbolTable.indexOf(varName.identifier!))
+    case "static":
+      vmWriter.writePop("static", index: symbolTable.indexOf(varName.identifier!))
+    default:
+      vmWriter.writePop("argument", index: symbolTable.indexOf(varName.identifier!))
+    }
+  }
+
   private func writeOpenTag(tag: String) {
-    out += "<\(tag)>\n"
+    //out += "<\(tag)>\n"
   }
 
   private func writeCloseTag(tag: String) {
-    out += "</\(tag)>\n"
+    //out += "</\(tag)>\n"
   }
 
-  private func writeNextToken() {
-    out += "\(tokeniser.next()!)\n"
+  private func writeNextToken() -> JackToken {
+    let token = tokeniser.next()!
+    //out += "\(token)\n"
+    return token
   }
 }
