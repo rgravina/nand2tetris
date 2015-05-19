@@ -39,7 +39,7 @@ class JackParse {
   }
 
   private func getTypeName(type: JackToken) -> String {
-    var typeName:String
+    let typeName:String
     if (type.keyword != nil) {
       typeName = type.keyword!.rawValue
     } else {
@@ -62,8 +62,8 @@ class JackParse {
     var token = tokeniser.peek()!
     while(token.keyword == .Static || token.keyword == .Field) {
       writeOpenTag("classVarDec")
-      var kind = writeNextToken()  // static or field
-      var type = writeNextToken()  // type
+      let kind = writeNextToken()  // static or field
+      let type = writeNextToken()  // type
       var varName = writeNextToken()  // varName
       define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
@@ -151,8 +151,8 @@ class JackParse {
     var token = tokeniser.peek()!
     while token.keyword == .Var {
       writeOpenTag("varDec")
-      var kind = writeNextToken()  // var
-      var type = writeNextToken()  // type
+      let kind = writeNextToken()  // var
+      let type = writeNextToken()  // type
       var varName = writeNextToken()  // varName
       define(varName, type: type, kind: kind)
       token = tokeniser.peek()!
@@ -253,7 +253,7 @@ class JackParse {
         writeOpenTag("doStatement")
         // 'do' subroutineCall ';'
         writeNextToken()  // 'do'
-        var callee = writeNextToken()  // subroutineName | className or varName
+        let callee = writeNextToken()  // subroutineName | className or varName
         compileSubroutineCall(callee);
         // igmore the return value
         vmWriter.writePop("temp", index: 0)
@@ -308,7 +308,7 @@ class JackParse {
           vmWriter.writePush("local", index: symbolTable.indexOf(callee.identifier!))
         }
       }
-      var numExpressions = compileExpressionList()
+      let numExpressions = compileExpressionList()
       // (className | varName) '.' subroutineName '(' expressionList ')'
       // e.g. Foo.new, Foo.something, foo.something
       if (calleeType != nil) {
@@ -347,7 +347,7 @@ class JackParse {
     compileTerm()
     var token = tokeniser.peek()!
     while(token.binaryOperator) {
-      var op = writeNextToken() // op
+      let op = writeNextToken() // op
       compileTerm()
       switch(op.symbol!) {
       case "*":
@@ -436,7 +436,7 @@ class JackParse {
         true
       }
     } else {
-      var varName = writeNextToken() // varName
+      let varName = writeNextToken() // varName
       token = tokeniser.peek()!
       if (token.symbol == "[") {
         writeNextToken() // '['
@@ -493,7 +493,7 @@ class JackParse {
   }
 
   private func writeNextToken() -> JackToken {
-    var token = tokeniser.next()!
+    let token = tokeniser.next()!
     //out += "\(token)\n"
     return token
   }
