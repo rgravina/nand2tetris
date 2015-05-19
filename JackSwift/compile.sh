@@ -41,4 +41,4 @@
 cp ../12/Math.jack ../12/MathTest/
 cp ../12/os/* ../12/MathTest/
 rm ../12/MathTest/Math.vm
-make file=../12/MathTest/
+JackCompiler.sh ../12/MathTest/

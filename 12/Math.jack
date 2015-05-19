@@ -7,32 +7,76 @@
  * A basic math library.
  */
 class Math {
+    static Array twoToThe;
 
     /** Initializes the library. */
     function void init() {
+        let twoToThe = Array.new(16);
+        let twoToThe[0] = 2;
+        let twoToThe[1] = 4;
+        let twoToThe[2] = 8;
+        let twoToThe[3] = 16;
+        let twoToThe[4] = 32;
+        let twoToThe[5] = 64;
+        let twoToThe[6] = 128;
+        let twoToThe[7] = 256;
+        let twoToThe[8] = 512;
+        let twoToThe[9] = 1024;
+        let twoToThe[10] = 2048;
+        let twoToThe[11] = 4096;
+        let twoToThe[12] = 8192;
+        let twoToThe[14] = 32768;
+        let twoToThe[15] = 65536;
+        return;
     }
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
+        return 0;
     }
 
     /** Returns the product of x and y. */
     function int multiply(int x, int y) {
+        var int sum, shiftedX, j;
+
+        let sum = 0;
+        let shiftedX = x;
+        let j = 0;
+
+        while (j < 15) {
+            if (Math.bit(x, j)) {
+                let sum = sum + shiftedX;
+            }
+            // Really shiftedX * 2 but this is the multiply method!
+            let shiftedX = shiftedX + shiftedX;
+            let j = j + 1;
+        }
+
+        return sum;
+    }
+
+    /** Returns true if jth bit of x is 1 */
+    function boolean bit(int x, int j) {
+        return true;
     }
 
     /** Returns the integer part of x/y. */
     function int divide(int x, int y) {
+        return 0;
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+        return 0;
     }
 
     /** Returns the greater number. */
     function int max(int a, int b) {
+        return 0;
     }
 
     /** Returns the smaller number. */
     function int min(int a, int b) {
+        return 0;
     }
 }
