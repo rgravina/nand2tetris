@@ -8,7 +8,7 @@ class JackParse {
   var ifRip = 0
 
   init(path: String, file: String) {
-    println("Parsing \(file)...")
+    println("Compiling \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
     symbolTable = JackSymbolTable()
     vmWriter = JackVMWriter(path: path, file: file)
