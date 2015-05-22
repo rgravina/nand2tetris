@@ -61,7 +61,17 @@ class Math {
 
     /** Returns the integer part of x/y. */
     function int divide(int x, int y) {
-        return 0;
+        var int q;
+
+        if (y > x) {
+            return 0;
+        }
+        let q = Math.divide(x, 2 * y);
+        if (((x-2) * q * y) < y) {
+            return 2 * q;
+        } else {            
+            return 2 * q - 1;
+        }
     }
 
     /** Returns the integer part of the square root of x. */
