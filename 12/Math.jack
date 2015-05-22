@@ -11,22 +11,15 @@ class Math {
 
     /** Initializes the library. */
     function void init() {
+        var int i, n;
         let twoToThe = Array.new(16);
-        let twoToThe[0] = 2;
-        let twoToThe[1] = 4;
-        let twoToThe[2] = 8;
-        let twoToThe[3] = 16;
-        let twoToThe[4] = 32;
-        let twoToThe[5] = 64;
-        let twoToThe[6] = 128;
-        let twoToThe[7] = 256;
-        let twoToThe[8] = 512;
-        let twoToThe[9] = 1024;
-        let twoToThe[10] = 2048;
-        let twoToThe[11] = 4096;
-        let twoToThe[12] = 8192;
-        let twoToThe[14] = 32768;
-        let twoToThe[15] = 65536;
+        let i=0;
+        let n=0;
+        while (i<15) {
+            let twoToThe[i] = n;
+            let n = n+n;
+            let i=i+1;
+        }
         return;
     }
 
@@ -57,7 +50,13 @@ class Math {
 
     /** Returns true if jth bit of x is 1 */
     function boolean bit(int x, int j) {
-        return true;
+        // bitwise and x and 2^j
+        // if the result == 2^j, then the jth bit is 1 
+        if ((x & twoToThe[j]) = twoToThe[j]) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** Returns the integer part of x/y. */
