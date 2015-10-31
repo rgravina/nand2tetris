@@ -5,11 +5,11 @@ class JackVMWriter {
   var out:String = ""
 
   init(path: String, file: String) {
-    self.outputFile = path.stringByAppendingPathComponent("\(file[0..<count(file)-5]).vm")
+    self.outputFile = (path as NSString).stringByAppendingPathComponent("\(file[0..<file.characters.count-5]).vm")
   }
 
   init(file: String) {
-    self.outputFile = "\(file[0..<count(file)-5]).vm"
+    self.outputFile = "\(file[0..<file.characters.count-5]).vm"
   }
 
   func writeFunction(className: String, subroutineName: String, numLocals: Int) {
@@ -49,6 +49,9 @@ class JackVMWriter {
   }
 
   func write() {
-    out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
+    do {
+      try out.writeToFile(outputFile, atomically: false, encoding: NSUTF8StringEncoding)
+    } catch _ {
+    };
   }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public enum JackVarKind: String, Printable {
+public enum JackVarKind: String, CustomStringConvertible {
   case Static = "static"    // static segment (class scope)
   case Field = "field"      // this segment   (class scope)
   case Arg = "arg"          // arg segment    (subroutine scope)
@@ -10,7 +10,7 @@ public enum JackVarKind: String, Printable {
   }
 }
 
-struct SymbolTableEntry : Printable {
+struct SymbolTableEntry : CustomStringConvertible {
   var type:String
   var kind:String
   var index:Int

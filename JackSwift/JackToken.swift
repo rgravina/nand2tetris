@@ -4,7 +4,7 @@ public enum JackTokenType {
   case Keyword, Symbol, Identifier, IntConstant, StringConstant, Unknown
 }
 
-public enum JackTokenKeyword: String, Printable {
+public enum JackTokenKeyword: String, CustomStringConvertible {
   case Class = "class"
   case Method = "method"
   case Function = "function"
@@ -32,7 +32,7 @@ public enum JackTokenKeyword: String, Printable {
   }
 }
 
-public class JackToken : Printable{
+public class JackToken : CustomStringConvertible{
   public let type:JackTokenType
   public let keyword:JackTokenKeyword?
   public let symbol:Character?
@@ -61,7 +61,7 @@ public class JackToken : Printable{
       type = .IntConstant
       symbol = nil
       keyword = nil
-      intVal = string.toInt()
+      intVal = Int(string)
       stringVal = nil
       identifier = nil
     } else if JackToken.isStringVal(string) {
@@ -70,7 +70,7 @@ public class JackToken : Printable{
       keyword = nil
       intVal = nil
       // remove double quotes from string
-      stringVal = string[1..<count(string)-1]
+      stringVal = string[1..<string.characters.count-1]
       identifier = nil
     } else {
       type = .Identifier
@@ -98,7 +98,7 @@ public class JackToken : Printable{
   }
 
   internal static func isIntVal(s: String) -> Bool {
-    return s.toInt() != nil
+    return Int(s) != nil
   }
 
   internal static func isStringVal(s: String) -> Bool {

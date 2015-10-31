@@ -8,7 +8,7 @@ class JackParse {
   var ifRip = 0
 
   init(path: String, file: String) {
-    println("Compiling \(file)...")
+    print("Compiling \(file)...")
     tokeniser = JackTokeniser(path: path, file: file)
     symbolTable = JackSymbolTable()
     vmWriter = JackVMWriter(path: path, file: file)
@@ -86,7 +86,7 @@ class JackParse {
     while(token.symbol != "}") {
       writeOpenTag("subroutineDec")
       let method = writeNextToken()  // constructor etc.
-      let returnType = writeNextToken()  // 'void' or type
+      writeNextToken()  // returnType is 'void' or type
       let subroutineName = writeNextToken()  // subroutineName
       symbolTable.startSubroutineScope(method.keyword!.rawValue, className: className.identifier!)
       writeNextToken()  // '('
@@ -286,7 +286,7 @@ class JackParse {
     // subroutineName '(' expressionList ')' |
     // (className | varName) '.' subroutineName '(' expressionList ')'
     // expects the caller has output the first token
-    var token = tokeniser.peek()!
+    let token = tokeniser.peek()!
     if(token.symbol == "(") {
       writeNextToken()  // '('
       // it's a method call, need to put this onto the stack
@@ -325,7 +325,7 @@ class JackParse {
     // (expression (',' expression)*)?
     writeOpenTag("expressionList")
     var numExpressions = 0
-    var token = tokeniser.peek()!
+    let token = tokeniser.peek()!
     if(token.symbol != ")") {
       compileExpression()
       numExpressions++
@@ -396,7 +396,7 @@ class JackParse {
       //push constant 18
       //call String.new 1
       let stringVal = stringToken.stringVal!
-      vmWriter.writePush("constant", index: count(stringVal))
+      vmWriter.writePush("constant", index: stringVal.characters.count)
       vmWriter.writeCall("String.new", numArgs: 1)
       // write each character
       //push constant 72

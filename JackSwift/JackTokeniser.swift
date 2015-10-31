@@ -13,13 +13,13 @@ class JackTokeniser {
   init(path: String, file: String) {
     reader = StreamReader(path: "\(path)/\(file)", delimiter: "")
     source = reader!.nextLine()!
-    length = count(source)
+    length = source.characters.count
   }
 
   init(file: String) {
     reader = StreamReader(path: file, delimiter: "")
     source = reader!.nextLine()!
-    length = count(source)
+    length = source.characters.count
   }
 
   /**
@@ -28,7 +28,7 @@ class JackTokeniser {
   func next() -> JackToken? {
     // if a lookahead was performed, return that token instead of getting the next from the stream
     if (peekedToken != nil) {
-      var tempPeekedToken = peekedToken
+      let tempPeekedToken = peekedToken
       peekedToken = nil
       return tempPeekedToken
     }

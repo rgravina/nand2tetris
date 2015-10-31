@@ -4,7 +4,7 @@ public enum AssemblyCommandType {
   case Address, Computation, Label
 }
 
-public class AssemblyCommand : Printable {
+public class AssemblyCommand : CustomStringConvertible {
   public let type:AssemblyCommandType
   public var address:String?
   public var instruction:String?
@@ -20,10 +20,10 @@ public class AssemblyCommand : Printable {
     switch char {
     case "@":
       type = .Address
-      address = command[1..<count(command)]
+      address = command[1..<command.characters.count]
     case "(":
       type = .Label
-      address = command[1..<count(command)-1]
+      address = command[1..<command.characters.count-1]
     default:
       type = .Computation
       /**
@@ -69,7 +69,7 @@ public class AssemblyCommand : Printable {
   public class func decToBin(decimal: Int) -> String? {
       let binary = String(decimal, radix: 2)
     var result = ""
-    for i in 0..<(16 - count(binary)) {
+    for _ in 0..<(16 - binary.characters.count) {
       result += "0"
     }
     result += binary
@@ -96,8 +96,6 @@ public class AssemblyCommand : Printable {
         return instruction
       case .Label:
         return "(\(address!))"
-      default:
-        return "Unknown"
       }
     }
   }
@@ -110,7 +108,7 @@ public class AssemblyCommand : Printable {
       switch(type) {
       case .Address:
         // value is already an address
-        if let intValue = address!.toInt() {
+        if let intValue = Int(address!) {
           return AssemblyCommand.decToBin(intValue)!
         }
         // value is a symbol, so get its address from the symbol table

@@ -47,9 +47,9 @@ class StreamReader  {
     }
 
     // Read data chunks from file until a line delimiter is found:
-    var range = buffer.rangeOfData(delimData, options: nil, range: NSMakeRange(0, buffer.length))
+    var range = buffer.rangeOfData(delimData, options: [], range: NSMakeRange(0, buffer.length))
     while range.location == NSNotFound {
-      var tmpData = fileHandle.readDataOfLength(chunkSize)
+      let tmpData = fileHandle.readDataOfLength(chunkSize)
       if tmpData.length == 0 {
         // EOF or read error.
         atEof = true
@@ -64,7 +64,7 @@ class StreamReader  {
         return nil
       }
       buffer.appendData(tmpData)
-      range = buffer.rangeOfData(delimData, options: nil, range: NSMakeRange(0, buffer.length))
+      range = buffer.rangeOfData(delimData, options: [], range: NSMakeRange(0, buffer.length))
     }
 
     // Convert complete line (excluding the delimiter) to a string:
@@ -91,8 +91,8 @@ class StreamReader  {
 }
 
 extension StreamReader : SequenceType {
-  func generate() -> GeneratorOf<String> {
-    return GeneratorOf<String> {
+  func generate() -> AnyGenerator<String> {
+    return anyGenerator {
       return self.nextLine()
     }
   }

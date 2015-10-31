@@ -18,7 +18,7 @@ class AssemblyParser {
      * the symbol table.
      */
     while let line = reader.nextLine() {
-      var command = AssemblyCommand(command: line)
+      let command = AssemblyCommand(command: line)
       if command.type == .Label {
         // labels represent the address of the next command
         // so, don't add it to the command list
@@ -37,7 +37,7 @@ class AssemblyParser {
     for command in commands {
       if command.type == .Address {
         assert(command.address != nil)
-        if let intValue = command.address!.toInt() {
+        if Int(command.address!) != nil {
         } else {
           if let address = symbolTable.get(command.address!) {
             command.address = String(stringInterpolationSegment: address)
@@ -54,7 +54,7 @@ class AssemblyParser {
   * Returns the next command
   */
   func next() -> AssemblyCommand? {
-    if currentCommand < count(commands) {
+    if currentCommand < commands.count {
       return commands[currentCommand++]
     }
     return nil

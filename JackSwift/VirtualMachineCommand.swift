@@ -4,7 +4,7 @@ public enum VirtualMachineCommandType {
   case Arithmetic, Push, Pop, Label, Goto, If, Function, Return, Call, Unknown
 }
 
-public class VirtualMachineCommand : Printable {
+public class VirtualMachineCommand : CustomStringConvertible {
   public let className:String
   public let type:VirtualMachineCommandType
   public let arg1:String?
@@ -17,16 +17,16 @@ public class VirtualMachineCommand : Printable {
   */
   public init(className: String, command: String) {
     self.className = className
-    var tokens = split(command) {$0 == " "}
+    var tokens = command.characters.split {$0 == " "}.map { String($0) }
     switch(tokens.first!) {
     case "push":
       type = .Push
       arg1 = tokens[1]
-      arg2 = tokens[2].toInt()
+      arg2 = Int(tokens[2])
     case "pop":
       type = .Pop
       arg1 = tokens[1]
-      arg2 = tokens[2].toInt()
+      arg2 = Int(tokens[2])
     case "add":
       type = .Arithmetic
       arg1 = "add"
@@ -78,7 +78,7 @@ public class VirtualMachineCommand : Printable {
     case "function":
       type = .Function
       arg1 = tokens[1]
-      arg2 = tokens[2].toInt()
+      arg2 = Int(tokens[2])
     case "return":
       type = .Return
       arg1 = nil
@@ -86,13 +86,13 @@ public class VirtualMachineCommand : Printable {
     case "call":
       type = .Call
       arg1 = tokens[1]
-      arg2 = tokens[2].toInt()
+      arg2 = Int(tokens[2])
     default:
       type = .Unknown
       arg1 = nil
       arg2 = nil
     }
-    println(self)
+    print(self)
   }
 
 
@@ -164,20 +164,20 @@ public class VirtualMachineCommand : Printable {
     case .Arithmetic:
       switch(arg1!) {
       case "add":
-        instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1AndAToArg2())
+        instructions.appendContentsOf(decrementStackPointer())
+        instructions.appendContentsOf(setDToArg1AndAToArg2())
         instructions.append("D=A+D")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "sub":
-        instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1AndAToArg2())
+        instructions.appendContentsOf(decrementStackPointer())
+        instructions.appendContentsOf(setDToArg1AndAToArg2())
         instructions.append("D=A-D")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "eq", "lt", "gt":
-        instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1AndAToArg2())
+        instructions.appendContentsOf(decrementStackPointer())
+        instructions.appendContentsOf(setDToArg1AndAToArg2())
         let rip = VirtualMachineCommand.rip++
         instructions.append("D=A-D")         // A-D == 0 if equal, <0 if arg1 < arg2, >0 if arg1 > arg2
         instructions.append("@R13")
@@ -191,28 +191,28 @@ public class VirtualMachineCommand : Printable {
         instructions.append("($RIP:\(rip))") // The end of this equals instruction
         return instructions
       case "and":
-        instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1AndAToArg2())
+        instructions.appendContentsOf(decrementStackPointer())
+        instructions.appendContentsOf(setDToArg1AndAToArg2())
         instructions.append("D=A&D")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "or":
-        instructions.extend(decrementStackPointer())
-        instructions.extend(setDToArg1AndAToArg2())
+        instructions.appendContentsOf(decrementStackPointer())
+        instructions.appendContentsOf(setDToArg1AndAToArg2())
         instructions.append("D=A|D")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "neg":
         instructions.append("@SP")
         instructions.append("A=M-1")
         instructions.append("D=-M")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "not":
         instructions.append("@SP")
         instructions.append("A=M-1")
         instructions.append("D=!M")
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       default:
         return instructions
@@ -223,39 +223,39 @@ public class VirtualMachineCommand : Printable {
         // push arg2 onto the stack
         //   set memory location in SP to arg2
         //   increment stack pointer (SP)
-        instructions.extend(setTopOfStackToValue(arg2!))
-        instructions.extend(incrementStackPointer())
+        instructions.appendContentsOf(setTopOfStackToValue(arg2!))
+        instructions.appendContentsOf(incrementStackPointer())
         return instructions
       case "local", "argument", "this", "that", "temp", "pointer":
         // set top of stack to the value in local + offset
         // e.g. push local 0
-        instructions.extend(putAddressFromSementWithOffsetInD())
+        instructions.appendContentsOf(putAddressFromSementWithOffsetInD())
         instructions.append("A=D")
         instructions.append("D=M")  // store value at address in D
-        instructions.extend(incrementStackPointer())
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(incrementStackPointer())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       case "static":
         instructions.append("@\(className).\(arg2!)")
         instructions.append("D=M")  // store value at address in D
-        instructions.extend(incrementStackPointer())
-        instructions.extend(putDOnStack())
+        instructions.appendContentsOf(incrementStackPointer())
+        instructions.appendContentsOf(putDOnStack())
         return instructions
       default:
         return instructions
       }
     case .Pop:
-      instructions.extend(decrementStackPointer())
+      instructions.appendContentsOf(decrementStackPointer())
       switch(arg1!) {
         case "static":
           instructions.append("@\(className).\(arg2!)")
           instructions.append("D=A")
         default:
-          instructions.extend(putAddressFromSementWithOffsetInD())
+          instructions.appendContentsOf(putAddressFromSementWithOffsetInD())
       }
       instructions.append("@R13")   // store D in R13
       instructions.append("M=D")
-      instructions.extend(putTopOfStackInD())
+      instructions.appendContentsOf(putTopOfStackInD())
       instructions.append("@R13")
       instructions.append("A=M")    // load R13 into A
 
@@ -267,8 +267,8 @@ public class VirtualMachineCommand : Printable {
       instructions.append("(\(getFullLabelName()))")
       return instructions
     case .If:
-      instructions.extend(decrementStackPointer())
-      instructions.extend(putTopOfStackInD())
+      instructions.appendContentsOf(decrementStackPointer())
+      instructions.appendContentsOf(putTopOfStackInD())
       instructions.append("@\(getFullLabelName())")
       instructions.append("D;JNE")
       return instructions
@@ -286,10 +286,10 @@ public class VirtualMachineCommand : Printable {
       instructions.append("(\(arg1!))")
       instructions.append("@LCL")
       instructions.append("D=M")
-      for i in 0..<arg2! {
+      for _ in 0..<arg2! {
         instructions.append("AD=D+1")
         instructions.append("M=0")
-        instructions.extend(incrementStackPointer())
+        instructions.appendContentsOf(incrementStackPointer())
       }
       return instructions
     case .Return:
@@ -341,7 +341,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func incrementStackPointer() -> Array<String>  {
-    println("// - increment stack pointer")
+    print("// - increment stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("M=M+1")
@@ -349,7 +349,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func decrementStackPointer() -> Array<String>  {
-    println("// - decrement stack pointer")
+    print("// - decrement stack pointer")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("M=M-1")
@@ -357,7 +357,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func setTopOfStackToValue(value: Int) -> Array<String>  {
-    println("// - set top of stack to \(value)")
+    print("// - set top of stack to \(value)")
     var instructions = Array<String>()
     instructions.append("@\(value)")
     instructions.append("D=A")
@@ -368,8 +368,8 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func setDToArg1AndAToArg2() -> Array<String>  {
-    println("// - get top of stack and store in D")
-    println("// - get next value from stack and store in A")
+    print("// - get top of stack and store in D")
+    print("// - get next value from stack and store in A")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("A=M")
@@ -380,7 +380,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func putDOnStack() -> Array<String>  {
-    println("// - put value back on stack")
+    print("// - put value back on stack")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("A=M-1")
@@ -389,7 +389,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func putTopOfStackInD() -> Array<String>  {
-    println("// - put top of stack in D")
+    print("// - put top of stack in D")
     var instructions = Array<String>()
     instructions.append("@SP")
     instructions.append("A=M")
@@ -407,7 +407,7 @@ public class VirtualMachineCommand : Printable {
 
 
   private static func call(function: String, arguments: Int) -> Array<String>  {
-    println("// - call function")
+    print("// - call function")
     var instructions = Array<String>()
     let rip = VirtualMachineCommand.rip++
     instructions.append("@$RIP:\(rip)")  // push RIP
@@ -453,7 +453,7 @@ public class VirtualMachineCommand : Printable {
   }
 
   private func putAddressFromSementWithOffsetInD() -> Array<String>  {
-    println("// - put address off segment+offset in D")
+    print("// - put address off segment+offset in D")
     var instructions = Array<String>()
     instructions.append("@\(arg2!)")  // load offset
     instructions.append("D=A")        // save offset in D
@@ -478,19 +478,19 @@ public class VirtualMachineCommand : Printable {
       instructions.append("@3")
       instructions.append("D=D+A")  // set R13 location to save into
     default:
-      println("// unknown segment")
+      print("// unknown segment")
     }
     return instructions
   }
 
   public static var setup: Array<String> {
-    println("// initialise stack pointer to 256")
+    print("// initialise stack pointer to 256")
     var instructions = Array<String>()
     instructions.append("@256")
     instructions.append("D=A")
     instructions.append("@SP")
     instructions.append("M=D")
-    instructions.extend(VirtualMachineCommand.call("Sys.init", arguments: 0))
+    instructions.appendContentsOf(VirtualMachineCommand.call("Sys.init", arguments: 0))
 
     let comparisonFunctions:Array<(comp: String, jump: String)> = [
       (comp: "EQ", jump: "JNE"),
@@ -502,7 +502,7 @@ public class VirtualMachineCommand : Printable {
       // @R13 - should contain result of arg2 - arg1.
       // @R14 - should contain the return address
       // @SP  - should point to the address after the top value on the stack
-      println("// \(comparisonFuction.comp) function")
+      print("// \(comparisonFuction.comp) function")
       instructions.append("($$\(comparisonFuction.comp))")
       instructions.append("@R13")
       instructions.append("D=M")

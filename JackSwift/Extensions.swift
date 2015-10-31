@@ -7,31 +7,31 @@ extension String
 {
   // e.g. string[0]
   subscript(integerIndex: Int) -> Character {
-    let index = advance(startIndex, integerIndex)
+    let index = startIndex.advancedBy(integerIndex)
     return self[index]
   }
 
   // e.g. string[0..<2]
   subscript(integerRange: Range<Int>) -> String {
-    let start = advance(startIndex, integerRange.startIndex)
-    let end = advance(startIndex, integerRange.endIndex)
+    let start = startIndex.advancedBy(integerRange.startIndex)
+    let end = startIndex.advancedBy(integerRange.endIndex)
     let range = start..<end
     return self[range]
   }
 
   func substringToIndex(index:Int) -> String {
-    return self.substringToIndex(advance(self.startIndex, index))
+    return self.substringToIndex(self.startIndex.advancedBy(index))
   }
 
   func substringFromIndex(index:Int) -> String {
-    return self.substringFromIndex(advance(self.startIndex, index))
+    return self.substringFromIndex(self.startIndex.advancedBy(index))
   }
 
   func indexOf(target: String) -> Int
   {
-    var range = self.rangeOfString(target)
+    let range = self.rangeOfString(target)
     if let range = range {
-      return distance(self.startIndex, range.startIndex)
+      return self.startIndex.distanceTo(range.startIndex)
     } else {
       return -1
     }
