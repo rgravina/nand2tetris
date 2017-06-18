@@ -19,7 +19,7 @@ class AssemblyParser {
      */
     while let line = reader.nextLine() {
       let command = AssemblyCommand(command: line)
-      if command.type == .Label {
+      if command.type == .label {
         // labels represent the address of the next command
         // so, don't add it to the command list
         symbolTable.add(command.address!, address: commands.count)
@@ -35,7 +35,7 @@ class AssemblyParser {
      * they should be allocated in RAM.
      */
     for command in commands {
-      if command.type == .Address {
+      if command.type == .address {
         assert(command.address != nil)
         if Int(command.address!) != nil {
         } else {
@@ -55,7 +55,8 @@ class AssemblyParser {
   */
   func next() -> AssemblyCommand? {
     if currentCommand < commands.count {
-      return commands[currentCommand++]
+      currentCommand += 1
+      return commands[currentCommand]
     }
     return nil
   }

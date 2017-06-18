@@ -1,7 +1,7 @@
 import Foundation
 
 public enum JackTokenType {
-  case Keyword, Symbol, Identifier, IntConstant, StringConstant, Unknown
+  case keyword, symbol, identifier, intConstant, stringConstant, unknown
 }
 
 public enum JackTokenKeyword: String, CustomStringConvertible {
@@ -32,40 +32,40 @@ public enum JackTokenKeyword: String, CustomStringConvertible {
   }
 }
 
-public class JackToken : CustomStringConvertible{
-  public let type:JackTokenType
-  public let keyword:JackTokenKeyword?
-  public let symbol:Character?
-  public let identifier:String?
-  public let intVal:Int?
-  public let stringVal:String?
-  public let arg1:String?
-  public let arg2:Int?
+open class JackToken : CustomStringConvertible{
+  open let type:JackTokenType
+  open let keyword:JackTokenKeyword?
+  open let symbol:Character?
+  open let identifier:String?
+  open let intVal:Int?
+  open let stringVal:String?
+  open let arg1:String?
+  open let arg2:Int?
 
   public init(string: String) {
     if JackToken.isSymbol(string[0]) {
-      type = .Symbol
+      type = .symbol
       symbol = string[0]
       keyword = nil
       intVal = nil
       stringVal = nil
       identifier = nil
     } else if JackToken.isKeyword(string)  {
-      type = .Keyword
+      type = .keyword
       keyword = JackToken.keywordFromString(string)
       symbol = nil
       intVal = nil
       stringVal = nil
       identifier = nil
     } else if JackToken.isIntVal(string) {
-      type = .IntConstant
+      type = .intConstant
       symbol = nil
       keyword = nil
       intVal = Int(string)
       stringVal = nil
       identifier = nil
     } else if JackToken.isStringVal(string) {
-      type = .StringConstant
+      type = .stringConstant
       symbol = nil
       keyword = nil
       intVal = nil
@@ -73,7 +73,7 @@ public class JackToken : CustomStringConvertible{
       stringVal = string[1..<string.characters.count-1]
       identifier = nil
     } else {
-      type = .Identifier
+      type = .identifier
       symbol = nil
       keyword = nil
       intVal = nil
@@ -84,7 +84,7 @@ public class JackToken : CustomStringConvertible{
     arg2 = nil
   }
 
-  internal static func isSymbol(c: Character) -> Bool {
+  internal static func isSymbol(_ c: Character) -> Bool {
     switch (c) {
     case "{", "}", "(", ")", "[", "]", ".", ",", ";", "+", "-", "*", "/", "&", "|", "<", ">", "=", "~":
       return true
@@ -93,23 +93,23 @@ public class JackToken : CustomStringConvertible{
     }
   }
 
-  internal static func isKeyword(s: String) -> Bool {
+  internal static func isKeyword(_ s: String) -> Bool {
     return JackToken.keywordFromString(s) != nil
   }
 
-  internal static func isIntVal(s: String) -> Bool {
+  internal static func isIntVal(_ s: String) -> Bool {
     return Int(s) != nil
   }
 
-  internal static func isStringVal(s: String) -> Bool {
+  internal static func isStringVal(_ s: String) -> Bool {
     return s[0] == "\""
   }
 
-  internal static func keywordFromString(s: String) -> JackTokenKeyword? {
+  internal static func keywordFromString(_ s: String) -> JackTokenKeyword? {
     return JackTokenKeyword(rawValue: s)
   }
 
-  public var keywordConstant: Bool {
+  open var keywordConstant: Bool {
     if (keyword == nil) {
       return false
     }
@@ -121,7 +121,7 @@ public class JackToken : CustomStringConvertible{
     }
   }
 
-  public var binaryOperator: Bool {
+  open var binaryOperator: Bool {
     if (symbol == nil) {
       return false
     }
@@ -133,7 +133,7 @@ public class JackToken : CustomStringConvertible{
     }
   }
 
-  public var unaryOperator: Bool {
+  open var unaryOperator: Bool {
     if (symbol == nil) {
       return false
     }
@@ -145,18 +145,18 @@ public class JackToken : CustomStringConvertible{
     }
   }
 
-  public var description: String {
+  open var description: String {
     get {
       switch(type) {
-      case .Symbol:
+      case .symbol:
         return "<symbol> \(symbol!) </symbol>"
-      case .Keyword:
+      case .keyword:
         return "<keyword> \(keyword!) </keyword>"
-      case .Identifier:
+      case .identifier:
         return "<identifier> \(identifier!) </identifier>"
-      case .IntConstant:
+      case .intConstant:
         return "<integerConstant> \(intVal!) </integerConstant>"
-      case .StringConstant:
+      case .stringConstant:
         return "<stringConstant> \(stringVal!) </stringConstant>"
       default:
         return "(unknown)"

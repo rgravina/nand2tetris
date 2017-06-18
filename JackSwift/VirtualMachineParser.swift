@@ -9,12 +9,12 @@ class VirtualMachineParser {
    */
   init(path: String, file: String) {
     reader = HackFileReader(file: "\(path)/\(file)")
-    self.className = file[Range(start:file.startIndex, end:file.endIndex.advancedBy(-3))]
+    self.className = file[(file.startIndex ..< file.characters.index(file.endIndex, offsetBy: -3))]
   }
 
   init(file: String) {
     reader = HackFileReader(file: file)
-    self.className = file[Range(start:file.startIndex, end:file.endIndex.advancedBy(-3))]
+    self.className = file[(file.startIndex ..< file.characters.index(file.endIndex, offsetBy: -3))]
   }
 
   /**

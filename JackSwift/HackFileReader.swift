@@ -34,16 +34,16 @@ class HackFileReader {
         line = trimmed(line!)
       }
       // remove end of line comments
-      let commentIndex = line!.rangeOfString("//")
+      let commentIndex = line!.range(of: "//")
       if (commentIndex != nil) {
-        line = trimmed(line![line!.startIndex..<commentIndex!.startIndex])
+        line = trimmed(line![line!.startIndex..<commentIndex!.lowerBound])
       }
       return line!
     }
     return nil
   }
 
-  private func trimmed(line: String) -> String {
-    return line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+  fileprivate func trimmed(_ line: String) -> String {
+    return line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
   }
 }

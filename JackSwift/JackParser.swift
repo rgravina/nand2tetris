@@ -25,7 +25,7 @@ class JackParse {
     vmWriter.write()
   }
   
-  private func compileClass() {
+  fileprivate func compileClass() {
     // 'class' className '{' classVarDec* compileSubroutineDec* '}'
     writeOpenTag("class")
     writeNextToken()  // 'class'
@@ -38,7 +38,7 @@ class JackParse {
     writeCloseTag("class")
   }
 
-  private func getTypeName(type: JackToken) -> String {
+  fileprivate func getTypeName(_ type: JackToken) -> String {
     let typeName:String
     if (type.keyword != nil) {
       typeName = type.keyword!.rawValue
@@ -48,15 +48,15 @@ class JackParse {
     return typeName
   }
 
-  private func define(varName: JackToken, type: JackToken, kind:JackToken) {
+  fileprivate func define(_ varName: JackToken, type: JackToken, kind:JackToken) {
     symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind.keyword!.rawValue)
   }
 
-  private func define(varName: JackToken, type: JackToken, kind: String) {
+  fileprivate func define(_ varName: JackToken, type: JackToken, kind: String) {
     symbolTable.define(varName.identifier!, type: getTypeName(type), kind: kind)
   }
 
-  private func compileClassVarDec() {
+  fileprivate func compileClassVarDec() {
     // zero or more
     // classVarDec: ('static' | 'field') type varName (',' varName)* ';'
     var token = tokeniser.peek()!
@@ -79,7 +79,7 @@ class JackParse {
     }
   }
 
-  private func compileSubroutineDec(className: JackToken) {
+  fileprivate func compileSubroutineDec(_ className: JackToken) {
     // zero or more
     // subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) subroutineName '(' parameterList ')' subroutineBody
     var token = tokeniser.peek()!
@@ -102,7 +102,7 @@ class JackParse {
     }
   }
 
-  private func compileParameterList() {
+  fileprivate func compileParameterList() {
     // ((type varName) (',' type varName)*)?
     writeOpenTag("parameterList")
     var token = tokeniser.peek()!
@@ -122,7 +122,7 @@ class JackParse {
     writeCloseTag("parameterList")
   }
 
-  private func compileSubroutineBody(className: JackToken, subroutineName: JackToken, method: JackToken) {
+  fileprivate func compileSubroutineBody(_ className: JackToken, subroutineName: JackToken, method: JackToken) {
     // '{' varDec* statements '}'
     writeOpenTag("subroutineBody")
     writeNextToken()  // '{'
@@ -147,7 +147,7 @@ class JackParse {
     writeCloseTag("subroutineBody")
   }
 
-  private func compileVarDec() {
+  fileprivate func compileVarDec() {
     var token = tokeniser.peek()!
     while token.keyword == .Var {
       writeOpenTag("varDec")
@@ -168,7 +168,7 @@ class JackParse {
     }
   }
 
-  private func compileStatements() {
+  fileprivate func compileStatements() {
     // statement*
     writeOpenTag("statements")
     // letStatement | ifStatement | whileStatement | doStatement | returnStatement
@@ -207,7 +207,7 @@ class JackParse {
       case .If:
         writeOpenTag("ifStatement")
         writeNextToken()  // if
-        let rip = ifRip++
+        let rip = ifRip += 1
         writeNextToken()  // '('
         compileExpression()  // expression
         writeNextToken()  // ')'
@@ -235,7 +235,7 @@ class JackParse {
       case .While:
         writeOpenTag("whileStatement")
         writeNextToken()  // while
-        let rip = whileRip++
+        let rip = whileRip += 1
         vmWriter.writeLabel("WHILE_EXP\(rip)")
         writeNextToken()  // '('
         compileExpression()  // expression
@@ -282,7 +282,7 @@ class JackParse {
     writeCloseTag("statements")
   }
 
-  private func compileSubroutineCall(callee: JackToken) {
+  fileprivate func compileSubroutineCall(_ callee: JackToken) {
     // subroutineName '(' expressionList ')' |
     // (className | varName) '.' subroutineName '(' expressionList ')'
     // expects the caller has output the first token
@@ -321,19 +321,19 @@ class JackParse {
     writeNextToken()  // ')'
   }
 
-  private func compileExpressionList() -> Int {
+  fileprivate func compileExpressionList() -> Int {
     // (expression (',' expression)*)?
     writeOpenTag("expressionList")
     var numExpressions = 0
     let token = tokeniser.peek()!
     if(token.symbol != ")") {
       compileExpression()
-      numExpressions++
+      numExpressions += 1
       var token = tokeniser.peek()!
       while(token.symbol == ",") {
         writeNextToken() // ','
         compileExpression()
-        numExpressions++
+        numExpressions += 1
         token = tokeniser.peek()!
       }
     }
@@ -341,7 +341,7 @@ class JackParse {
     return numExpressions
   }
 
-  private func compileExpression() {
+  fileprivate func compileExpression() {
     // term (op term)*
     writeOpenTag("expression")
     compileTerm()
@@ -376,7 +376,7 @@ class JackParse {
     writeCloseTag("expression")
   }
 
-  private func compileTerm() {
+  fileprivate func compileTerm() {
     // integerConstant | stringConstant | keywordConstant 
     //   | varName
     //   | varName '[' expression ']'
@@ -387,10 +387,10 @@ class JackParse {
     //   -> subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName '(' expressionList ')'
     writeOpenTag("term")
     var token = tokeniser.peek()!
-    if (token.type == .IntConstant) {
+    if (token.type == .intConstant) {
       let int = writeNextToken()
       vmWriter.writePush("constant", index: int.intVal!)
-    } else if (token.type == .StringConstant) {
+    } else if (token.type == .stringConstant) {
       let stringToken = writeNextToken()
       // e.g. "How many numbers? "
       //push constant 18
@@ -456,7 +456,7 @@ class JackParse {
     writeCloseTag("term")
   }
 
-  private func pushVariableOffset(varName: JackToken) {
+  fileprivate func pushVariableOffset(_ varName: JackToken) {
     let kind = symbolTable.kindOf(varName.identifier!)
     switch(kind) {
     case "var":
@@ -470,7 +470,7 @@ class JackParse {
     }
   }
 
-  private func popVariableOffset(varName: JackToken) {
+  fileprivate func popVariableOffset(_ varName: JackToken) {
     let kind = symbolTable.kindOf(varName.identifier!)
     switch(kind) {
     case "var":
@@ -484,15 +484,15 @@ class JackParse {
     }
   }
 
-  private func writeOpenTag(tag: String) {
+  fileprivate func writeOpenTag(_ tag: String) {
     //out += "<\(tag)>\n"
   }
 
-  private func writeCloseTag(tag: String) {
+  fileprivate func writeCloseTag(_ tag: String) {
     //out += "</\(tag)>\n"
   }
 
-  private func writeNextToken() -> JackToken {
+  fileprivate func writeNextToken() -> JackToken {
     let token = tokeniser.next()!
     //out += "\(token)\n"
     return token

@@ -40,12 +40,12 @@ class JackTokeniser {
         if source[pos..<(pos+2)] == "//" {
           // go to start of next line
           while (source[pos] != "\r\n") {
-            pos++
+            pos += 1
           }
         } else if source[pos..<(pos+2)] == "/*" {
           // go to closing comment
           while source[pos..<(pos+2)] != "*/" {
-            pos++
+            pos += 1
           }
           pos+=2
         }
@@ -53,24 +53,26 @@ class JackTokeniser {
 
       if source[pos] == " " || source[pos] == "\t" || source[pos] == "\r\n" {
         // keep going
-        pos++
+        pos += 1
       } else {
         // char should go in token
         token.append(source[pos])
         if (JackToken.isSymbol(source[pos])) {
-          pos++
+          pos += 1
           return JackToken(string: token)
         }
         var inString = source[pos] == "\""
-        pos++
+        pos += 1
         while (inString || (source[pos] != " " && !JackToken.isSymbol(source[pos])) && source[pos] != "\r\n" ) {
           if inString {
-            token.append(source[pos++])
+            pos += 1
+            token.append(source[pos])
             if source[pos] == "\"" {
               inString = false
             }
           } else {
-            token.append(source[pos++])
+            pos += 1
+            token.append(source[pos])
           }
         }
         return JackToken(string: token)

@@ -20,7 +20,7 @@ struct SymbolTableEntry : CustomStringConvertible {
   }
 }
 
-public class JackSymbolTable {
+open class JackSymbolTable {
   var className:String?
   var classScope = [String:SymbolTableEntry]()
   var subroutineScope = [String:SymbolTableEntry]()
@@ -31,7 +31,7 @@ public class JackSymbolTable {
     indexes = ["static": 0, "field": 0]
   }
 
-  public func startSubroutineScope(method: String, className: String) {
+  open func startSubroutineScope(_ method: String, className: String) {
     // reset arg and local indexes and clear all subroutine variables from the symbol table
     indexes["arg"] = 0
     indexes["var"] = 0
@@ -42,13 +42,15 @@ public class JackSymbolTable {
     }
   }
 
-  public func define(name: String, type: String, kind: String) {
+  open func define(_ name: String, type: String, kind: String) {
     if kind == "static" || kind == "field" {
-      let index = indexes[kind]!++
+      indexes[kind]! += 1
+      let index = indexes[kind]!
       classScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
       //println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else if kind == "arg" || kind == "var" {
-      let index = indexes[kind]!++
+      indexes[kind]! += 1
+      let index = indexes[kind]!
       subroutineScope[name] = SymbolTableEntry(type: type, kind: kind, index: index)
       //println("Defining new variable name:\(name), type:\(type), kind:\(kind) index:\(index)")
     } else {
@@ -56,18 +58,18 @@ public class JackSymbolTable {
     }
   }
 
-  public func varCount(kind: String) -> Int {
+  open func varCount(_ kind: String) -> Int {
     return indexes[kind]!
   }
 
-  public func kindOf(name: String) -> String {
+  open func kindOf(_ name: String) -> String {
     if let subScope = subroutineScope[name] {
       return subScope.kind
     }
     return classScope[name]!.kind
   }
 
-  public func typeOf(name: String) -> String? {
+  open func typeOf(_ name: String) -> String? {
     if let subScope = subroutineScope[name] {
       return subScope.type
     } else if let clsScope = classScope[name] {
@@ -77,7 +79,7 @@ public class JackSymbolTable {
     }
   }
 
-  public func indexOf(name: String) -> Int {
+  open func indexOf(_ name: String) -> Int {
     if let subScope = subroutineScope[name] {
       return subScope.index
     }
